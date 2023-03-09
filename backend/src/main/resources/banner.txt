@@ -1,0 +1,12 @@
+${AnsiBackground.BRIGHT_BLACK}${AnsiColor.BRIGHT_YELLOW}     _____ _ _        ${AnsiColor.GREEN}  ____                  _       ${AnsiBackground.DEFAULT}
+${AnsiBackground.BRIGHT_BLACK}${AnsiColor.BRIGHT_YELLOW}    / ____(_) |       ${AnsiColor.GREEN} / __ \                | |      ${AnsiBackground.DEFAULT}
+${AnsiBackground.BRIGHT_BLACK}${AnsiColor.BRIGHT_YELLOW}   | |     _| |_ _   _${AnsiColor.GREEN}| |  | |_   _  ___  ___| |_     ${AnsiBackground.DEFAULT}
+${AnsiBackground.BRIGHT_BLACK}${AnsiColor.BRIGHT_YELLOW}   | |    | | __| | | ${AnsiColor.GREEN}| |  | | | | |/ _ \/ __| __|    ${AnsiBackground.DEFAULT}
+${AnsiBackground.BRIGHT_BLACK}${AnsiColor.BRIGHT_YELLOW}   | |____| | |_| |_| ${AnsiColor.GREEN}| |__| | |_| |  __/\__ \ |_     ${AnsiBackground.DEFAULT}
+${AnsiBackground.BRIGHT_BLACK}${AnsiColor.BRIGHT_YELLOW}    \_____|_|\__|\__, ${AnsiColor.GREEN}|\___\_\\__,_|\___||___/\__|    ${AnsiBackground.DEFAULT}
+${AnsiBackground.BRIGHT_BLACK}${AnsiColor.BRIGHT_YELLOW}                  __/ ${AnsiColor.GREEN}|                               ${AnsiBackground.DEFAULT}
+${AnsiBackground.BRIGHT_BLACK}${AnsiColor.BRIGHT_YELLOW}                 |___/                                ${AnsiBackground.DEFAULT}${AnsiColor.DEFAULT}
+
+Ein Software-Projekt von ${AnsiColor.BRIGHT_YELLOW}Daniel Pillwein${AnsiColor.DEFAULT}, ${AnsiColor.BRIGHT_YELLOW}Lukas Schodl${AnsiColor.DEFAULT} und ${AnsiColor.BRIGHT_YELLOW}Markus Wizany${AnsiColor.DEFAULT}
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
