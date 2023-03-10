@@ -59,7 +59,7 @@ public class UserEndpoint {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Object> userLogout(@RequestHeader("X-API-KEY") String token) {
+    public ResponseEntity<Object> userLogout(@CookieValue(value = "X-API-KEY") String token) {
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
             return new ResponseEntity<Object>(new ErrorDto("Es gibt keinen Benutzer mit diesem Token"), HttpStatus.BAD_REQUEST);
