@@ -47,6 +47,16 @@
               }
             },
             "description": "JSON des hinzugefügten Benutzers"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Der Benutzername oder die Email existiert bereits"
+                }
+              }
+            },
+            "description": "Der Benutzername oder die Email existiert bereits"
           }
         }
       }
@@ -77,10 +87,10 @@
         "responses": {
           "200": {
             "headers": {
-              "Set-Cookie":{
+              "Set-Cookie": {
                 "schema": {
                   "type": "string",
-                  "example": "APITOKEN=awhdoiji314j§!§J21ioen21adsf"
+                  "example": "X-API-KEY=awhdoiji314j§!§J21ioen21adsf"
                 }
               }
             },
@@ -96,20 +106,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "API_TOKEN": {
+                    "X-API-KEY": {
                       "type": "string"
                     },
                     "token_valid_until": {
                       "type": "integer",
                       "description": "Zeit, bei der Token abläuft. Format noch unbekannt"
                     },
-                    "user": {
-                    }
+                    "user": {}
                   }
                 }
               }
             },
-            "description": "Erfolgreich eingeloggt. Gibt *API_TOKEN* zurück"
+            "description": "Erfolgreich eingeloggt. Gibt *X-API-KEY* zurück"
           },
           "400": {
             "content": {
@@ -152,17 +161,117 @@
         }
       }
     },
+    "/verify": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "description": "Email von Benutzer wird verifiziert.",
+        "security": [
+          {}
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "ID der Verifikation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "id": "in8/§bf93buhfb8!)°!unj"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Benutzer wurde erfolgreich erstellt."
+          },
+          "401": {
+            "description": "Der Link ist expired",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Der Link ist abgelaufen"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Die Fehlermeldung"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Prüft ob der gesetzte API-Token des Benutzers gültig ist",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Benutzer erkannt",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 10,
+                  "name": "Quantom",
+                  "email": "Quantom@myemail.com"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/logout": {
       "post": {
         "tags": [
           "auth"
         ],
         "description": "Benutzer loggt sich aus",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "responses": {
           "204": {
             "description": "User wurde abgemeldet"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Es gibt keinen Benutzer mit diesem Token"
+                }
+              }
+            },
+            "description": "Es gibt keinen Benutzer mit diesem Token"
           }
         }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY",
+        "bearerFormat": "TOKEN"
       }
     }
   }
