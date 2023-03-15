@@ -3,24 +3,42 @@ package com.example.backend.rest;
 import com.example.backend.dto.ErrorDto;
 import com.example.backend.dto.UserLoginDto;
 import com.example.backend.dto.UserRegisterDto;
+import com.example.backend.dto.UserVerifyDto;
 import com.example.backend.entity.User;
 import com.example.backend.mapper.UserLoginMapping;
 import com.example.backend.mapper.UserRegisterMapping;
 import com.example.backend.service.UserServiceImpl;
+import com.example.backend.util.Emails;
 import com.example.backend.util.Strings;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.util.Calendar;
+import java.util.Date;
+
 @RestController
 @RequestMapping(value = "/api", method = {RequestMethod.GET, RequestMethod.PUT})
 public class UserEndpoint {
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
     @PostMapping("/register")
     public ResponseEntity<Object> UserRegister(@RequestBody User user) {
+        LOG.info("/register issued with parameter: " + user);
+
         if (UserServiceImpl.getUserByName(user.getUsername()) == null && UserServiceImpl.getUserByEmail(user.getEmail()) == null) {
             UserServiceImpl.addUser(user);
+            try {
+                Emails.sendMail(user.getEmail());
+                LOG.info("Email Verification for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
+            } catch(MessagingException mex) {
+                mex.printStackTrace();
+            }
             return new ResponseEntity<Object>(new UserRegisterMapping(new UserRegisterDto(user), false), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<Object>(new ErrorDto("Der Benutzername oder die Email existiert bereits"), HttpStatus.BAD_REQUEST);
@@ -44,6 +62,26 @@ public class UserEndpoint {
             cookieResponse.addCookie(cookie);
             ResponseEntity<Object> response = new ResponseEntity<Object>(new UserLoginMapping(new UserLoginDto(currentUser)), HttpStatus.OK);
             return response;
+        }
+    }
+
+    @PostMapping("/verify") // TODO: add email mapping
+    public ResponseEntity<Object> UserVerify(@RequestBody UserVerifyDto request) {
+        Date date = UserServiceImpl.getPendingEmailVerifications().getOrDefault(request.getKey(), null);
+        System.out.println(request.getKey());
+        if (date == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
+        } else {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date());
+            c.add(Calendar.MINUTE, -10);
+            Date validDate = c.getTime();
+            if (validDate.after(date)) {
+                return new ResponseEntity<>(new ErrorDto("Der Link ist abgelaufen"), HttpStatus.UNAUTHORIZED);
+            } else {
+                UserServiceImpl.removePendingEmailVerification(request.getKey());
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
         }
     }
 
