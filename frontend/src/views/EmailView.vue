@@ -11,40 +11,87 @@
             d="M134.71,5c-21.22-.3-62,14.13-62,58.05,0,45.08,62,126.31,62,126.31s59.58-80.16,59.58-125.29C194.29,17.34,155.69,5.31,134.71,5Zm-.39,84.16a26.93,26.93,0,1,1,26.93-26.93A26.93,26.93,0,0,1,134.32,89.18Z"
             transform="translate(-25.24 -1.02)"
             style="fill:#ed3524;stroke:#b41415;stroke-miterlimit:10;stroke-width:8px"/>
-        <circle cx="109.08" cy="61.23" r="26.93" style="fill:none;stroke:#b41415;stroke-miterlimit:10;stroke-width:8px"/>
+        <circle cx="109.08" cy="61.23" r="26.93"
+                style="fill:none;stroke:#b41415;stroke-miterlimit:10;stroke-width:8px"/>
       </g>
     </svg>
-    <Login></Login>
+    <h1>E-Mail-Verifizierung</h1>
+    <EmailPending v-if="status==='pending'" :email="this.email.replaceAll('-','.')"></EmailPending>
+    <EmailExpired v-else-if="status==='expired'"></EmailExpired>
+    <EmailSuccess v-else-if="status==='success'"></EmailSuccess>
   </div>
 </template>
 
 <script>
-import Login from "@/components/Login.vue";
+import EmailPending from "@/components/EmailPending.vue";
+import EmailSuccess from "@/components/EmailSuccess.vue";
+import EmailExpired from "@/components/EmailExpired.vue";
 
 export default {
-  name: "LoginView",
-  components: {Login}
-
+  name: "EmailView",
+  components: {
+    EmailPending,
+    EmailSuccess,
+    EmailExpired
+  },
+  props: {
+    email: String,
+    verificationKey: String
+  },
+  data() {
+    return {
+      status: 'pending'
+    }
+  },
+  methods: {
+    verifyKey() {
+      fetch('http://localhost:8080/api/verify', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+              'key': this.verificationKey,
+              'email': this.email
+            }
+        )
+      })
+          .then(response => {
+            if (response.status === 201) {
+              this.status = 'success'
+            } else if (response.status === 401) {
+              this.status = 'expired'
+            }
+          })
+    }
+  }
+  ,
+  mounted() {
+    this.verifyKey(this.verificationKey)
+  }
 }
 </script>
 
 <style scoped lang="scss">
 @import "src/assets/colors.scss";
 
-.view-container{
+.view-container {
   display: flex;
   flex-direction: column;
-  align-content: center;
-}
+  text-align: center;
+  align-items: center;
 
-svg{
-  background-color: $white;
-  width: 25%;
-  margin: 2rem auto 0 auto;
-}
+  h1 {
+    font-size: 1.75rem;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
 
-Login {
-  width: 100%;
-  background-color: $white;
+  svg {
+    background-color: $white;
+    width: 25%;
+    margin: 2rem auto 0 auto;
+  }
 }
 </style>
