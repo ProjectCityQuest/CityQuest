@@ -177,7 +177,8 @@
             "application/json": {
               "schema": {
                 "example": {
-                  "id": "in8/§bf93buhfb8!)°!unj"
+                  "id": "in8/§bf93buhfb8!)°!unj",
+                  "email": "dani@gmail.com"
                 }
               }
             }

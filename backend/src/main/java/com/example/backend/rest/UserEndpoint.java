@@ -34,7 +34,9 @@ public class UserEndpoint {
         if (UserServiceImpl.getUserByName(user.getUsername()) == null && UserServiceImpl.getUserByEmail(user.getEmail()) == null) {
             UserServiceImpl.addUser(user);
             try {
-                Emails.sendMail(user.getEmail());
+                String key = Strings.generateToken(24);
+                Emails.sendMail(user.getEmail(), key);
+                UserServiceImpl.addPendingEmail(key, user.getEmail());
                 LOG.info("Email Verification for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
             } catch(MessagingException mex) {
                 mex.printStackTrace();
@@ -47,6 +49,7 @@ public class UserEndpoint {
 
     @PostMapping("/login")
     public ResponseEntity<Object> UserLogin(@RequestBody User user, HttpServletResponse cookieResponse) {
+        LOG.info("/login issued with parameter: " + user);
         User currentUser = UserServiceImpl.getUserByName(user.getUsername());
 
         if (currentUser == null) {
@@ -65,11 +68,14 @@ public class UserEndpoint {
         }
     }
 
-    @PostMapping("/verify") // TODO: add email mapping
+    @PostMapping("/verify")
     public ResponseEntity<Object> UserVerify(@RequestBody UserVerifyDto request) {
-        Date date = UserServiceImpl.getPendingEmailVerifications().getOrDefault(request.getKey(), null);
-        System.out.println(request.getKey());
-        if (date == null) {
+        LOG.info("/register issued with parameter: " + request);
+        Date date = UserServiceImpl.getPendingEmailVerificationsDate().getOrDefault(request.getKey(), null);
+        String email = UserServiceImpl.getPendingEmailVerificationsEmail().getOrDefault(request.getKey(), null);
+        if (date == null || email == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
+        } else if(!email.equals(request.getEmail())) {
             return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
         } else {
             Calendar c = Calendar.getInstance();
@@ -79,6 +85,7 @@ public class UserEndpoint {
             if (validDate.after(date)) {
                 return new ResponseEntity<>(new ErrorDto("Der Link ist abgelaufen"), HttpStatus.UNAUTHORIZED);
             } else {
+                UserServiceImpl.getUserByEmail(request.getEmail()).setEmailIsVerified(true);
                 UserServiceImpl.removePendingEmailVerification(request.getKey());
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }
@@ -87,6 +94,7 @@ public class UserEndpoint {
 
     @GetMapping("/users")
     public ResponseEntity<Object> checkUserToken(@CookieValue(value = "X-API-KEY") String token, HttpServletResponse cookieResponse) {
+        LOG.info("/users issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
             return new ResponseEntity<Object>(new ErrorDto("Es gibt keinen benutzer mit diesem Token"), HttpStatus.UNAUTHORIZED);
@@ -98,6 +106,7 @@ public class UserEndpoint {
 
     @PostMapping("/logout")
     public ResponseEntity<Object> userLogout(@CookieValue(value = "X-API-KEY") String token) {
+        LOG.info("/logout issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
             return new ResponseEntity<Object>(new ErrorDto("Es gibt keinen Benutzer mit diesem Token"), HttpStatus.BAD_REQUEST);
