@@ -22,4 +22,12 @@ public class UserVerifyDto {
     public void setKey(String key) {
         this.key = key;
     }
+
+    @Override
+    public String toString() {
+        return "UserVerifyDto{" +
+                "key='" + key + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

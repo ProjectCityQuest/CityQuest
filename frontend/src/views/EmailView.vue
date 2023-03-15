@@ -45,25 +45,28 @@ export default {
   },
   methods: {
     verifyKey() {
-      fetch('http://localhost:8080/api/verify', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-              'key': this.verificationKey,
-              'email': this.email
-            }
-        )
-      })
-          .then(response => {
-            if (response.status === 201) {
-              this.status = 'success'
-            } else if (response.status === 401) {
-              this.status = 'expired'
-            }
-          })
+      if (this.verificationKey !== undefined) {
+        this.email.replaceAll('-', '\.')
+        fetch('http://localhost:8080/api/verify', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+                'key': this.verificationKey,
+                'email': this.email.replaceAll('-', '\.')
+              }
+          )
+        })
+            .then(response => {
+              if (response.status === 201) {
+                this.status = 'success'
+              } else if (response.status === 401) {
+                this.status = 'expired'
+              }
+            })
+      }
     }
   }
   ,
