@@ -4,7 +4,7 @@ import router from './router'
 
 const app = createApp(App)
 
-import './assets/base.css'
+import './assets/base.scss'
 
 app.use(router)
 

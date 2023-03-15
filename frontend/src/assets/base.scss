@@ -1,0 +1,22 @@
+@font-face {
+    font-family: 'Berlin Sans FB';
+    src: url('../assets/fonts/BRLNSR.ttf');
+}
+
+@font-face {
+    font-family: 'Berlin Sans FB Bold';
+    src: url('../assets/fonts/BRLNSB.ttf');
+}
+
+* {
+    font-family: 'Berlin Sans FB', sans-serif;
+    font-weight: 400;
+    font-size: 17px;
+    margin: 0;
+    padding: 0;
+    background-color: #F8F8F8;
+}
+
+button{
+    font-family: sans-serif;
+}

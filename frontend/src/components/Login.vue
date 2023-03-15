@@ -1,25 +1,15 @@
 <template>
   <div class="register-wrapper">
-    <p v-if="error" id="response-error">Der Benutzername/die E-Mail-Adresse existieren bereits. Bitte wähle einen/eine andern/andere.</p>
+    <p v-if="error" id="response-error">Der angegebene Benutzername oder das Passwort sind falsch. Bitte versuche es erneut.</p>
     <div v-else id="spacer"></div>
     <form @submit.prevent>
-      <!-- Firstname -->
+      <!-- Benutzername -->
       <label>Benutzername</label>
       <input class="username input-field" type="text"
              v-model="v$.form.username.$model"
              :class="status(v$.form.username)">
       <!-- error message -->
       <div class="input-errors" v-for="(error, index) of v$.form.username.$errors" :key="index">
-        <div class="error-msg">{{ error.$message }}</div>
-      </div>
-
-      <!-- Email -->
-      <label>E-Mail</label>
-      <input class="email input-field" type="email"
-             v-model="v$.form.email.$model"
-             :class="status(v$.form.email)">
-      <!-- error message -->
-      <div class="input-errors" v-for="(error, index) of v$.form.email.$errors" :key="index">
         <div class="error-msg">{{ error.$message }}</div>
       </div>
 
@@ -33,29 +23,21 @@
         <div class="error-msg">{{ error.$message }}</div>
       </div>
 
-      <!-- Confirm Password -->
-      <label>Passwort wiederholen</label>
-      <input class="password input-field" type="password"
-             v-model="v$.form.confirmPassword.$model"
-             :class="status(v$.form.confirmPassword)">
-      <!-- error message -->
-      <div class="input-errors" v-for="(error, index) of v$.form.confirmPassword.$errors" :key="index">
-        <div class="error-msg">{{ error.$message }}</div>
-      </div>
-
-      <button :disabled="v$.form.$invalid" @click="sendRegistration()">Registrieren</button>
+      <button :disabled="v$.form.$invalid" @click="sendLogin()">Login</button>
     </form>
     <div id="spacer"></div>
-    <router-link class="router-link" to="/login">Login</router-link>
+    <router-link class="router-link" to="/passwort-vergessen">Passwort vergessen?</router-link>
+    <div id="spacer2"></div>
+    <router-link class="router-link" to="/registrierung">Noch keinen Account?</router-link>
   </div>
 </template>
 
 <script>
 import useVuelidate from '@vuelidate/core'
-import {required$, email$, passwordMinLength$, passwordSameAs$} from "@/validators";
+import {required$, passwordMinLength$} from "@/validators";
 
 export default {
-  name: "Register",
+  name: "Login",
   setup() {
     return {v$: useVuelidate()}
   },
@@ -76,16 +58,9 @@ export default {
         username: {
           required$
         },
-        email: {
-          required$, email$
-        },
         password: {
           required$,
           min: passwordMinLength$(8)
-        },
-        confirmPassword: {
-          required$,
-          sameAsPassword: passwordSameAs$(this.form.password)
         }
       }
     }
@@ -97,8 +72,8 @@ export default {
         dirty: validation.$dirty
       }
     },
-    sendRegistration() {
-      fetch('http://localhost:8080/api/register', {
+    sendLogin() {
+      fetch('http://localhost:8080/api/login', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -106,14 +81,13 @@ export default {
         },
         body: JSON.stringify({
               'username': this.form.username,
-              'password': this.form.password,
-              'email': this.form.email
+              'password': this.form.password
             }
         )
       })
           .then(response => {
-            if (response.status === 201) {
-              window.location.replace('http://localhost:5173/email-verifizierung/'+(this.form.email.replaceAll('.','-')))
+            if (response.status === 200) {
+              window.location.replace('http://localhost:5173/map/')
             } else {
               this.error = true
             }
@@ -138,10 +112,15 @@ export default {
     color: $red;
     text-align: center;
     margin: 1.5rem 0 1.5rem 0;
+    width: 90%;
   }
 
   #spacer{
     height: 2rem;
+  }
+
+  #spacer2{
+    height: 1rem;
   }
 
   form {
