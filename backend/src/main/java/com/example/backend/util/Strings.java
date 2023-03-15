@@ -11,10 +11,4 @@ public class Strings {
         rand.nextBytes(b);
         return new String(Base64.getEncoder().encode(b));
     }
-
-    public static String generateToken(int amount) {
-        byte[] b = new byte[amount];
-        rand.nextBytes(b);
-        return new String(Base64.getEncoder().encode(b));
-    }
 }
