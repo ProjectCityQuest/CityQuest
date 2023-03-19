@@ -76,9 +76,9 @@ export default {
       fetch('http://localhost:8080/api/login', {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
+        credentials: 'same-origin',
         body: JSON.stringify({
               'username': this.form.username,
               'password': this.form.password
@@ -87,7 +87,10 @@ export default {
       })
           .then(response => {
             if (response.status === 200) {
-              window.location.replace('http://localhost:5173/map/')
+              console.log("Login successful")
+              console.log(response.headers.get('Date'))
+              console.log(document.cookie)
+              //window.location.replace('http://localhost:5173/map/')
             } else {
               this.error = true
             }
