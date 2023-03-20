@@ -1,9 +1,6 @@
 package com.example.backend.rest;
 
-import com.example.backend.dto.ErrorDto;
-import com.example.backend.dto.UserLoginDto;
-import com.example.backend.dto.UserRegisterDto;
-import com.example.backend.dto.UserVerifyDto;
+import com.example.backend.dto.*;
 import com.example.backend.entity.User;
 import com.example.backend.mapper.UserLoginMapping;
 import com.example.backend.mapper.UserRegisterMapping;
@@ -21,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api", method = {RequestMethod.GET, RequestMethod.PUT})
@@ -60,10 +59,7 @@ public class UserEndpoint {
             return new ResponseEntity<Object>(new ErrorDto("Die E-Mail-Adresse wurde noch nicht verifiziert"), HttpStatus.UNAUTHORIZED);
         } else {
             currentUser.setToken(Strings.generateToken());
-            Cookie cookie = new Cookie("X-API-KEY", currentUser.getToken());
-            cookie.setMaxAge(7 * 24 * 60 * 60);
-            cookieResponse.addCookie(cookie);
-            ResponseEntity<Object> response = new ResponseEntity<Object>(new UserLoginMapping(new UserLoginDto(currentUser)), HttpStatus.OK);
+            ResponseEntity<Object> response = new ResponseEntity<Object>(new AuthorizationDto(currentUser.getToken()), HttpStatus.OK);
             return response;
         }
     }
