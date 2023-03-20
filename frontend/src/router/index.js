@@ -87,6 +87,9 @@ const router = createRouter({
     ]
 })
 
+// runs on all path requests which have the meta-tag 'requiresAuth' set to 'true'
+// checks if the stored sessionKey is valid
+// if so the request is permitted, else the user gets redirected to the '/login' path
 router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (await checkSessionKey()) {
@@ -102,6 +105,9 @@ router.beforeEach(async (to, from, next) => {
     }
 })
 
+// runs on all path requests which have the meta-tag 'requiresNoCookie' set to 'true'
+// checks if there is not sessionKey or the stored sessionKey is invalid
+// if so the request is permitted, else the user gets redirected to the '/map' path
 router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresNoCookie)) {
         if (document.cookie.indexOf('sessionKey=')>-1) {
