@@ -110,12 +110,12 @@ router.beforeEach(async (to, from, next) => {
 // if so the request is permitted, else the user gets redirected to the '/map' path
 router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresNoCookie)) {
-        if (document.cookie.indexOf('sessionKey=')>-1) {
-            if (await checkSessionKey()){
+        if (document.cookie.indexOf('sessionKey=') > -1) {
+            if (await checkSessionKey()) {
                 next({
                     path: '/map'
                 })
-            }else {
+            } else {
                 document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
                 next()
             }
