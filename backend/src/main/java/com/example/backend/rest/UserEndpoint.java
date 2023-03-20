@@ -95,7 +95,6 @@ public class UserEndpoint {
         if (user == null) {
             return new ResponseEntity<Object>(new ErrorDto("Es gibt keinen benutzer mit diesem Token"), HttpStatus.UNAUTHORIZED);
         } else {
-            cookieResponse.addCookie(new Cookie("X-API-KEY", token));
             return new ResponseEntity<Object>(new UserLoginDto(user), HttpStatus.OK);
         }
     }
