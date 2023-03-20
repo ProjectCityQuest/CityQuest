@@ -18,7 +18,7 @@ function getCookie(cname) {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return false;
 }
 
 async function checkSessionKey() {
@@ -45,24 +45,36 @@ const router = createRouter({
         {
             path: '/login',
             name: 'login',
-            component: LoginView
+            component: LoginView,
+            meta: {
+                requiresNoCookie: true
+            }
         },
         {
             path: '/registrierung',
             name: 'registrierung',
-            component: RegisterView
+            component: RegisterView,
+            meta: {
+                requiresNoCookie: true
+            }
         },
         {
             path: '/email-verifizierung/:email/:verificationKey',
             name: 'email-verifizierung-checking',
             component: EmailView,
-            props: true
+            props: true,
+            meta: {
+                requiresNoCookie: true
+            }
         },
         {
             path: '/email-verifizierung/:email',
             name: 'email-verifizierung-pending',
             component: EmailView,
-            props: true
+            props: true,
+            meta: {
+                requiresNoCookie: true
+            }
         },
         {
             path: '/map',
@@ -83,6 +95,21 @@ router.beforeEach(async (to, from, next) => {
             next({
                 path: '/login'
             })
+        }
+    } else {
+        next()
+    }
+})
+
+router.beforeEach(async (to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresNoCookie)) {
+        if (getCookie('sessionKey') !== false) {
+
+            next({
+                path: '/map'
+            })
+        } else {
+            next()
         }
     } else {
         next()
