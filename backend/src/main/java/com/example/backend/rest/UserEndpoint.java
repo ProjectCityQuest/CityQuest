@@ -89,7 +89,7 @@ public class UserEndpoint {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Object> checkUserToken(@CookieValue(value = "X-API-KEY") String token, HttpServletResponse cookieResponse) {
+    public ResponseEntity<Object> checkUserToken(@RequestHeader(value = "sessionKey") String token, HttpServletResponse cookieResponse) {
         LOG.info("/users issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
