@@ -87,10 +87,9 @@ export default {
         )
       })
       if (response.status === 200) {
-        console.log("Login successful")
         let data = await response.json()
-        console.log(data.sessionKey)
-        //window.location.replace('http://localhost:5173/map/')
+        document.cookie = "sessionKey="+data.sessionKey
+        window.location.replace('http://localhost:5173/map/')
       } else {
         this.error = true
       }
