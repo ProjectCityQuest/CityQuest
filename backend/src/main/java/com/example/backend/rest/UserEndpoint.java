@@ -37,7 +37,7 @@ public class UserEndpoint {
                 Emails.sendMail(user.getEmail(), key);
                 UserServiceImpl.addPendingEmail(key, user.getEmail());
                 LOG.info("Email Verification for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
-            } catch(MessagingException mex) {
+            } catch (MessagingException mex) {
                 mex.printStackTrace();
             }
             return new ResponseEntity<Object>(new UserRegisterMapping(new UserRegisterDto(user), false), HttpStatus.CREATED);
@@ -71,7 +71,7 @@ public class UserEndpoint {
         String email = UserServiceImpl.getPendingEmailVerificationsEmail().getOrDefault(request.getKey(), null);
         if (date == null || email == null) {
             return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
-        } else if(!email.equals(request.getEmail())) {
+        } else if (!email.equals(request.getEmail())) {
             return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
         } else {
             Calendar c = Calendar.getInstance();
