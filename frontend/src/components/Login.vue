@@ -72,12 +72,13 @@ export default {
         dirty: validation.$dirty
       }
     },
-    sendLogin() {
-      fetch('http://localhost:8080/api/login', {
+    async sendLogin() {
+      const response = await fetch('http://127.0.0.1:8080/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
+        withCredentials: true,
         credentials: 'same-origin',
         body: JSON.stringify({
               'username': this.form.username,
@@ -85,16 +86,14 @@ export default {
             }
         )
       })
-          .then(response => {
-            if (response.status === 200) {
-              console.log("Login successful")
-              console.log(response.headers.get('Date'))
-              console.log(document.cookie)
-              //window.location.replace('http://localhost:5173/map/')
-            } else {
-              this.error = true
-            }
-          })
+      if (response.status === 200) {
+        console.log("Login successful")
+        let data = await response.json()
+        console.log(data.sessionKey)
+        //window.location.replace('http://localhost:5173/map/')
+      } else {
+        this.error = true
+      }
     }
   }
 }
