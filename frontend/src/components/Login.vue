@@ -89,7 +89,8 @@ export default {
       })
       if (response.status === 200) {
         let data = await response.json()
-        document.cookie = "sessionKey=" + data.sessionKey
+        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+        document.cookie = "sessionKey=" + data.sessionKey + "; path=/"
         window.location.replace('http://localhost:5173/map/')
       } else {
         this.error = true
