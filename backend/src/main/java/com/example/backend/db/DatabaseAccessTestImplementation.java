@@ -1,6 +1,7 @@
 package com.example.backend.db;
 
 import com.example.backend.entity.User;
+import com.example.backend.service.UserServiceImpl;
 import com.example.backend.util.Strings;
 
 import java.util.ArrayList;
@@ -41,5 +42,11 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
     @Override
     public User getUserByEmail(String email) {
         return userList.stream().filter(x -> x.getEmail().equals(email)).findFirst().orElse(null);
+    }
+
+    @Override
+    public void createUser(User user) {
+        user.setId(UserServiceImpl.getUserList().size());
+        userList.add(user);
     }
 }

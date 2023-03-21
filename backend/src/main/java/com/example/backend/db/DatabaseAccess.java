@@ -8,4 +8,5 @@ public interface DatabaseAccess {
     public List<User> getAllUser();
     public User getUserById(int id);
     public User getUserByEmail(String email);
+    public void createUser(User user);
 }
