@@ -5,6 +5,8 @@ import RegisterView from "@/views/RegisterView.vue";
 import EmailView from "@/views/EmailView.vue";
 import MapView from "@/views/MapView.vue";
 
+// gets the value of a cookie by name
+// if the cookie doesn't exist, the function returns 'false'
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -21,6 +23,8 @@ function getCookie(cname) {
     return false;
 }
 
+// gets the value of the sessionKey cookie, then check its validity by sending it to the backend
+// it returns a boolean, which indicates, if the response status of this request is 200 or not
 async function checkSessionKey() {
     const response = await fetch('http://127.0.0.1:8080/api/users', {
         method: 'GET',
