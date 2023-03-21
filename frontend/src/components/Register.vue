@@ -3,7 +3,7 @@
     <p v-if="error" id="response-error">Der Benutzername/die E-Mail-Adresse existieren bereits. Bitte wähle einen/eine andern/andere.</p>
     <div v-else id="spacer"></div>
     <form @submit.prevent>
-      <!-- Firstname -->
+      <!-- Username -->
       <label>Benutzername</label>
       <input class="username input-field" type="text"
              v-model="v$.form.username.$model"
