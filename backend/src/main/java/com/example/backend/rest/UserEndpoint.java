@@ -1,9 +1,6 @@
 package com.example.backend.rest;
 
-import com.example.backend.dto.ErrorDto;
-import com.example.backend.dto.UserLoginDto;
-import com.example.backend.dto.UserRegisterDto;
-import com.example.backend.dto.UserVerifyDto;
+import com.example.backend.dto.*;
 import com.example.backend.entity.User;
 import com.example.backend.mapper.UserLoginMapping;
 import com.example.backend.mapper.UserRegisterMapping;
@@ -21,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api", method = {RequestMethod.GET, RequestMethod.PUT})
@@ -38,7 +37,7 @@ public class UserEndpoint {
                 Emails.sendMail(user.getEmail(), key);
                 UserServiceImpl.addPendingEmail(key, user.getEmail());
                 LOG.info("Email Verification for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
-            } catch(MessagingException mex) {
+            } catch (MessagingException mex) {
                 mex.printStackTrace();
             }
             return new ResponseEntity<Object>(new UserRegisterMapping(new UserRegisterDto(user), false), HttpStatus.CREATED);
@@ -60,10 +59,7 @@ public class UserEndpoint {
             return new ResponseEntity<Object>(new ErrorDto("Die E-Mail-Adresse wurde noch nicht verifiziert"), HttpStatus.UNAUTHORIZED);
         } else {
             currentUser.setToken(Strings.generateToken());
-            Cookie cookie = new Cookie("X-API-KEY", currentUser.getToken());
-            cookie.setMaxAge(7 * 24 * 60 * 60);
-            cookieResponse.addCookie(cookie);
-            ResponseEntity<Object> response = new ResponseEntity<Object>(new UserLoginMapping(new UserLoginDto(currentUser)), HttpStatus.OK);
+            ResponseEntity<Object> response = new ResponseEntity<Object>(new AuthorizationDto(currentUser.getToken()), HttpStatus.OK);
             return response;
         }
     }
@@ -75,7 +71,7 @@ public class UserEndpoint {
         String email = UserServiceImpl.getPendingEmailVerificationsEmail().getOrDefault(request.getKey(), null);
         if (date == null || email == null) {
             return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
-        } else if(!email.equals(request.getEmail())) {
+        } else if (!email.equals(request.getEmail())) {
             return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
         } else {
             Calendar c = Calendar.getInstance();
@@ -93,13 +89,12 @@ public class UserEndpoint {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Object> checkUserToken(@CookieValue(value = "X-API-KEY") String token, HttpServletResponse cookieResponse) {
+    public ResponseEntity<Object> checkUserToken(@RequestHeader(value = "sessionKey") String token, HttpServletResponse cookieResponse) {
         LOG.info("/users issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
             return new ResponseEntity<Object>(new ErrorDto("Es gibt keinen benutzer mit diesem Token"), HttpStatus.UNAUTHORIZED);
         } else {
-            cookieResponse.addCookie(new Cookie("X-API-KEY", token));
             return new ResponseEntity<Object>(new UserLoginDto(user), HttpStatus.OK);
         }
     }

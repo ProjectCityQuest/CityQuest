@@ -1,6 +1,7 @@
 <template>
   <div class="register-wrapper">
-    <p v-if="error" id="response-error">Der angegebene Benutzername oder das Passwort sind falsch. Bitte versuche es erneut.</p>
+    <p v-if="error" id="response-error">Der angegebene Benutzername oder das Passwort sind falsch. Bitte versuche es
+      erneut.</p>
     <div v-else id="spacer"></div>
     <form @submit.prevent>
       <!-- Benutzername -->
@@ -72,26 +73,28 @@ export default {
         dirty: validation.$dirty
       }
     },
-    sendLogin() {
-      fetch('http://localhost:8080/api/login', {
+    async sendLogin() {
+      const response = await fetch('http://127.0.0.1:8080/api/login', {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
+        withCredentials: true,
+        credentials: 'same-origin',
         body: JSON.stringify({
               'username': this.form.username,
               'password': this.form.password
             }
         )
       })
-          .then(response => {
-            if (response.status === 200) {
-              window.location.replace('http://localhost:5173/map/')
-            } else {
-              this.error = true
-            }
-          })
+      if (response.status === 200) {
+        let data = await response.json()
+        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+        document.cookie = "sessionKey=" + data.sessionKey + "; path=/"
+        window.location.replace('http://localhost:5173/map/')
+      } else {
+        this.error = true
+      }
     }
   }
 }
@@ -108,18 +111,18 @@ export default {
   align-items: center;
   background-color: $white;
 
-  #response-error{
+  #response-error {
     color: $red;
     text-align: center;
     margin: 1.5rem 0 1.5rem 0;
     width: 90%;
   }
 
-  #spacer{
+  #spacer {
     height: 2rem;
   }
 
-  #spacer2{
+  #spacer2 {
     height: 1rem;
   }
 
