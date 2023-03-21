@@ -44,14 +44,15 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
             String username = currentUser.get("username")+"";
             String password = currentUser.get("password")+"";
             String email = currentUser.get("email")+"";
+            boolean emailIsVerified = (boolean) currentUser.get("email_is_verified");
             String token = currentUser.get("token")+"";
             Date token_expiration_date = (Date)currentUser.get("token_expiration_date");
 
             User user = new User(username, email, password);
             user.setId(id);
             user.setToken(token);
+            user.setEmailIsVerified(emailIsVerified);
             userList.add(user);
-
         }
 
         return userList;
