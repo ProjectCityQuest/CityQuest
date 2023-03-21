@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.db.DatabaseAccess;
+import com.example.backend.db.DatabaseAccessImplementation;
 import com.example.backend.db.DatabaseAccessTestImplementation;
 import com.example.backend.entity.User;
 import com.example.backend.util.Strings;
@@ -9,12 +10,12 @@ import java.util.*;
 
 public class UserServiceImpl {
     private static List<User> userList = new ArrayList<>();
-    private DatabaseAccess DATABASE;
+    private static DatabaseAccess DATABASE;
     private static Map<String, Date> pendingEmailVerificationsDate = new HashMap<>();
     private static Map<String, String> pendingEmailVerificationsEmail = new HashMap<>();
 
     public UserServiceImpl() {
-        DATABASE = new DatabaseAccessTestImplementation();
+        DATABASE = new DatabaseAccessImplementation();
         userList = DATABASE.getAllUser();
 
         pendingEmailVerificationsDate.put(Strings.generateToken(24), new Date());
@@ -50,7 +51,7 @@ public class UserServiceImpl {
     }
 
     public static void addUser(User user) {
-        userList.add(user);
+        DATABASE.createUser(user);
     }
 
     public static User getUserByName(String name) {
