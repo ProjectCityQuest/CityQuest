@@ -1,9 +1,13 @@
+/**
+ * The purpose of this class is to format the response body for a {@value /register} request
+ */
+
 package com.example.backend.dto;
 
 import com.example.backend.entity.User;
 
 public class UserRegisterDto {
-    private int id;
+    private final int id;
     private String username;
     private String email;
     private String password;
@@ -16,10 +20,6 @@ public class UserRegisterDto {
 
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getEmail() {

@@ -1,3 +1,7 @@
+/**
+ * The purpose of this class is to format the response body for an authorization
+ */
+
 package com.example.backend.dto;
 
 public class AuthorizationDto {

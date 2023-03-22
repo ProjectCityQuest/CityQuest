@@ -1,3 +1,7 @@
+/**
+ * The purpose of this class is to format the response body for a verification
+ */
+
 package com.example.backend.dto;
 
 public class UserVerifyDto {
@@ -17,10 +21,6 @@ public class UserVerifyDto {
 
     public String getKey() {
         return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     @Override

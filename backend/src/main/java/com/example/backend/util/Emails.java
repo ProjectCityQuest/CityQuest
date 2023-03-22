@@ -1,6 +1,8 @@
-package com.example.backend.util;
+/**
+ * This class implements reusable email templates
+ */
 
-import com.fasterxml.jackson.databind.ser.std.InetAddressSerializer;
+package com.example.backend.util;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -41,7 +43,7 @@ public class Emails {
         message.setFrom(new InternetAddress(from));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
         message.setSubject("Bestätigen Sie Ihre Email!");
-        message.setContent("<h1>Verifizieren Sie Ihre Email</h1><hr><a href='http://"+ip+":5173/login/"+key+"'><button style='border:1px solid black;padding: 20px; color:black;'>Klicken Sie hier um Ihre Email zu verifizieren!</button></a><p>Falls Sie sich nicht bei CityQuest registriert haben, ignorieren Sie diese Email.</p>", "text/html");
+        message.setContent("<h1>Verifizieren Sie Ihre Email</h1><hr><a href='http://"+ip+":5173//email-verifizierung/" + to + "/"+key+"'><button style='border:1px solid black;padding: 20px; color:black;'>Klicken Sie hier um Ihre Email zu verifizieren!</button></a><p>Falls Sie sich nicht bei CityQuest registriert haben, ignorieren Sie diese Email.</p>", "text/html");
         Transport.send(message);
     }
 }
