@@ -13,9 +13,9 @@ import java.util.*;
 
 public class DatabaseAccessImplementation implements DatabaseAccess {
     /**
-     * @param DB_URL is the url of the database
-     * @param DB_USERNAME is the database users username
-     * @param DB_PASSWORD is the database users password
+     * DB_URL is the url of the database
+     * DB_USERNAME is the database users username
+     * DB_PASSWORD is the database users password
      */
 
     private String DB_URL = "jdbc:mysql://localhost:3306/cityquest";
@@ -23,12 +23,12 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
     private String DB_PASSWORD = "";
 
     /**
-     * @param jdbcTemplate handles all queries and requests to the database
+     * jdbcTemplate handles all queries and requests to the database
      */
     JdbcTemplate jdbcTemplate;
 
     /**
-     * @param userList contains all current Users
+     * userList contains all current Users
      */
     private static List<User> userList = new ArrayList<>();
 
@@ -57,7 +57,12 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
             String username = currentUser.get("username")+"";
             String password = currentUser.get("password")+"";
             String email = currentUser.get("email")+"";
-            boolean emailIsVerified = (boolean) currentUser.get("email_is_verified");
+            boolean emailIsVerified;
+            if (currentUser.get("email_is_verified") == null) {
+                emailIsVerified = false;
+            } else {
+                emailIsVerified = (boolean) currentUser.get("email_is_verified");
+            }
 
             User user = new User(username, email, password);
             user.setId(id);
