@@ -4,7 +4,6 @@
 </template>
 
 <script>
-
 import View from 'ol/View'
 import Map from 'ol/Map'
 import TileLayer from 'ol/layer/Tile'
@@ -15,43 +14,37 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import {circular} from 'ol/geom/Polygon';
 import Control from 'ol/control/Control';
-
-// importing the OpenLayers stylesheet is required for having
-// good-looking buttons!
+import {Fill, Icon, Style} from 'ol/style';
 import {fromLonLat} from "ol/proj";
+import kompas from 'kompas';
+
+// styles nav elements on map
 import 'ol/ol.css'
 
 export default {
   name: 'MapView',
-  components: {},
-  props: {},
+  data() {
+    return {
+      positionFound: false
+    }
+  },
   mounted() {
+    const map = new Map({
+      target: 'map', layers: [new TileLayer({
+        source: new OSM()
+      })], view: new View({
+        center: [0, 0], zoom: 2
+      })
+    });
+
     const source = new VectorSource();
     const layer = new VectorLayer({
       source: source,
     });
 
-    // this is where we create the OpenLayers map
-    const map = new Map({
-      // the map will be created using the 'map-root' ref
-      target: this.$refs['map-root'],
-      layers: [
-        // adding a background tiled layer
-        new TileLayer({
-          source: new OSM() // tiles are served by OpenStreetMap
-        }),
-      ],
-
-      // the map view will initially show the whole world
-      view: new View({
-        zoom: 0,
-        center: [0, 0],
-        constrainResolution: true
-      }),
-    })
-
     map.addLayer(layer)
 
+    // Draws GPS position on the map
     navigator.geolocation.watchPosition(
         function (pos) {
           const coords = [pos.coords.longitude, pos.coords.latitude];
@@ -72,9 +65,10 @@ export default {
         }
     );
 
+    // Locate button to instantly move to GPS position
     const locate = document.createElement('div');
     locate.className = 'ol-control ol-unselectable locate';
-    locate.innerHTML = '<button title="Locate me" class="locate">◎</button>';
+    locate.innerHTML = '<button title="Locate me">◎</button>';
     locate.addEventListener('click', function () {
       if (!source.isEmpty()) {
         map.getView().fit(source.getExtent(), {
@@ -88,6 +82,44 @@ export default {
           element: locate,
         })
     );
+
+    // Displays direction of device
+    const style = new Style({
+      fill: new Fill({
+        color: 'rgba(0, 0, 255, 0.2)',
+      }),
+      image: new Icon({
+        src: '/src/assets/location-heading.svg',
+        imgSize: [24, 24],
+        rotateWithView: true,
+      }),
+    });
+    layer.setStyle(style);
+
+    function startCompass() {
+      kompas()
+          .watch()
+          .on('heading', function (heading) {
+            style.getImage().setRotation((Math.PI / 180) * heading);
+          });
+    }
+
+    if (
+        window.DeviceOrientationEvent &&
+        typeof DeviceOrientationEvent.requestPermission === 'function'
+    ) {
+      locate.addEventListener('click', function () {
+        DeviceOrientationEvent.requestPermission()
+            .then(startCompass)
+            .catch(function (error) {
+              alert(`ERROR: ${error.message}`);
+            });
+      });
+    } else if ('ondeviceorientationabsolute' in window) {
+      startCompass();
+    } else {
+      alert('No device orientation provided by device');
+    }
   },
 }
 </script>
