@@ -14,7 +14,7 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import {circular} from 'ol/geom/Polygon';
 import Control from 'ol/control/Control';
-import {Fill, Icon, Style} from 'ol/style';
+import {Icon, Stroke, Style} from 'ol/style';
 import {fromLonLat} from "ol/proj";
 import kompas from 'kompas';
 
@@ -107,9 +107,11 @@ export default {
     /*
      Displays direction of device
      */
+
     const style = new Style({
-      fill: new Fill({
-        color: 'rgba(0, 0, 255, 0.2)',
+      stroke: new Stroke({
+        color: 'rgba(237, 54, 36, 0.6)',
+        lineDash: [4, 8]
       }),
       image: new Icon({
         src: '/src/assets/location-heading.svg',
@@ -117,7 +119,10 @@ export default {
         rotateWithView: true,
       }),
     });
-    layer.setStyle(style);
+
+    layer.setStyle(style)
+
+    map.addLayer(layer)
 
     function startCompass() {
       kompas()
