@@ -1,3 +1,13 @@
+/**
+ * This class is used to generate Tokens for
+ *
+ * @name sessionKey
+ * @length 64
+ *
+ * @name email verification
+ * @length variable
+ */
+
 package com.example.backend.util;
 
 import java.security.SecureRandom;

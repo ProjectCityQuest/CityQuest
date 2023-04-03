@@ -1,3 +1,9 @@
+/**
+ * This class implements the basic {@link com.example.backend.db.DatabaseAccess} interface
+ * and is used for test purposes
+ * All data using this class is volatile
+ */
+
 package com.example.backend.db;
 
 import com.example.backend.entity.User;
@@ -8,8 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseAccessTestImplementation implements DatabaseAccess {
+    /**
+     * userList contains all current Users
+     */
     public static List<User> userList = new ArrayList<>();
 
+    /**
+     * creates test data for testing purposes
+     */
     public DatabaseAccessTestImplementation() {
         User user = new User("Daniel Pillwein", "dani@gmail.com", "gutesPasswort");
         user.setId(0);
@@ -29,21 +41,33 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
         System.out.println(userList);
     }
 
+    /**
+     * @see DatabaseAccess
+     */
     @Override
     public List<User> getAllUser() {
         return userList;
     }
 
+    /**
+     * @see DatabaseAccess
+     */
     @Override
     public User getUserById(int id) {
         return userList.stream().filter(x -> x.getId() == id).findFirst().orElse(null);
     }
 
+    /**
+     * @see DatabaseAccess
+     */
     @Override
     public User getUserByEmail(String email) {
         return userList.stream().filter(x -> x.getEmail().equals(email)).findFirst().orElse(null);
     }
 
+    /**
+     * @see DatabaseAccess
+     */
     @Override
     public void createUser(User user) {
         user.setId(UserServiceImpl.getUserList().size());

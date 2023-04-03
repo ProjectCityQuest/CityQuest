@@ -1,14 +1,15 @@
+/**
+ * Rest API endpoint for all user-related requests
+ */
+
 package com.example.backend.rest;
 
 import com.example.backend.dto.*;
 import com.example.backend.entity.User;
-import com.example.backend.mapper.UserLoginMapping;
 import com.example.backend.mapper.UserRegisterMapping;
 import com.example.backend.service.UserServiceImpl;
 import com.example.backend.util.Emails;
 import com.example.backend.util.Strings;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api", method = {RequestMethod.GET, RequestMethod.PUT})
 public class UserEndpoint {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
+
+    /**
+     *
+     * @param user receives a user object formatted as json
+     * @return the http code and response body according to the openapi definition
+     */
 
     @PostMapping("/register")
     public ResponseEntity<Object> UserRegister(@RequestBody User user) {
@@ -46,8 +52,15 @@ public class UserEndpoint {
         }
     }
 
+
+    /**
+     *
+     * @param user receives a user object formatted as json
+     * @return the http code and response body according to the openapi definition
+     */
+
     @PostMapping("/login")
-    public ResponseEntity<Object> UserLogin(@RequestBody User user, HttpServletResponse cookieResponse) {
+    public ResponseEntity<Object> UserLogin(@RequestBody User user) {
         LOG.info("/login issued with parameter: " + user);
         User currentUser = UserServiceImpl.getUserByName(user.getUsername());
 
@@ -63,6 +76,12 @@ public class UserEndpoint {
             return response;
         }
     }
+
+    /**
+     *
+     * @param request contains credentials to verify the email of a user
+     * @return the http code and response body according to the openapi definition
+     */
 
     @PostMapping("/verify")
     public ResponseEntity<Object> UserVerify(@RequestBody UserVerifyDto request) {
@@ -88,8 +107,14 @@ public class UserEndpoint {
         }
     }
 
+    /**
+     *
+     * @param token is the sessionKey of a user and checks whether this key is valid
+     * @return the http code and response body according to the openapi definition
+     */
+
     @GetMapping("/users")
-    public ResponseEntity<Object> checkUserToken(@RequestHeader(value = "sessionKey") String token, HttpServletResponse cookieResponse) {
+    public ResponseEntity<Object> checkUserToken(@RequestHeader(value = "sessionKey") String token) {
         LOG.info("/users issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
@@ -98,6 +123,12 @@ public class UserEndpoint {
             return new ResponseEntity<Object>(new UserLoginDto(user), HttpStatus.OK);
         }
     }
+
+    /**
+     *
+     * @param token is the sessionKey of a user to disable the key and logout the user
+     * @return the http code and response body according to the openapi definition
+     */
 
     @PostMapping("/logout")
     public ResponseEntity<Object> userLogout(@CookieValue(value = "X-API-KEY") String token) {

@@ -1,6 +1,9 @@
-package com.example.backend.entity;
+/**
+ * This is the Class for the User Objects
+ * The format is the same as in the database
+ */
 
-import com.example.backend.service.UserServiceImpl;
+package com.example.backend.entity;
 
 public class User {
     private int id;

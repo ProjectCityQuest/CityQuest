@@ -1,11 +1,15 @@
+/**
+ * The purpose of this class is to format the response body for a {@value /login} request
+ */
+
 package com.example.backend.dto;
 
 import com.example.backend.entity.User;
 
 public class UserLoginDto {
-    private int id;
-    private String name;
-    private String email;
+    private final int id;
+    private final String name;
+    private final String email;
 
     public int getId() {
         return id;

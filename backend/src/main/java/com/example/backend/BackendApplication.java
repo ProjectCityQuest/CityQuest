@@ -1,3 +1,11 @@
+/**
+ * Main Class of the Backend Application using:
+ * @software Springboot
+ * @version 3.0.1
+ *
+ * Execute this file to start the Backend Application
+ */
+
 package com.example.backend;
 
 import com.example.backend.service.UserServiceImpl;

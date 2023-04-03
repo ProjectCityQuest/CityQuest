@@ -1,11 +1,14 @@
+/**
+ * This class is just a formatter to return the json body of a {@value /register} request in the correct format
+ */
+
 package com.example.backend.mapper;
 
 import com.example.backend.dto.UserRegisterDto;
-import com.example.backend.entity.User;
 
 public class UserRegisterMapping {
-    private UserRegisterDto user;
-    private boolean emailVerified;
+    private final UserRegisterDto user;
+    private final boolean emailVerified;
 
     @Override
     public String toString() {
