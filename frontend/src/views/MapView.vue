@@ -25,7 +25,8 @@ export default {
   name: 'MapView',
   data() {
     return {
-      positionFound: false
+      positionFound: false,
+      userPositionFound: false
     }
   },
   mounted() {
@@ -46,9 +47,25 @@ export default {
 
     map.addLayer(layer)
 
-    // Draws GPS position on the map
+    /*
+     Draws GPS position on the map
+     */
     navigator.geolocation.watchPosition(
-        function (pos) {
+        (pos) => {
+          // centers map on user position
+          if (!this.userPositionFound) {
+            try {
+              map.getView().fit(source.getExtent(), {
+                maxZoom: 18,
+                duration: 500,
+              });
+
+              this.userPositionFound = true;
+            } catch (err) {
+              console.log("User not located yet")
+            }
+          }
+
           const coords = [pos.coords.longitude, pos.coords.latitude];
           const accuracy = circular(coords, pos.coords.accuracy);
           source.clear(true);
@@ -67,7 +84,9 @@ export default {
         }
     );
 
-    // Locate button to instantly move to GPS position
+    /*
+     Locate button to instantly move to GPS position
+     */
     const locate = document.createElement('div');
     locate.className = 'ol-control ol-unselectable locate';
     locate.innerHTML = '<button title="Locate me">◎</button>';
@@ -85,7 +104,9 @@ export default {
         })
     );
 
-    // Displays direction of device
+    /*
+     Displays direction of device
+     */
     const style = new Style({
       fill: new Fill({
         color: 'rgba(0, 0, 255, 0.2)',
