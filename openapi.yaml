@@ -90,6 +90,51 @@ paths:
                     type: string
                     description: Die Fehlermeldung
           description: Die E-Mail-Adresse wurde noch nicht verifiziert
+  /verify:
+    post:
+      tags:
+        - public
+      description: Verifiziert die E-Mail-Adresse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                key: aa234adsklvneoiadv
+                email: 9137@htl.rennweg.at
+      responses:
+        201:
+          description: E-Mail-Adresse verifiziert
+        401:
+          description: Verifizierungs-Key existiert nicht oder ist abgelaufen
+          content:
+            application/json:
+              example:
+                error: Der Verifizierungs-Link ist ungültig oder abgelaufen
+  /resetpassword:
+    patch:
+      tags:
+        - public
+      description: Mit Zugriff auf die E-Mail-Adresse kann ich mein Passwort ändern
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                key: aa234adsklvneoiadv
+                email: 9137@htl.rennweg.at
+                new_password: Teesstt123!
+      responses:
+        204:
+          description: Password wurde geändert
+        401:
+          description: Verifizierungs-Key existiert nicht oder ist abgelaufen
+          content:
+            application/json:
+              example:
+                error: Der Passwort-Vergessen-Link ist ungültig oder abgelaufen
   /users:
     get:
       tags:
@@ -115,30 +160,6 @@ paths:
       responses:
         200:
           description: Dein Benutzer wurde gelöscht
-    patch:
-      tags:
-        - auth
-      description: Eigenes Passwort ändern
-      security:
-        - ApiKeyAuth: [ ]
-      requestBody:
-        required: true
-        description: Altes und neues Passwort
-        content:
-          application/json:
-            schema:
-              example:
-                new_password: gib8wizmarki
-                old_password: stubsi10!
-      responses:
-        204:
-          description: Passwort wurde geändert
-        409:
-          description: Altes Passwort stimmt nicht
-          content:
-            application/json:
-              example:
-                error: Altes Passwort stimmt nicht
   /logout:
     post:
       tags:
