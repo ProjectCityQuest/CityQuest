@@ -33,7 +33,7 @@ paths:
                 emailVerified: false
           description: JSON des hinzugefügten Benutzers
         '400':
-          content: 
+          content:
             application/json:
               example:
                 error: Der Benutzername oder die Email existiert bereits
@@ -44,7 +44,7 @@ paths:
         - public
       description: Benutzer loggt sich ein.
       security:
-        - {}
+        - { }
       requestBody:
         required: true
         description: Zugangsdaten
@@ -61,7 +61,7 @@ paths:
               example:
                 sessionKey: Lu9Tc1Pdola+SOnfPUxEkoKYuQLdjmsMK89uxT+RrrVegf1xQOI6Mpv5IXrYX6CVsukFLhwGzNH/zLMsuoBSbQ==
               schema:
-                type: String
+                type: string
                 properties:
                   sessionKey:
                     type: string
@@ -96,7 +96,7 @@ paths:
         - auth
       description: Prüft ob der gesetzte API-Token des Benutzers gültig ist
       security:
-        - ApiKeyAuth: []
+        - ApiKeyAuth: [ ]
       responses:
         '200':
           description: Benutzer erkannt
@@ -106,13 +106,46 @@ paths:
                 id: 10
                 name: Quantom
                 email: Quantom@myemail.com
+    delete:
+      tags:
+        - auth
+      description: Löscht den eigenen Benutzer
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        200:
+          description: Dein Benutzer wurde gelöscht
+    patch:
+      tags:
+        - auth
+      description: Eigenes Passwort ändern
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        description: Altes und neues Passwort
+        content:
+          application/json:
+            schema:
+              example:
+                new_password: gib8wizmarki
+                old_password: stubsi10!
+      responses:
+        204:
+          description: Passwort wurde geändert
+        409:
+          description: Altes Passwort stimmt nicht
+          content:
+            application/json:
+              example:
+                error: Altes Passwort stimmt nicht
   /logout:
     post:
       tags:
         - auth
       description: Benutzer loggt sich aus
       security:
-        - ApiKeyAuth: []
+        - ApiKeyAuth: [ ]
       responses:
         '204':
           description: User wurde abgemeldet
