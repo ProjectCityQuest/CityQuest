@@ -1,6 +1,9 @@
 <template>
   <div ref="map-root" id="map">
   </div>
+  <div class="ol-control ol-unselectable locate" ref="locate">
+    <button title="Locate me" @click="zoomToUser">◎</button>
+  </div>
 </template>
 
 <script>
@@ -50,10 +53,7 @@ export default {
             // centers map on user position
             if (!this.userPositionFound) {
               try {
-                this.map.getView().fit(this.vectorSource.getExtent(), {
-                  maxZoom: 18,
-                  duration: 500,
-                });
+                this.zoomToUser()
 
                 this.userPositionFound = true;
               } catch (err) {
@@ -79,21 +79,16 @@ export default {
           }
       );
     },
-    createLocateButton() {
-      this.locate = document.createElement('div');
-      this.locate.className = 'ol-control ol-unselectable locate';
-      this.locate.innerHTML = '<button title="Locate me">◎</button>';
-      this.locate.addEventListener('click', () => {
-        if (!this.vectorSource.isEmpty()) {
-          this.map.getView().fit(this.vectorSource.getExtent(), {
-            maxZoom: 18,
-            duration: 500,
-          });
-        }
+    zoomToUser() {
+      this.map.getView().fit(this.vectorSource.getExtent(), {
+        maxZoom: 18,
+        duration: 500,
       });
+    },
+    createLocateButton() {
       this.map.addControl(
           new Control({
-            element: this.locate,
+            element: this.$refs.locate,
           })
       );
     },
@@ -124,7 +119,7 @@ export default {
           window.DeviceOrientationEvent &&
           typeof DeviceOrientationEvent.requestPermission === 'function'
       ) {
-        this.locate.addEventListener('click', function () {
+        this.$refs.locate.addEventListener('click', function () {
           DeviceOrientationEvent.requestPermission()
               .then(startCompass)
               .catch(function (error) {
@@ -142,7 +137,7 @@ export default {
     this.initiateMap(true)
 
     this.vectorSource = new VectorSource();
-    this.vectorLayer= new VectorLayer({
+    this.vectorLayer = new VectorLayer({
       source: this.vectorSource,
     });
 
