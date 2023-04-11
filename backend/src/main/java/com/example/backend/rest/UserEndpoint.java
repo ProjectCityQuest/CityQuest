@@ -40,7 +40,7 @@ public class UserEndpoint {
             UserServiceImpl.addUser(user);
             try {
                 String key = Strings.generateToken(24);
-                Emails.sendMail(user.getEmail(), key);
+                Emails.sendVerificationMail(user.getEmail(), key);
                 UserServiceImpl.addPendingEmail(key, user.getEmail());
                 LOG.info("Email Verification for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
             } catch (MessagingException mex) {
@@ -157,5 +157,27 @@ public class UserEndpoint {
             UserServiceImpl.removeUser(user);
             return new ResponseEntity<>(HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/forgotpassword")
+    public ResponseEntity<Object> resetPassword(@RequestBody User request) {
+        LOG.info("GET /forgotpassword issued with parameters: " + request.getEmail());
+
+        User user = UserServiceImpl.getUserByEmail(request.getEmail());
+
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Es gibt keinen Benutzer mit der angegebenen Email-Adresse"), HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            String key = Strings.generateToken(24);
+            Emails.sendPasswordResetMail(user.getEmail(), key);
+            UserServiceImpl.addPendingPasswordReset(key, user.getEmail());
+            LOG.info("Password reset email for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
