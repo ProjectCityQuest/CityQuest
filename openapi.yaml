@@ -113,7 +113,7 @@ paths:
               example:
                 error: Der Verifizierungs-Link ist ungültig oder abgelaufen
   /forgotpassword:
-    patch:
+    get:
       tags:
         - public
       description: Es wird eine Email verschickt mit der das Passwort zurückgesetzt werden kann
