@@ -34,21 +34,21 @@ public class UserEndpoint {
 
     @PostMapping("/register")
     public ResponseEntity<Object> UserRegister(@RequestBody User user) {
-        LOG.info("/register issued with parameter: " + user);
+        LOG.info("POST /register issued with parameter: " + user);
 
         if (UserServiceImpl.getUserByName(user.getUsername()) == null && UserServiceImpl.getUserByEmail(user.getEmail()) == null) {
             UserServiceImpl.addUser(user);
             try {
                 String key = Strings.generateToken(24);
-                Emails.sendMail(user.getEmail(), key);
+                Emails.sendVerificationMail(user.getEmail(), key);
                 UserServiceImpl.addPendingEmail(key, user.getEmail());
                 LOG.info("Email Verification for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
             } catch (MessagingException mex) {
                 mex.printStackTrace();
             }
-            return new ResponseEntity<Object>(new UserRegisterMapping(new UserRegisterDto(user), false), HttpStatus.CREATED);
+            return new ResponseEntity<>(new UserRegisterMapping(new UserRegisterDto(user), false), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<Object>(new ErrorDto("Der Benutzername oder die Email existiert bereits"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorDto("Der Benutzername oder die Email existiert bereits"), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -61,19 +61,18 @@ public class UserEndpoint {
 
     @PostMapping("/login")
     public ResponseEntity<Object> UserLogin(@RequestBody User user) {
-        LOG.info("/login issued with parameter: " + user);
+        LOG.info("POST /login issued with parameter: " + user);
         User currentUser = UserServiceImpl.getUserByName(user.getUsername());
 
         if (currentUser == null) {
-            return new ResponseEntity<Object>(new ErrorDto("Falscher Benutzername oder falsches Passwort"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorDto("Falscher Benutzername oder falsches Passwort"), HttpStatus.BAD_REQUEST);
         } else if (!currentUser.getPassword().equals(user.getPassword())) {
-            return new ResponseEntity<Object>(new ErrorDto("Falscher Benutzername oder falsches Passwort"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorDto("Falscher Benutzername oder falsches Passwort"), HttpStatus.BAD_REQUEST);
         } else if (!currentUser.isEmailIsVerified()) {
-            return new ResponseEntity<Object>(new ErrorDto("Die E-Mail-Adresse wurde noch nicht verifiziert"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ErrorDto("Die E-Mail-Adresse wurde noch nicht verifiziert"), HttpStatus.UNAUTHORIZED);
         } else {
             currentUser.setToken(Strings.generateToken());
-            ResponseEntity<Object> response = new ResponseEntity<Object>(new AuthorizationDto(currentUser.getToken()), HttpStatus.OK);
-            return response;
+            return new ResponseEntity<>(new AuthorizationDto(currentUser.getToken()), HttpStatus.OK);
         }
     }
 
@@ -85,7 +84,7 @@ public class UserEndpoint {
 
     @PostMapping("/verify")
     public ResponseEntity<Object> UserVerify(@RequestBody UserVerifyDto request) {
-        LOG.info("/verify issued with parameter: " + request);
+        LOG.info("POST /verify issued with parameter: " + request);
         Date date = UserServiceImpl.getPendingEmailVerificationsDate().getOrDefault(request.getKey(), null);
         String email = UserServiceImpl.getPendingEmailVerificationsEmail().getOrDefault(request.getKey(), null);
         if (date == null || email == null) {
@@ -115,12 +114,12 @@ public class UserEndpoint {
 
     @GetMapping("/users")
     public ResponseEntity<Object> checkUserToken(@RequestHeader(value = "sessionKey") String token) {
-        LOG.info("/users issued with parameter: " + token);
+        LOG.info("GET /users issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
-            return new ResponseEntity<Object>(new ErrorDto("Es gibt keinen benutzer mit diesem Token"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ErrorDto("Es gibt keinen benutzer mit diesem Token"), HttpStatus.UNAUTHORIZED);
         } else {
-            return new ResponseEntity<Object>(new UserLoginDto(user), HttpStatus.OK);
+            return new ResponseEntity<>(new UserLoginDto(user), HttpStatus.OK);
         }
     }
 
@@ -131,15 +130,55 @@ public class UserEndpoint {
      */
 
     @PostMapping("/logout")
-    public ResponseEntity<Object> userLogout(@CookieValue(value = "X-API-KEY") String token) {
-        LOG.info("/logout issued with parameter: " + token);
+    public ResponseEntity<Object> userLogout(@RequestHeader(value = "sessionKey") String token) {
+        LOG.info("POST /logout issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
-            return new ResponseEntity<Object>(new ErrorDto("Es gibt keinen Benutzer mit diesem Token"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorDto("Es gibt keinen Benutzer mit diesem Token"), HttpStatus.BAD_REQUEST);
         } else {
             user.setToken(null);
-            return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+    }
+
+    /**
+     *
+     * @param token is the sessionKey of a user to delete the account of this user
+     * @return the http code and response body according to the openapi definition
+     */
+
+    @DeleteMapping("/users")
+    public ResponseEntity<Object> userDelete(@RequestHeader(value = "sessionKey") String token) {
+        LOG.info("DELETE /users issued with parameter: " + token);
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Es gibt keinen Benutzer mit diesem Token"), HttpStatus.BAD_REQUEST);
+        } else {
+            UserServiceImpl.removeUser(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/forgotpassword")
+    public ResponseEntity<Object> resetPassword(@RequestBody User request) {
+        LOG.info("GET /forgotpassword issued with parameters: " + request.getEmail());
+
+        User user = UserServiceImpl.getUserByEmail(request.getEmail());
+
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Es gibt keinen Benutzer mit der angegebenen Email-Adresse"), HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            String key = Strings.generateToken(24);
+            Emails.sendPasswordResetMail(user.getEmail(), key);
+            UserServiceImpl.addPendingPasswordReset(key, user.getEmail());
+            LOG.info("Password reset email for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
