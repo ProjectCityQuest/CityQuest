@@ -141,4 +141,18 @@ public class UserEndpoint {
             return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
         }
     }
+
+    /**
+     *
+     * @param request contains the request contents according to the openapi definition
+     * @see ChangePasswordDto
+     * @return the http code and response body according to the openapi definition
+     */
+
+    @PatchMapping("/changepassword")
+    public ResponseEntity<Object> changePassword(@RequestBody ChangePasswordDto request) {
+        LOG.info("PATCH /changepassword issued with parameter: " + request);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
