@@ -21,8 +21,7 @@ public class UserServiceImpl {
      * @key Token of the email Verification
      * @value timestamp as a Date Object
      */
-    private static Map<String, Date> pendingEmailVerificationsDate = new HashMap<>();
-
+    private static final Map<String, Date> pendingEmailVerificationsDate = new HashMap<>();
 
     /**
      * This map contains the email address of the user which received a verification email
@@ -31,6 +30,22 @@ public class UserServiceImpl {
      * @value email address of the user
      */
     private static final Map<String, String> pendingEmailVerificationsEmail = new HashMap<>();
+
+    /**
+     * This map contains the email address of the user which wants to reset its password
+     *
+     * @key Token of the password reset
+     * @value email address of the user
+     */
+    private static final Map<String, String> pendingPasswordResetEmail = new HashMap<>();
+
+    /**
+     * This map contains the timestamp of when the password reset mail got sent
+     *
+     * @key Token of the password reset
+     * @value timestamp as a Date Object
+     */
+    private static final Map<String, Date> pendingPasswordResetDate = new HashMap<>();
 
     /**
      * This contructor creates loads the already existing users and prints logs into console
@@ -137,5 +152,44 @@ public class UserServiceImpl {
 
     public static User getUserById(int id) {
         return getUserList().stream().filter(x -> x.getId() == id).findFirst().orElse(null);
+    }
+
+    /**
+     *
+     * @param id is the token that was generated and sent with the email to reset the password
+     * @param email of the user
+     */
+
+    public static void addPendingPasswordReset(String id, String email) {
+        pendingPasswordResetEmail.put(id, email);
+        pendingPasswordResetDate.put(id, new Date());
+    }
+
+    /**
+     *
+     * @param id is the token that was generated and sent with the email to reset the password
+     */
+
+    public static void removePendingPasswordReset(String id) {
+        pendingPasswordResetDate.remove(id);
+        pendingPasswordResetEmail.remove(id);
+    }
+
+    /**
+     *
+     * @return the Map of pending password reset dates
+     */
+
+    public static Map<String, Date> getPendingPasswordResetDate() {
+        return pendingPasswordResetDate;
+    }
+
+    /**
+     *
+     * @return the Map of pending password reset emails
+     */
+
+    public static Map<String, String> getPendingPasswordResetEmail() {
+        return pendingPasswordResetEmail;
     }
 }
