@@ -33,7 +33,7 @@ paths:
                 emailVerified: false
           description: JSON des hinzugefügten Benutzers
         '400':
-          content: 
+          content:
             application/json:
               example:
                 error: Der Benutzername oder die Email existiert bereits
@@ -44,7 +44,7 @@ paths:
         - public
       description: Benutzer loggt sich ein.
       security:
-        - {}
+        - { }
       requestBody:
         required: true
         description: Zugangsdaten
@@ -61,7 +61,7 @@ paths:
               example:
                 sessionKey: Lu9Tc1Pdola+SOnfPUxEkoKYuQLdjmsMK89uxT+RrrVegf1xQOI6Mpv5IXrYX6CVsukFLhwGzNH/zLMsuoBSbQ==
               schema:
-                type: String
+                type: string
                 properties:
                   sessionKey:
                     type: string
@@ -90,13 +90,58 @@ paths:
                     type: string
                     description: Die Fehlermeldung
           description: Die E-Mail-Adresse wurde noch nicht verifiziert
+  /verify:
+    post:
+      tags:
+        - public
+      description: Verifiziert die E-Mail-Adresse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                key: aa234adsklvneoiadv
+                email: 9137@htl.rennweg.at
+      responses:
+        201:
+          description: E-Mail-Adresse verifiziert
+        401:
+          description: Verifizierungs-Key existiert nicht oder ist abgelaufen
+          content:
+            application/json:
+              example:
+                error: Der Verifizierungs-Link ist ungültig oder abgelaufen
+  /resetpassword:
+    patch:
+      tags:
+        - public
+      description: Mit Zugriff auf die E-Mail-Adresse kann ich mein Passwort ändern
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                key: aa234adsklvneoiadv
+                email: 9137@htl.rennweg.at
+                new_password: Teesstt123!
+      responses:
+        204:
+          description: Password wurde geändert
+        401:
+          description: Verifizierungs-Key existiert nicht oder ist abgelaufen
+          content:
+            application/json:
+              example:
+                error: Der Passwort-Vergessen-Link ist ungültig oder abgelaufen
   /users:
     get:
       tags:
         - auth
       description: Prüft ob der gesetzte API-Token des Benutzers gültig ist
       security:
-        - ApiKeyAuth: []
+        - ApiKeyAuth: [ ]
       responses:
         '200':
           description: Benutzer erkannt
@@ -106,13 +151,22 @@ paths:
                 id: 10
                 name: Quantom
                 email: Quantom@myemail.com
+    delete:
+      tags:
+        - auth
+      description: Löscht den eigenen Benutzer
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        200:
+          description: Dein Benutzer wurde gelöscht
   /logout:
     post:
       tags:
         - auth
       description: Benutzer loggt sich aus
       security:
-        - ApiKeyAuth: []
+        - ApiKeyAuth: [ ]
       responses:
         '204':
           description: User wurde abgemeldet
