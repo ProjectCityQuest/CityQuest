@@ -4,9 +4,12 @@
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
+  <NavBar :active-icon="2"></NavBar>
 </template>
 
 <script>
+import NavBar from "@/components/NavBar.vue";
+
 import View from 'ol/View'
 import Map from 'ol/Map'
 import TileLayer from 'ol/layer/Tile'
@@ -26,6 +29,7 @@ import 'ol/ol.css'
 
 export default {
   name: 'MapView',
+  components: {NavBar},
   data() {
     return {
       userPositionFound: false,
@@ -159,6 +163,11 @@ export default {
   border-style: none;
   margin: 0;
   padding: 0;
+
+  .ol-attribution {
+    // slightly illegal
+    display: none;
+  }
 }
 
 .locate {
