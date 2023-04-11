@@ -109,4 +109,15 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
 
         userList.add(newUser);
     }
+
+    /**
+     *
+     * @see DatabaseAccess
+     */
+
+    public void deleteUser(User user) {
+        // TODO: implement removing the user from the database
+
+        userList.remove(user);
+    }
 }

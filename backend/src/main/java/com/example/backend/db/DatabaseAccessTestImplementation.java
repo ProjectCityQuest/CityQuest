@@ -73,4 +73,13 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
         user.setId(UserServiceImpl.getUserList().size());
         userList.add(user);
     }
+
+    /**
+     *
+     * @see DatabaseAccess
+     */
+
+    public void deleteUser(User user) {
+        userList.remove(user);
+    }
 }

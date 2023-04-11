@@ -141,4 +141,15 @@ public class UserEndpoint {
             return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
         }
     }
+
+    @DeleteMapping("/users")
+    public ResponseEntity<Object> userDelete(@RequestHeader(value = "sessionKey") String token) {
+        User user = UserServiceImpl.getUserList().stream().filter(x -> x.getToken().equals(token)).findFirst().orElse(null);
+        if (user == null) {
+            return new ResponseEntity<Object>(new ErrorDto("Es gibt keinen Benutzer mit diesem Token"), HttpStatus.BAD_REQUEST);
+        } else {
+            UserServiceImpl.removeUser(user);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        }
+    }
 }
