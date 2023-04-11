@@ -46,7 +46,6 @@ export default {
   methods: {
     verifyKey() {
       if (this.verificationKey !== undefined) {
-        this.email.replaceAll('-', '\.')
         fetch('http://localhost:8080/api/verify', {
           method: 'POST',
           headers: {
