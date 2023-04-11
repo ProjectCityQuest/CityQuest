@@ -39,4 +39,11 @@ public interface DatabaseAccess {
      * @param user creates a user object
      */
     public void createUser(User user);
+
+    /**
+     *
+     * @param user deletes the given user
+     */
+
+    public void deleteUser(User user);
 }
