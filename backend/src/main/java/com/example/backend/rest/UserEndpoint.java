@@ -131,7 +131,7 @@ public class UserEndpoint {
      */
 
     @PostMapping("/logout")
-    public ResponseEntity<Object> userLogout(@CookieValue(value = "X-API-KEY") String token) {
+    public ResponseEntity<Object> userLogout(@RequestHeader(value = "sessionKey") String token) {
         LOG.info("/logout issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
