@@ -112,7 +112,28 @@ paths:
             application/json:
               example:
                 error: Der Verifizierungs-Link ist ungültig oder abgelaufen
-  /resetpassword:
+  /forgotpassword:
+    get:
+      tags:
+        - public
+      description: Es wird eine Email verschickt mit der das Passwort zurückgesetzt werden kann
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                email: 9137@htl.rennweg.at
+      responses:
+        201:
+          description: Email wurde verschickt
+        400: 
+          description: Es existiert keine Benutzer mit der Email-Adresse
+          content:
+            application/json:
+              example:
+                error: Es gibt keinen Benutzer mit der angegebenen Email-Adresse
+  /changepassword:
     patch:
       tags:
         - public

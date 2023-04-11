@@ -138,4 +138,9 @@ public class UserServiceImpl {
     public static User getUserById(int id) {
         return getUserList().stream().filter(x -> x.getId() == id).findFirst().orElse(null);
     }
+
+    public static void removeUser(User user) {
+        DATABASE.deleteUser(user);
+        userList.remove(user);
+    }
 }
