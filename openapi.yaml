@@ -156,7 +156,7 @@ paths:
             application/json:
               example:
                 error: Der Passwort-Vergessen-Link ist ungültig oder abgelaufen
-  /users:
+  /getusers:
     get:
       tags:
         - auth
@@ -172,6 +172,7 @@ paths:
                 id: 10
                 name: Quantom
                 email: Quantom@myemail.com
+  /deleteusers:
     delete:
       tags:
         - auth
