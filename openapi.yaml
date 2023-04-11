@@ -160,6 +160,12 @@ paths:
       responses:
         200:
           description: Dein Benutzer wurde gelöscht
+        400:
+          content:
+            application/json:
+              example:
+                error: Es gibt keinen Benutzer mit diesem Token
+          description: Der Benutzer existiert nicht
   /logout:
     post:
       tags:
