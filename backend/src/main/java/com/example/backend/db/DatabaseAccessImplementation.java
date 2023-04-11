@@ -18,9 +18,9 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      * DB_PASSWORD is the database users password
      */
 
-    private String DB_URL = "jdbc:mysql://localhost:3306/cityquest";
-    private String DB_USERNAME = "root";
-    private String DB_PASSWORD = "";
+    private final String DB_URL = "jdbc:mysql://localhost:3306/cityquest";
+    private final String DB_USERNAME = "root";
+    private final String DB_PASSWORD = "";
 
     /**
      * jdbcTemplate handles all queries and requests to the database
@@ -30,7 +30,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
     /**
      * userList contains all current Users
      */
-    private static List<User> userList = new ArrayList<>();
+    private static final List<User> userList = new ArrayList<>();
 
     /**
      * creates a connection between the database and the backend
@@ -108,5 +108,18 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         newUser.setId(id);
 
         userList.add(newUser);
+    }
+
+    /**
+     *
+     * @see DatabaseAccess
+     */
+
+    public void deleteUser(User user) {
+        String statement = "DELETE from User where pk_id = " + user.getId();
+        jdbcTemplate.execute(statement);
+        // TODO: implement removing the user from the database
+
+        userList.remove(user);
     }
 }

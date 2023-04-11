@@ -19,7 +19,7 @@ public class Strings {
     public static String generateToken() {
         byte[] b = new byte[64];
         rand.nextBytes(b);
-        return new String(Base64.getEncoder().encode(b)).replaceAll("=","");
+        return new String(Base64.getEncoder().encode(b)).replaceAll("[=/|\\\\]",((int) (Math.random() * 10))+"");
     }
 
     public static String generateToken(int amount) {

@@ -154,6 +154,11 @@ public class UserServiceImpl {
         return getUserList().stream().filter(x -> x.getId() == id).findFirst().orElse(null);
     }
 
+    public static void removeUser(User user) {
+        DATABASE.deleteUser(user);
+        userList.remove(user);
+    }
+
     /**
      *
      * @param id is the token that was generated and sent with the email to reset the password
