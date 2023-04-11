@@ -85,6 +85,7 @@ public class UserEndpoint {
 
     @PostMapping("/verify")
     public ResponseEntity<Object> UserVerify(@RequestBody UserVerifyDto request) {
+        System.out.println(request);
         LOG.info("/verify issued with parameter: " + request);
         Date date = UserServiceImpl.getPendingEmailVerificationsDate().getOrDefault(request.getKey(), null);
         String email = UserServiceImpl.getPendingEmailVerificationsEmail().getOrDefault(request.getKey(), null);
