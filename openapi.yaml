@@ -160,6 +160,8 @@ paths:
       responses:
         200:
           description: Dein Benutzer wurde gelöscht
+        400:
+          description: Der Benutzer existiert nicht
   /logout:
     post:
       tags:
