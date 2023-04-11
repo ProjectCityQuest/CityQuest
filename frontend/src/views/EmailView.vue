@@ -83,6 +83,8 @@ export default {
   flex-direction: column;
   text-align: center;
   align-items: center;
+  background-color: $white;
+  height: 100vh;
 
   h1 {
     font-size: 1.75rem;
