@@ -78,7 +78,7 @@ export default {
     }
 
     .map-icon {
-      fill: $orange;
+      fill: $blue;
     }
 
     .puzzle-icon {
@@ -86,7 +86,7 @@ export default {
     }
 
     .collection-icon {
-      fill: $blue;
+      fill: $orange;
     }
   }
 }
