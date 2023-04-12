@@ -104,7 +104,7 @@ export default {
         }),
         image: new Icon({
           src: '/src/assets/location-heading.svg',
-          imgSize: [24, 24],
+          imgSize: [64, 64],
           rotateWithView: true,
         }),
       });
