@@ -38,7 +38,6 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
         user.setToken(Strings.generateToken());
         user.setEmailIsVerified(false);
         userList.add(user);
-        System.out.println(userList);
     }
 
     /**

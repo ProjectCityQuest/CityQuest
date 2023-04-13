@@ -8,10 +8,14 @@ import com.example.backend.db.DatabaseAccess;
 import com.example.backend.db.DatabaseAccessImplementation;
 import com.example.backend.db.DatabaseAccessTestImplementation;
 import com.example.backend.entity.User;
+import com.example.backend.util.IP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class UserServiceImpl {
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     private static List<User> userList = new ArrayList<>();
     private static DatabaseAccess DATABASE;
 
@@ -52,10 +56,9 @@ public class UserServiceImpl {
      */
 
     public UserServiceImpl() {
+        LOG.info("Server running on IP: " + IP.getServerIP());
         DATABASE = new DatabaseAccessImplementation();
         userList = DATABASE.getAllUser();
-
-        System.out.println(userList);
     }
 
     /**
