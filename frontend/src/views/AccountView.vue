@@ -32,13 +32,34 @@
         </div>
       </div>
       <div class="account-actions">
-        <router-link class="router-link" to="passwort-ändern">Passwort ändern</router-link>
+        <router-link class="router-link" to="passwort-aendern">Passwort ändern</router-link>
         <button @click="logOutOverlayVisible = true">Abmelden</button>
         <button class="delete-account" @click="deleteAccountOverlayVisible = true">Account löschen</button>
       </div>
     </div>
-    <Overlay :is-visible="logOutOverlayVisible" @close-overlay="logOutOverlayVisible=false">test</Overlay>
-    <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">based
+    <Overlay :is-visible="logOutOverlayVisible" @close-overlay="logOutOverlayVisible=false">
+      <h1 class="overlay-header">Abmelden</h1>
+      <p class="overlay-info">
+        Bist du dir sicher, dass du dich abmelden möchtest?
+      </p>
+      <p class="overlay-info">
+        (Dein Puzzlefortschritt und deine Sammelbuch-Einträge bleiben bestehen)
+      </p>
+      <div class="action-wrapper">
+        <button class="overlay-action">Abmelden</button>
+      </div>
+    </Overlay>
+    <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">
+      <h1 class="overlay-header">Account löschen</h1>
+      <p class="overlay-info">
+        Bist du dir sicher, dass du deinen Account löschen möchtest?
+      </p>
+      <p class="overlay-info">
+        Dein Puzzlefortschritt und deine Sammelbuch-Einträge gehen verloren.
+      </p>
+      <div class="action-wrapper">
+        <button class="overlay-action">Account löschen</button>
+      </div>
     </Overlay>
     <NavBar :active-icon="1"></NavBar>
   </div>
@@ -175,5 +196,33 @@ export default {
     }
   }
 
+  .overlay-header {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 1rem;
+  }
+
+  .overlay-info {
+    font-size: 15px;
+    margin-bottom: 0.3rem;
+  }
+
+  .action-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+
+    .overlay-action {
+      font-family: 'Berlin Sans FB', sans-serif;
+      width: 90%;
+      height: 2rem;
+      font-weight: normal;
+      font-size: 15px;
+      border-radius: 10px;
+      background: $blue;
+      color: $white;
+      border: none;
+    }
+  }
 }
 </style>
