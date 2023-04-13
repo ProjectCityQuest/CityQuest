@@ -82,4 +82,8 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
     public void deleteUser(User user) {
         userList.remove(user);
     }
+
+    public void changePassword(User user, String password) {
+        UserServiceImpl.getUserById(user.getId()).setPassword(password);
+    }
 }

@@ -112,7 +112,7 @@ public class UserEndpoint {
      * @return the http code and response body according to the openapi definition
      */
 
-    @GetMapping("/users")
+    @GetMapping("/getusers")
     public ResponseEntity<Object> checkUserToken(@RequestHeader(value = "sessionKey") String token) {
         LOG.info("GET /users issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
@@ -147,7 +147,7 @@ public class UserEndpoint {
      * @return the http code and response body according to the openapi definition
      */
 
-    @DeleteMapping("/users")
+    @DeleteMapping("/deleteusers")
     public ResponseEntity<Object> userDelete(@RequestHeader(value = "sessionKey") String token) {
         LOG.info("DELETE /users issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
@@ -179,5 +179,37 @@ public class UserEndpoint {
         }
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /**
+     *
+     * @param request contains the request contents according to the openapi definition
+     * @see ChangePasswordDto
+     * @return the http code and response body according to the openapi definition
+     */
+
+    @PatchMapping("/changepassword")
+    public ResponseEntity<Object> changePassword(@RequestBody ChangePasswordDto request) {
+        LOG.info("PATCH /changepassword issued with parameter: " + request);
+
+        Date date = UserServiceImpl.getPendingPasswordResetDate().getOrDefault(request.getKey(), null);
+        String email = UserServiceImpl.getPendingPasswordResetEmail().getOrDefault(request.getKey(), null);
+        if (date == null || email == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
+        } else if (!email.equals(request.getEmail())) {
+            return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
+        } else {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date());
+            c.add(Calendar.MINUTE, -10);
+            Date validDate = c.getTime();
+            if (validDate.after(date)) {
+                return new ResponseEntity<>(new ErrorDto("Der Link ist abgelaufen"), HttpStatus.UNAUTHORIZED);
+            } else {
+                UserServiceImpl.changePassword(UserServiceImpl.getUserByEmail(request.getEmail()).getId(), request.getNew_password());
+                UserServiceImpl.removePendingPasswordReset(request.getKey());
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        }
     }
 }

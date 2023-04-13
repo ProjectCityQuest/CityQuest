@@ -6,6 +6,7 @@
 package com.example.backend.db;
 
 import com.example.backend.entity.User;
+import com.example.backend.service.UserServiceImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -118,8 +119,14 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
     public void deleteUser(User user) {
         String statement = "DELETE from User where pk_id = " + user.getId();
         jdbcTemplate.execute(statement);
-        // TODO: implement removing the user from the database
 
         userList.remove(user);
+    }
+
+    public void changePassword(User user, String password) {
+        String statement = "UPDATE User SET password = '" + password +"' WHERE pk_id = " + user.getId();
+        jdbcTemplate.execute(statement);
+
+        UserServiceImpl.getUserById(user.getId()).setPassword(password);
     }
 }

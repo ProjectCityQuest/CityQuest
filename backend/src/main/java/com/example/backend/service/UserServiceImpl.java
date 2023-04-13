@@ -197,4 +197,8 @@ public class UserServiceImpl {
     public static Map<String, String> getPendingPasswordResetEmail() {
         return pendingPasswordResetEmail;
     }
+
+    public static void changePassword(int id, String password) {
+        DATABASE.changePassword(getUserById(id), password);
+    }
 }

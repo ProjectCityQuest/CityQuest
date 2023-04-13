@@ -46,4 +46,6 @@ public interface DatabaseAccess {
      */
 
     public void deleteUser(User user);
+
+    public void changePassword(User user, String password);
 }

@@ -29,7 +29,7 @@ function getCookie(cname) {
 // gets the value of the sessionKey cookie, then check its validity by sending it to the backend
 // it returns a boolean, which indicates, if the response status of this request is 200 or not
 async function checkSessionKey() {
-    const response = await fetch('http://127.0.0.1:8080/api/users', {
+    const response = await fetch('http://127.0.0.1:8080/api/getusers', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
