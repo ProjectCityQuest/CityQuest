@@ -98,7 +98,7 @@ export default {
       }
     },
     sendRegistration() {
-      fetch('http://localhost:8080/api/register', {
+      fetch(`http://${window.location.hostname}:8080/api/register`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

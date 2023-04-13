@@ -74,7 +74,7 @@ export default {
       }
     },
     async sendLogin() {
-      const response = await fetch('http://127.0.0.1:8080/api/login', {
+      const response = await fetch(`http://${window.location.hostname}:8080/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ export default {
         let data = await response.json()
         document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
         document.cookie = "sessionKey=" + data.sessionKey + "; path=/"
-        window.location.replace('http://localhost:5173/map/')
+        this.$router.push("/karte");
       } else {
         this.error = true
       }
