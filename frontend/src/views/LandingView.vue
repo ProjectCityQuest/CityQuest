@@ -1,5 +1,10 @@
 <template>
- <p>Welcome to CityQuest</p>
+  <div class="view-container">
+    <p>Welcome to CityQuest</p>
+    <router-link to="/login">Login</router-link>
+    <br>
+    <router-link to="/registrierung">Registrieren</router-link>
+  </div>
 </template>
 
 <script>
@@ -9,4 +14,8 @@ export default {
 </script>
 
 <style scoped>
+.view-container {
+  background-image: url("../assets/background.png");
+  min-height: 100vh;
+}
 </style>

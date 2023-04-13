@@ -35,7 +35,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-content: center;
-  background-color: $white;
+  background-image: url("../assets/background.png");
 }
 
 svg{

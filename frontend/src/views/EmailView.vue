@@ -83,8 +83,8 @@ export default {
   flex-direction: column;
   text-align: center;
   align-items: center;
-  background-color: $white;
   height: 100vh;
+  background-image: url("../assets/background.png");
 
   h1 {
     font-size: 1.75rem;

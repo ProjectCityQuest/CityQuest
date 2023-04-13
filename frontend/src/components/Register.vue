@@ -132,7 +132,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: $white;
+
+  &:last-child {
+    margin-bottom: 1.5em;
+  }
 
   #response-error{
     color: $red;
