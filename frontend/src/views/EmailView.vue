@@ -83,7 +83,7 @@ export default {
   flex-direction: column;
   text-align: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background-image: url("../assets/background.png");
 
   h1 {

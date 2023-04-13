@@ -35,6 +35,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-content: center;
+  min-height: 100vh;
   background-image: url("../assets/background.png");
 }
 
