@@ -4,6 +4,9 @@ import LandingView from "@/views/LandingView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import EmailView from "@/views/EmailView.vue";
 import MapView from "@/views/MapView.vue";
+import AccountView from "@/views/AccountView.vue";
+import PuzzleView from "@/views/PuzzleView.vue";
+import CollectionView from "@/views/CollectionView.vue";
 
 // gets the value of a cookie by name
 // if the cookie doesn't exist, the function returns 'false'
@@ -81,9 +84,33 @@ const router = createRouter({
             }
         },
         {
-            path: '/map',
-            name: 'map',
+            path: '/account',
+            name: 'account',
+            component: AccountView,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: '/karte',
+            name: 'karte',
             component: MapView,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: '/puzzle',
+            name: 'puzzle',
+            component: PuzzleView,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: '/sammelbuch',
+            name: 'sammelbuch',
+            component: CollectionView,
             meta: {
                 requiresAuth: true
             }
