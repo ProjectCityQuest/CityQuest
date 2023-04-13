@@ -3,23 +3,43 @@
     <div class="account-wrapper">
       <h1>Mein Account</h1>
       <div class="profile-settings">
-        <div class="username">
-          <p>Benutzername</p>
-          <p>Lukas Schodl</p>
-        </div>
-        <div class="username">
-          <p>E-Mail-Adresse</p>
-          <p>lukas.schodl@htl.rennweg.at</p>
+        <nav>
+          <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg"
+               viewBox="0 0 139.81 139.31">
+            <path
+                d="M8.05,140.17l17.76-3.39a3.61,3.61,0,0,0,1.87-6.1L13.32,116.32a3.61,3.61,0,0,0-6.1,1.87L3.83,136A3.61,3.61,0,0,0,8.05,140.17Z"
+                transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
+            <path d="M127,49l12.74-12.74a13.09,13.09,0,0,0,0-18.52l-13-13a13.09,13.09,0,0,0-18.52,0L95.5,17.5Z"
+                  transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
+            <path d="M117.5,58.5,86,27,14.75,98.25A29,29,0,0,1,18.5,98,28.5,28.5,0,0,1,47,126.5c0,.89,0,1.76-.13,2.63Z"
+                  transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
+          </svg>
+        </nav>
+        <div class="edit-profile">
+          <div class="user-data-container">
+            <div class="username">
+              <h2>Benutzername</h2>
+              <p>Lukas Schodl</p>
+            </div>
+            <div class="email">
+              <h2>E-Mail-Adresse</h2>
+              <p>lukas.schodl@htl.rennweg.at</p>
+            </div>
+          </div>
+          <div class="image-container">
+            <img class="profile-picture" src="../assets/placeholder_profile.png" alt="Profilbild">
+          </div>
         </div>
       </div>
       <div class="account-actions">
         <router-link class="router-link" to="passwort-ändern">Passwort ändern</router-link>
         <button @click="logOutOverlayVisible = true">Abmelden</button>
-        <button @click="deleteAccountOverlayVisible = true">Account löschen</button>
+        <button class="delete-account" @click="deleteAccountOverlayVisible = true">Account löschen</button>
       </div>
     </div>
     <Overlay :is-visible="logOutOverlayVisible" @close-overlay="logOutOverlayVisible=false">test</Overlay>
-    <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">based</Overlay>
+    <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">based
+    </Overlay>
     <NavBar :active-icon="1"></NavBar>
   </div>
 </template>
@@ -53,21 +73,105 @@ export default {
     flex-direction: column;
     align-items: center;
 
+    h1 {
+      font-size: 32px;
+      margin: 1rem 1rem;
+    }
+
+    .profile-settings {
+      width: 90%;
+      border-radius: 10px;
+      background: $light_gray;
+      padding: 0.5rem 0 1rem 0;
+
+      nav {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 1rem;
+        margin-bottom: 0.5rem;
+
+        .edit-icon {
+          height: 25px;
+          width: 25px;
+        }
+      }
+
+      .edit-profile {
+        display: flex;
+        width: 100%;
+
+        .user-data-container {
+          width: 50%;
+          padding-left: 1rem;
+
+          h2 {
+            font-size: 20px;
+            margin-top: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          p {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .image-container {
+          width: 50%;
+          padding-right: 1rem;
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          overflow: hidden;
+
+          .profile-picture {
+            border-radius: 10px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+
     .account-actions {
       width: 60%;
+      margin-top: 1rem;
 
       button, .router-link {
-        display: block;
+        font-family: 'Berlin Sans FB', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
         width: 100%;
-        height: 3rem;
-        border: 2px solid transparent;
-        color: white;
-        margin-top: 2.5rem;
-        font-weight: bolder;
-        background: $blue;
+        height: 2.5rem;
+        margin-top: 1rem;
+        font-weight: normal;
         border-radius: 10px;
-        padding-left: 0.5rem;
+        background: $white;
+        color: $dark_gray;
+        border: 2px solid $gray;
+
+        &:hover {
+          background: $gray;
+          color: $white;
+        }
       }
+
+      .delete-account {
+        color: $dark_red;
+        border-color: $dark_red;
+
+        &:hover {
+          background: $dark_red;
+          color: $white;
+        }
+      }
+
     }
   }
 
