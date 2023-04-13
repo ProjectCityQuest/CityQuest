@@ -51,7 +51,6 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
     @Override
     public List<User> getAllUser() {
         List<Map<String, Object>> users = jdbcTemplate.queryForList("SELECT * FROM User");
-        System.out.println(users);
 
         for (Map<String, Object> currentUser :users) {
             int id = Integer.parseInt(currentUser.get("pk_id")+"");
