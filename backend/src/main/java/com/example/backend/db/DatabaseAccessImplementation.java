@@ -97,10 +97,13 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      * @see DatabaseAccess
      */
     public void createUser(User user) {
-        String statement = "insert into User (username, password, email) values ('" + user.getUsername() + "', '" + user.getPassword() + "', '" + user.getEmail() + "');";
-        jdbcTemplate.execute(statement);
+        String statement = "insert into User (username, password, email) values (?, ?, ?);";
+        Object[] params = new Object[] {user.getUsername(), user.getPassword(), user.getEmail()};
+        jdbcTemplate.update(statement, params);
 
-        List<Map<String, Object>> users = jdbcTemplate.queryForList("SELECT * FROM User where username = '"+user.getUsername()+"';");
+        String statement1 = "SELECT * FROM User where username = ?;";
+        Object[] params1 = {user.getUsername()};
+        List<Map<String, Object>> users = jdbcTemplate.queryForList(statement1, params1);
 
         Map<String, Object> currentUser = users.get(0);
 
