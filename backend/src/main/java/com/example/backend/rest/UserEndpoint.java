@@ -159,11 +159,11 @@ public class UserEndpoint {
         }
     }
 
-    @GetMapping("/forgotpassword")
-    public ResponseEntity<Object> resetPassword(@RequestBody User request) {
-        LOG.info("GET /forgotpassword issued with parameters: " + request.getEmail());
+    @GetMapping("/forgotpassword/{email}")
+    public ResponseEntity<Object> resetPassword(@PathVariable String email) {
+        LOG.info("GET /forgotpassword issued with parameters: " + email);
 
-        User user = UserServiceImpl.getUserByEmail(request.getEmail());
+        User user = UserServiceImpl.getUserByEmail(email);
 
         if (user == null) {
             return new ResponseEntity<>(new ErrorDto("Es gibt keinen Benutzer mit der angegebenen Email-Adresse"), HttpStatus.BAD_REQUEST);
