@@ -247,7 +247,7 @@ export default {
           width: 50%;
           padding-right: 1rem;
           display: flex;
-          justify-content: flex-end;
+          justify-content: center;
           align-items: center;
           overflow: hidden;
 
