@@ -46,7 +46,7 @@
         (Dein Puzzlefortschritt und deine Sammelbuch-Einträge bleiben bestehen)
       </p>
       <div class="action-wrapper">
-        <button class="overlay-action">Abmelden</button>
+        <button class="overlay-action" @click="requestLogout">Abmelden</button>
       </div>
     </Overlay>
     <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">
@@ -80,6 +80,23 @@ export default {
     }
   },
   methods: {
+    async requestLogout() {
+      const response = await fetch(`http://${window.location.hostname}:8080/api/logout`, {
+        method: 'POST',
+        headers: {
+          sessionKey: this.getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin'
+      });
+
+      if (response.ok) {
+        console.log("logout successful")
+        this.$router.push("/")
+        // deletes cookie
+        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+      }
+    },
     getCookie(cname) {
       let name = cname + "=";
       let decodedCookie = decodeURIComponent(document.cookie);
