@@ -19,7 +19,7 @@ public class Strings {
         int tokenLength = 64;
 
         for (int i = 0; i < tokenLength; i++) {
-            token.append((int) (Math.random() * (characterPool.length() + 1)));
+            token.append(characterPool.charAt((int) (Math.random() * (characterPool.length()))));
         }
 
         return token.toString();
