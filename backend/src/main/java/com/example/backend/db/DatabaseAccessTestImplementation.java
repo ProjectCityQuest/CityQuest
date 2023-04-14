@@ -38,6 +38,11 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
         user.setToken(Strings.generateToken());
         user.setEmailIsVerified(false);
         userList.add(user);
+        user = new User("Luki", "9137@htl.rennweg.at", "testtest");
+        user.setId(3);
+        user.setToken(Strings.generateToken());
+        user.setEmailIsVerified(true);
+        userList.add(user);
     }
 
     /**
