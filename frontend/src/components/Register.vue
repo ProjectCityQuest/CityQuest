@@ -113,7 +113,7 @@ export default {
       })
           .then(response => {
             if (response.status === 201) {
-              window.location.replace('http://localhost:5173/email-verifizierung/'+(this.form.email.replaceAll('.','-')))
+              this.$router.push('/email-verifizierung/' + (this.form.email.replaceAll('.','-')))
             } else {
               this.error = true
             }
