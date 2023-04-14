@@ -48,7 +48,7 @@
       <div class="action-wrapper">
         <button class="overlay-action" @click="requestLogout">Abmelden</button>
       </div>
-      <p class="overlay-error"></p>
+      <p class="overlay-error">{{ getLogoutError }}</p>
     </Overlay>
     <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">
       <h1 class="overlay-header">Account löschen</h1>
@@ -94,7 +94,6 @@ export default {
       });
 
       if (response.ok) {
-        console.log("account deletion successful")
         this.$router.push("/")
         // deletes cookie
         document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
@@ -122,10 +121,20 @@ export default {
       });
 
       if (response.ok) {
-        console.log("logout successful")
-        this.$router.push("/")
+        this.$router.push("/");
         // deletes cookie
-        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+      } else {
+        this.logoutError(response)
+      }
+    },
+    logoutError(response) {
+      if (response.ok) return
+
+      if (response.status === 400) {
+        response.json().then(data => this.errors.logout = data.error)
+      } else {
+        this.errors.logout = 'Das hat nicht geklappt ):'
       }
     },
     getCookie(cname) {
@@ -164,6 +173,9 @@ export default {
     },
     getDeleteAccountError() {
       return this.errors.deleteAccount;
+    },
+    getLogoutError() {
+      return this.errors.logout;
     }
   },
   async mounted() {
