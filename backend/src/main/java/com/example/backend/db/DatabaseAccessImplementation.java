@@ -10,9 +10,13 @@ import com.example.backend.service.UserServiceImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 public class DatabaseAccessImplementation implements DatabaseAccess {
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     /**
      * DB_URL is the url of the database
      * DB_USERNAME is the database users username
@@ -116,16 +120,21 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      */
 
     public void deleteUser(User user) {
-        String statement = "DELETE from User where pk_id = " + user.getId();
-        jdbcTemplate.execute(statement);
+        String statement = "DELETE from User where pk_id = ?";
+        jdbcTemplate.update(statement, user.getId());
 
         userList.remove(user);
+
+        LOG.info("User: '" + user.getUsername() + "' with Id: '" + user.getId() + "' has been deleted!");
     }
 
     public void changePassword(User user, String password) {
-        String statement = "UPDATE User SET password = '" + password +"' WHERE pk_id = " + user.getId();
-        jdbcTemplate.execute(statement);
+        String statement = "UPDATE User SET password = ? WHERE pk_id = ?";
+        Object[] params = new Object[] {password, user.getId()};
+        jdbcTemplate.update(statement, params);
 
         UserServiceImpl.getUserById(user.getId()).setPassword(password);
+
+        LOG.info("Password of User:'" + user.getUsername() + "' with Id: '" + user.getId() + "' has been changed to: '" + user.getPassword() + "'");
     }
 }

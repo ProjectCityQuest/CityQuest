@@ -225,7 +225,6 @@ public class UserEndpoint {
             return new ResponseEntity<>(new ErrorDto("Das angegebene Passwort ist falsch"), HttpStatus.UNAUTHORIZED);
         } else {
             UserServiceImpl.changePassword(user.getId(), request.getNewPassword());
-            LOG.info("Password of User:'" + user.getUsername() + "' with Id: '" + user.getId() + "' has been changed to: '" + user.getPassword());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
     }
