@@ -188,6 +188,28 @@ paths:
               example:
                 error: Es gibt keinen Benutzer mit diesem Token
           description: Der Benutzer existiert nicht
+  /changepasswordauth:
+    patch:
+      tags:
+        - auth
+      description: Ein angemeldeter Benutzer kann sein Passwort ändern
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                old_password: altesPasswort
+                new_password: Teesstt123!
+      responses:
+        201:
+          description: Password wurde geändert
+        401:
+          description: Altes Passwort ist falsch
+          content:
+            application/json:
+              example:
+                error: Das angegebene Passwort ist falsch
   /logout:
     post:
       tags:
