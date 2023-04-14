@@ -19,11 +19,11 @@
           <div class="user-data-container">
             <div class="username">
               <h2>Benutzername</h2>
-              <p>Lukas Schodl</p>
+              <p>{{ getUsername }}</p>
             </div>
             <div class="email">
               <h2>E-Mail-Adresse</h2>
-              <p>lukas.schodl@htl.rennweg.at</p>
+              <p>{{ getEmail }}</p>
             </div>
           </div>
           <div class="image-container">
@@ -75,8 +75,48 @@ export default {
   data() {
     return {
       logOutOverlayVisible: false,
-      deleteAccountOverlayVisible: false
+      deleteAccountOverlayVisible: false,
+      userData: {}
     }
+  },
+  methods: {
+    getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return false;
+    },
+    fetchData() {
+      return fetch(`http://${window.location.hostname}:8080/api/getusers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'sessionKey': this.getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin'
+      }).then(response => response.json())
+    }
+  },
+  computed: {
+    getUsername() {
+      return this.userData.name;
+    },
+    getEmail() {
+      return this.userData.email;
+    }
+  },
+  async mounted() {
+    await this.fetchData().then(data => this.userData = data)
   }
 }
 </script>
