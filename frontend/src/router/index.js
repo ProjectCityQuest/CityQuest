@@ -7,6 +7,7 @@ import MapView from "@/views/MapView.vue";
 import AccountView from "@/views/AccountView.vue";
 import PuzzleView from "@/views/PuzzleView.vue";
 import CollectionView from "@/views/CollectionView.vue";
+import PasswordView from "@/views/PasswordView.vue";
 
 // gets the value of a cookie by name
 // if the cookie doesn't exist, the function returns 'false'
@@ -78,6 +79,32 @@ const router = createRouter({
             path: '/email-verifizierung/:email',
             name: 'email-verifizierung-pending',
             component: EmailView,
+            props: true,
+            meta: {
+                requiresNoCookie: true
+            }
+        },
+        {
+            path: '/passwort-vergessen',
+            name: 'passwort-vergessen',
+            component: PasswordView,
+            meta: {
+                requiresNoCookie: true
+            }
+        },
+        {
+            path: '/passwort-vergessen/:email',
+            name: 'passwort-vergessen-request',
+            component: PasswordView,
+            props: true,
+            meta: {
+                requiresNoCookie: true
+            }
+        },
+        {
+            path: '/passwort-vergessen/:email/:verificationKey',
+            name: 'passwort-vergessen-change',
+            component: PasswordView,
             props: true,
             meta: {
                 requiresNoCookie: true
