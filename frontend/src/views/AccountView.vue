@@ -48,6 +48,7 @@
       <div class="action-wrapper">
         <button class="overlay-action" @click="requestLogout">Abmelden</button>
       </div>
+      <p class="overlay-error"></p>
     </Overlay>
     <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">
       <h1 class="overlay-header">Account löschen</h1>
@@ -58,8 +59,9 @@
         Dein Puzzlefortschritt und deine Sammelbuch-Einträge gehen verloren.
       </p>
       <div class="action-wrapper">
-        <button class="overlay-action">Account löschen</button>
+        <button class="overlay-action" @click="requestAccountDelete">Account löschen</button>
       </div>
+      <p class="overlay-error">{{ getDeleteAccountError }}</p>
     </Overlay>
     <NavBar :active-icon="1"></NavBar>
   </div>
@@ -76,10 +78,39 @@ export default {
     return {
       logOutOverlayVisible: false,
       deleteAccountOverlayVisible: false,
-      userData: {}
+      userData: {},
+      errors: {}
     }
   },
   methods: {
+    async requestAccountDelete() {
+      const response = await fetch(`http://${window.location.hostname}:8080/api/deleteusers`, {
+        method: 'DELETE',
+        headers: {
+          sessionKey: this.getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin'
+      });
+
+      if (response.ok) {
+        console.log("account deletion successful")
+        this.$router.push("/")
+        // deletes cookie
+        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+      } else {
+        this.deleteAccountError(response)
+      }
+    },
+    deleteAccountError(response) {
+      if (response.ok) return
+
+      if (response.status === 400) {
+        response.json().then(data => this.errors.deleteAccount = data.error)
+      } else {
+        this.errors.deleteAccount = 'Das hat nicht geklappt ):'
+      }
+    },
     async requestLogout() {
       const response = await fetch(`http://${window.location.hostname}:8080/api/logout`, {
         method: 'POST',
@@ -130,6 +161,9 @@ export default {
     },
     getEmail() {
       return this.userData.email;
+    },
+    getDeleteAccountError() {
+      return this.errors.deleteAccount;
     }
   },
   async mounted() {
@@ -280,6 +314,12 @@ export default {
       color: $white;
       border: none;
     }
+  }
+
+  .overlay-error {
+    margin: 1rem 0 0.5rem 0;
+    text-align: center;
+    color: $red;
   }
 }
 </style>
