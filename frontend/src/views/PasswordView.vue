@@ -1,8 +1,11 @@
 <template>
-  <ForgotPasswordRequest v-if="status === 'request'"></ForgotPasswordRequest>
-  <ForgotPasswordPending :email="email" v-if="status === 'pending'"></ForgotPasswordPending>
-  <ForgotPasswordExpired v-if="status === 'expired'"></ForgotPasswordExpired>
-  <ForgotPasswordChange v-if="status === 'success'"></ForgotPasswordChange>
+  <div class="view-container">
+    <h1>Passwort Vergessen</h1>
+    <ForgotPasswordRequest v-if="status === 'request'"></ForgotPasswordRequest>
+    <ForgotPasswordPending :email="email" v-if="status === 'pending'"></ForgotPasswordPending>
+    <ForgotPasswordExpired v-if="status === 'expired'"></ForgotPasswordExpired>
+    <ForgotPasswordChange v-if="status === 'success'"></ForgotPasswordChange>
+  </div>
 </template>
 
 <script>
@@ -36,6 +39,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.view-container {
+  h1 {
+    text-align: center;
+    font-size: 32px;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+  }
 
+  min-height: 100vh;
+  background-image: url("../assets/background.png");
+}
 </style>
