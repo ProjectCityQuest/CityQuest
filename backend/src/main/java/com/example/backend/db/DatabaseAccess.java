@@ -15,7 +15,7 @@ public interface DatabaseAccess {
      *
      * @return all current users
      */
-    public List<User> getAllUser();
+    List<User> getAllUser();
 
 
     /**
@@ -23,7 +23,7 @@ public interface DatabaseAccess {
      * @param id of the user that is to be returned
      * @return a user object that matches the id
      */
-    public User getUserById(int id);
+    User getUserById(int id);
 
 
     /**
@@ -31,21 +31,23 @@ public interface DatabaseAccess {
      * @param email of the user that is to be returned
      * @return a user object that matches the email
      */
-    public User getUserByEmail(String email);
+    User getUserByEmail(String email);
 
 
     /**
      *
      * @param user creates a user object
      */
-    public void createUser(User user);
+    void createUser(User user);
 
     /**
      *
      * @param user deletes the given user
      */
 
-    public void deleteUser(User user);
+    void deleteUser(User user);
 
-    public void changePassword(User user, String password);
+    void changePassword(User user, String password);
+
+    void submitRatings(int[] ratings);
 }
