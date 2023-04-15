@@ -18,14 +18,29 @@ public class Emails {
     public static void sendVerificationMail(String email, String key) throws MessagingException {
         MimeMessage message = createMailTemplate(email);
         message.setSubject("Bestätigen Sie Ihre Email!");
-        message.setContent("<h1>Verifizieren Sie Ihre Email</h1><hr><a href='http://"+IP.getServerIP()+":5173/email-verifizierung/" + email + "/"+key+"'><button style='border:1px solid black;padding: 20px; color:black;'>Klicken Sie hier um Ihre Email zu verifizieren!</button></a><p>Falls Sie sich nicht bei CityQuest registriert haben, ignorieren Sie diese Email.</p>", "text/html");
+
+        EmailTemplate emailVerificationTemplate = new EmailTemplate();
+        emailVerificationTemplate.addTitle("Verifizieren Sie Ihre Email");
+        emailVerificationTemplate.addLine();
+        emailVerificationTemplate.addButton("Klicken Sie hier um Ihre Email zu verifizieren!", "http://"+IP.getServerIP()+":5173/email-verifizierung/" + email + "/"+key);
+        emailVerificationTemplate.addText("Falls Sie sich nicht bei CityQuest registriert haben, ignorieren Sie diese Email.");
+
+        message.setContent(emailVerificationTemplate.generateEmailTemplate(), "text/html");
+
         Transport.send(message);
     }
 
     public static void sendPasswordResetMail(String email, String key) throws MessagingException {
         MimeMessage message = createMailTemplate(email);
         message.setSubject("Passwortänderung!");
-        message.setContent("<h1>Folgen Sie den Anweisungen um Ihr Passwort zu ändern</h1><hr><a href='http://"+IP.getServerIP()+":5173/passwort-vergessen/" + email + "/"+key+"'><button style='border:1px solid black;padding: 20px; color:black;'>Klicken Sie hier um Ihr Passwort zu ändern!</button></a><p>Falls Sie keine Passwortänderung angefordert haben, ignorieren Sie diese Email.</p>", "text/html");
+
+        EmailTemplate passwordResetEmailTemplate = new EmailTemplate();
+        passwordResetEmailTemplate.addTitle("Folgen Sie den Anweisungen um Ihr Passwort zu ändern");
+        passwordResetEmailTemplate.addLine();
+        passwordResetEmailTemplate.addButton("Klicken Sie hier um Ihr Passwort zu ändern!", "http://"+IP.getServerIP()+":5173/passwort-vergessen/" + email + "/"+key);
+        passwordResetEmailTemplate.addText("Falls Sie keine Passwortänderung angefordert haben, ignorieren Sie diese Email.");
+
+        message.setContent(passwordResetEmailTemplate.generateEmailTemplate(), "text/html");
         Transport.send(message);
     }
 

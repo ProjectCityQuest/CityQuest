@@ -114,7 +114,7 @@ public class UserEndpoint {
 
     @GetMapping("/getusers")
     public ResponseEntity<Object> checkUserToken(@RequestHeader(value = "sessionKey") String token) {
-        LOG.info("GET /users issued with parameter: " + token);
+        LOG.info("GET /getusers issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
             return new ResponseEntity<>(new ErrorDto("Es gibt keinen benutzer mit diesem Token"), HttpStatus.UNAUTHORIZED);
