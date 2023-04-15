@@ -46,7 +46,7 @@ export default {
   methods: {
     verifyKey() {
       if (this.verificationKey !== undefined) {
-        fetch('http://localhost:8080/api/verify', {
+        fetch(`http://${window.location.hostname}:8080/api/verify`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -83,8 +83,8 @@ export default {
   flex-direction: column;
   text-align: center;
   align-items: center;
-  background-color: $white;
-  height: 100vh;
+  min-height: 100vh;
+  background-image: url("../assets/background.png");
 
   h1 {
     font-size: 1.75rem;

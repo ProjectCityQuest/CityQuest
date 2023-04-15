@@ -7,6 +7,7 @@ import MapView from "@/views/MapView.vue";
 import AccountView from "@/views/AccountView.vue";
 import PuzzleView from "@/views/PuzzleView.vue";
 import CollectionView from "@/views/CollectionView.vue";
+import PasswordView from "@/views/PasswordView.vue";
 
 // gets the value of a cookie by name
 // if the cookie doesn't exist, the function returns 'false'
@@ -29,7 +30,7 @@ function getCookie(cname) {
 // gets the value of the sessionKey cookie, then check its validity by sending it to the backend
 // it returns a boolean, which indicates, if the response status of this request is 200 or not
 async function checkSessionKey() {
-    const response = await fetch('http://127.0.0.1:8080/api/getusers', {
+    const response = await fetch(`http://${window.location.hostname}:8080/api/getusers`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -81,6 +82,31 @@ const router = createRouter({
             props: true,
             meta: {
                 requiresNoCookie: true
+            }
+        },
+        {
+            path: '/passwort-vergessen',
+            name: 'passwort-vergessen',
+            component: PasswordView,
+            meta: {
+                requiresNoCookie: true
+            }
+        },
+        {
+            path: '/passwort-vergessen/:email',
+            name: 'passwort-vergessen-request',
+            component: PasswordView,
+            props: true,
+            meta: {
+                requiresNoCookie: true
+            }
+        },
+        {
+            path: '/passwort-vergessen/:email/:verificationKey',
+            name: 'passwort-vergessen-change',
+            component: PasswordView,
+            props: true,
+            meta: {
             }
         },
         {
@@ -144,7 +170,7 @@ router.beforeEach(async (to, from, next) => {
         if (document.cookie.indexOf('sessionKey=') > -1) {
             if (await checkSessionKey()) {
                 next({
-                    path: '/map'
+                    path: '/karte'
                 })
             } else {
                 document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
