@@ -2,20 +2,17 @@
   <div class="view-container">
     <h1>Passwort Vergessen</h1>
     <ForgotPasswordRequest v-if="status === 'request'" :email-prop="email"></ForgotPasswordRequest>
-    <ForgotPasswordExpired v-if="status === 'error'"></ForgotPasswordExpired>
     <ForgotPasswordChange v-if="status === 'success'" :email="email" :verification-key="verificationKey"></ForgotPasswordChange>
   </div>
 </template>
 
 <script>
 import ForgotPasswordRequest from "@/components/ForgotPasswordRequest.vue";
-import ForgotPasswordExpired from "@/components/ForgotPasswordExpired.vue";
-import ForgotPasswordPending from "@/components/ForgotPasswordPending.vue";
 import ForgotPasswordChange from "@/components/ForgotPasswordChange.vue";
 
 export default {
   name: "PasswortView",
-  components: {ForgotPasswordExpired, ForgotPasswordRequest, ForgotPasswordPending, ForgotPasswordChange},
+  components: {ForgotPasswordRequest, ForgotPasswordChange},
   props: {
     email: String,
     verificationKey: String

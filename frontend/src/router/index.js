@@ -89,6 +89,7 @@ const router = createRouter({
             name: 'passwort-vergessen',
             component: PasswordView,
             meta: {
+                requiresNoCookie: true
             }
         },
         {
@@ -97,6 +98,7 @@ const router = createRouter({
             component: PasswordView,
             props: true,
             meta: {
+                requiresNoCookie: true
             }
         },
         {
