@@ -136,8 +136,10 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         Object[] params = new Object[] {password, user.getId()};
         jdbcTemplate.update(statement, params);
 
-        UserServiceImpl.getUserById(user.getId()).setPassword(password);
+        User currentUser = UserServiceImpl.getUserById(user.getId());
+        String oldPassword = currentUser.getPassword();
+        currentUser.setPassword(password);
 
-        LOG.info("Password of User:'" + user.getUsername() + "' with Id: '" + user.getId() + "' has been changed to: '" + user.getPassword() + "'");
+        LOG.info("Password of User:'" + user.getUsername() + "' with Id: '" + user.getId() + "' has been changed from '" + oldPassword + "' to '" + password + "'");
     }
 }

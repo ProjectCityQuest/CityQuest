@@ -215,7 +215,8 @@ public class UserEndpoint {
             if (validDate.after(date)) {
                 return new ResponseEntity<>(new ErrorDto("Der Link ist abgelaufen"), HttpStatus.UNAUTHORIZED);
             } else {
-                UserServiceImpl.changePassword(UserServiceImpl.getUserByEmail(request.getEmail()).getId(), request.getNew_password());
+                User user = UserServiceImpl.getUserByEmail(request.getEmail());
+                UserServiceImpl.changePassword(user.getId(), request.getNew_password());
                 UserServiceImpl.removePendingPasswordReset(request.getKey());
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
