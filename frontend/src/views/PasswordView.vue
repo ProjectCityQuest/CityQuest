@@ -1,10 +1,9 @@
 <template>
   <div class="view-container">
     <h1>Passwort Vergessen</h1>
-    <ForgotPasswordRequest v-if="status === 'request'"></ForgotPasswordRequest>
-    <ForgotPasswordPending :email="email" v-if="status === 'pending'"></ForgotPasswordPending>
-    <ForgotPasswordExpired v-if="status === 'expired'"></ForgotPasswordExpired>
-    <ForgotPasswordChange v-if="status === 'success'"></ForgotPasswordChange>
+    <ForgotPasswordRequest v-if="status === 'request'" :email-prop="email"></ForgotPasswordRequest>
+    <ForgotPasswordExpired v-if="status === 'error'"></ForgotPasswordExpired>
+    <ForgotPasswordChange v-if="status === 'success'" :email="email" :verification-key="verificationKey"></ForgotPasswordChange>
   </div>
 </template>
 
@@ -29,8 +28,6 @@ export default {
   mounted() {
     if (this.email && this.verificationKey) {
       this.status = 'success';
-    } else if (this.email) {
-      this.status = 'pending';
     } else {
       this.status = 'request';
     }

@@ -14,7 +14,10 @@
       <button class="submit" :disabled="v$.form.$invalid || request.status === 'pending'" @click="requestForgotPassword"
               :class="request.status">Anfrage
       </button>
+
       <p class="feedback-message" :class="request.status">{{ request.message }}</p>
+
+      <router-link class="router-link" to="/login">Login</router-link>
     </form>
   </div>
 </template>
@@ -25,6 +28,9 @@ import {required$, email$} from "@/validators";
 
 export default {
   name: "ForgotPasswordRequest",
+  props: {
+    emailProp: String
+  },
   setup() {
     return {v$: useVuelidate()}
   },
@@ -92,12 +98,15 @@ export default {
       this.request.status = "success";
       this.request.message = successMessage;
     },
+  },
+  created() {
+    this.form.email = this.emailProp ? this.emailProp.replaceAll('-', '\.') : '';
   }
 }
 </script>
 
 <style scoped lang="scss">
-@import "../assets/form";
+@import "src/assets/form";
 @import "src/assets/colors";
 
 .forgot-password-wrapper {
@@ -125,6 +134,11 @@ export default {
       &.error {
         color: $red;
       }
+    }
+
+    .router-link {
+      display: block;
+      margin-top: 1rem;
     }
   }
 }
