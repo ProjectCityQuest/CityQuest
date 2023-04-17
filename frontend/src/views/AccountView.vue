@@ -34,7 +34,7 @@
       <div class="account-actions">
         <router-link class="router-link" :to="`passwort-vergessen/${this.userData.email}`">Passwort ändern</router-link>
         <button @click="logOutOverlayVisible = true">Abmelden</button>
-        <button class="delete-account" @click="deleteAccountOverlayVisible = true">Account löschen</button>
+        <router-link class="router-link delete-account" :to="`account-loeschen`">Account löschen</router-link>
       </div>
     </div>
     <Overlay :is-visible="logOutOverlayVisible" @close-overlay="logOutOverlayVisible=false">

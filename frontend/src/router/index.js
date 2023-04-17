@@ -8,6 +8,7 @@ import AccountView from "@/views/AccountView.vue";
 import PuzzleView from "@/views/PuzzleView.vue";
 import CollectionView from "@/views/CollectionView.vue";
 import PasswordView from "@/views/PasswordView.vue";
+import deleteAccountView from "@/views/deleteAccountView.vue";
 
 // gets the value of a cookie by name
 // if the cookie doesn't exist, the function returns 'false'
@@ -113,6 +114,14 @@ const router = createRouter({
             path: '/account',
             name: 'account',
             component: AccountView,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: '/account-loeschen',
+            name: 'account-loeschen',
+            component: deleteAccountView,
             meta: {
                 requiresAuth: true
             }

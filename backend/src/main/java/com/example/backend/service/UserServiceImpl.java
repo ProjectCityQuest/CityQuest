@@ -57,7 +57,7 @@ public class UserServiceImpl {
 
     public UserServiceImpl() {
         LOG.info("Server running on IP: " + IP.getServerIP());
-        DATABASE = new DatabaseAccessImplementation();
+        DATABASE = new DatabaseAccessTestImplementation();
         userList = DATABASE.getAllUser();
     }
 
