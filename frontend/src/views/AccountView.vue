@@ -50,19 +50,6 @@
       </div>
       <p class="overlay-error">{{ getLogoutError }}</p>
     </Overlay>
-    <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">
-      <h1 class="overlay-header">Account löschen</h1>
-      <p class="overlay-info">
-        Bist du dir sicher, dass du deinen Account löschen möchtest?
-      </p>
-      <p class="overlay-info">
-        Dein Puzzlefortschritt und deine Sammelbuch-Einträge gehen verloren.
-      </p>
-      <div class="action-wrapper">
-        <button class="overlay-action" @click="requestAccountDelete">Account löschen</button>
-      </div>
-      <p class="overlay-error">{{ getDeleteAccountError }}</p>
-    </Overlay>
     <NavBar :active-icon="1"></NavBar>
   </div>
 </template>
