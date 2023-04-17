@@ -1,15 +1,36 @@
 <template>
-
+  <div class="view-container">
+    <h1>Mein Account</h1>
+    <h2>Account löschen</h2>
+    <p>Wir finden es sehr schade, du deinen Account löschen möchtest.</p>
+    <p>Bitte nimm dir noch kurz Zeit und hilf uns, die App für andere User zu verbessern.</p>
+    <div class="rating-container">
+      <div class="rating">
+        <p>Design</p>
+        <Rating></Rating>
+      </div>
+      <div class="rating">
+        <p>Navigation</p>
+        <Rating></Rating>
+      </div>
+      <div class="rating">
+        <p>Puzzle</p>
+        <Rating></Rating>
+      </div>
+      <div class="rating">
+        <p>Sammelbuch</p>
+        <Rating></Rating>
+      </div>
+    </div>
+  </div>
 </template>
 
 
 <script>
-import NavBar from "@/components/NavBar.vue";
-import Overlay from "@/components/Overlay.vue";
-
+import Rating from "@/components/Rating.vue";
 export default {
   name: "deleteAccountView",
-  components: {},
+  components: {Rating},
   data() {
     return {
       logOutOverlayVisible: false,
@@ -64,6 +85,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.view-container {
+  min-height: 100vh;
+  background-image: url("../assets/background.png");
+  background-position: center;
 
+  h1 {
+    font-size: 32px;
+    padding: 1rem 1rem;
+    text-align: center;
+  }
+}
 </style>
