@@ -15,7 +15,7 @@
               :class="request.status">Anfrage
       </button>
 
-      <p class="feedback-message" :class="request.status">{{ request.message }}</p>
+      <p class="feedback-message" :class="request.status" v-html="request.message"></p>
 
       <router-link class="router-link" to="/login">Login</router-link>
     </form>
@@ -75,7 +75,7 @@ export default {
       });
 
       if (response.ok) {
-        this.setSuccessMessage(`Eine Anfrage zur Passwortänderung wurde an ${this.form.email} gesendet.`)
+        this.setSuccessMessage(`Wir haben eine E-Mail an ${this.form.email} geschickt.<br>Bitte klicke auf den Link in der E-Mail, um dein Passwort zu ändern.`)
       } else {
         if (response.status === 400) {
           response.json().then(data => this.setErrorMessage(data.error))
@@ -113,6 +113,11 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+
+  &:last-child {
+    margin-bottom: 2rem;
+  }
 
   form {
     .submit {

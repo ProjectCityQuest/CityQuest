@@ -135,7 +135,7 @@ export default {
   align-items: center;
 
   &:last-child {
-    margin-bottom: 1.5em;
+    margin-bottom: 2rem;
   }
 
   #response-error{

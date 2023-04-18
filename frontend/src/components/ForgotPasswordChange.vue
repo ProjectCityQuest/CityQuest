@@ -129,6 +129,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+
+  &:last-child {
+    margin-bottom: 2rem;
+  }
+
 
   form {
     .submit {
