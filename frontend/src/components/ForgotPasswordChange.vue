@@ -37,6 +37,7 @@ import {required$, passwordMinLength$, passwordSameAs$} from "@/validators";
 
 export default {
   name: "ForgotPasswordChange",
+  emits: ["error"],
   props: {
     email: String,
     verificationKey: String
@@ -97,11 +98,7 @@ export default {
       if (response.ok) {
         this.setSuccessMessage('Dein Passwort wurde geändert.')
       } else {
-        if (response.status === 401) {
-          response.json().then(data => this.setErrorMessage(data.error))
-        } else {
-          this.setErrorMessage('Das hat nicht geklappt ):');
-        }
+        this.$emit('error')
       }
     },
     resetFeedback() {

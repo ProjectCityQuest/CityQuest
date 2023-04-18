@@ -18,7 +18,7 @@
     <h1>Passwort Vergessen</h1>
     <ForgotPasswordRequest v-if="status === 'request'" :email-prop="email"></ForgotPasswordRequest>
     <ForgotPasswordChange v-if="status === 'change'" :email="email"
-                          :verification-key="verificationKey"></ForgotPasswordChange>
+                          :verification-key="verificationKey" @error="status = 'error'"></ForgotPasswordChange>
     <ForgotPasswordError v-if="status === 'error'" :error-message="'Der Link ist abgelaufen.'"></ForgotPasswordError>
     <ForgotPasswordSuccess v-if="status === 'success'"></ForgotPasswordSuccess>
   </div>
@@ -42,9 +42,26 @@ export default {
       status: 'request'
     }
   },
-  mounted() {
+  methods: {
+    async verifyKey() {
+      const response = await fetch(`http://${window.location.hostname}:8080/api/verifyforgotpasswordkey`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          key: this.verificationKey
+        })
+      })
+
+      return response.ok
+    }
+  },
+  async mounted() {
     if (this.email && this.verificationKey) {
-      this.status = 'error';
+      if (await this.verifyKey()) {
+        this.status = 'change'
+      } else {
+        this.status = 'error'
+      }
     } else {
       this.status = 'request';
     }
