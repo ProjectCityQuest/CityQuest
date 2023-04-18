@@ -26,6 +26,13 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
      * creates test data for testing purposes
      */
     public DatabaseAccessTestImplementation() {
+    }
+
+    /**
+     * @see DatabaseAccess
+     */
+    @Override
+    public List<User> getAllUser() {
         User user = new User("Daniel Pillwein", "dani@gmail.com", "gutesPasswort");
         user.setId(0);
         user.setToken(Strings.generateToken());
@@ -46,13 +53,7 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
         user.setToken(Strings.generateToken());
         user.setEmailIsVerified(true);
         userList.add(user);
-    }
 
-    /**
-     * @see DatabaseAccess
-     */
-    @Override
-    public List<User> getAllUser() {
         return userList;
     }
 
