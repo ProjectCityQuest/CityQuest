@@ -111,6 +111,10 @@ export default {
   justify-content: center;
   align-items: center;
 
+  &:last-child {
+    margin-bottom: 2rem;
+  }
+
   #response-error {
     color: $red;
     text-align: center;

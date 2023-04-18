@@ -7,7 +7,8 @@ import MapView from "@/views/MapView.vue";
 import AccountView from "@/views/AccountView.vue";
 import PuzzleView from "@/views/PuzzleView.vue";
 import CollectionView from "@/views/CollectionView.vue";
-import PasswordView from "@/views/PasswordView.vue";
+import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
+import ChangePasswordView from "@/views/ChangePasswordView.vue";
 import deleteAccountView from "@/views/deleteAccountView.vue";
 
 // gets the value of a cookie by name
@@ -88,7 +89,7 @@ const router = createRouter({
         {
             path: '/passwort-vergessen',
             name: 'passwort-vergessen',
-            component: PasswordView,
+            component: ForgotPasswordView,
             meta: {
                 requiresNoCookie: true
             }
@@ -96,7 +97,7 @@ const router = createRouter({
         {
             path: '/passwort-vergessen/:email',
             name: 'passwort-vergessen-request',
-            component: PasswordView,
+            component: ForgotPasswordView,
             props: true,
             meta: {
                 requiresNoCookie: true
@@ -105,9 +106,18 @@ const router = createRouter({
         {
             path: '/passwort-vergessen/:email/:verificationKey',
             name: 'passwort-vergessen-change',
-            component: PasswordView,
+            component: ForgotPasswordView,
             props: true,
             meta: {
+            }
+        },
+        {
+            path: '/passwort-aendern',
+            name: 'passwort-aendern',
+            component: ChangePasswordView,
+            props: true,
+            meta: {
+                requiresAuth: true
             }
         },
         {

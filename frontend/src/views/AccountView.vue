@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="account-actions">
-        <router-link class="router-link" :to="`passwort-vergessen/${this.userData.email}`">Passwort ändern</router-link>
+        <router-link class="router-link" to="/passwort-aendern">Passwort ändern</router-link>
         <button @click="logOutOverlayVisible = true">Abmelden</button>
         <router-link class="router-link delete-account" :to="`account-loeschen`">Account löschen</router-link>
       </div>
