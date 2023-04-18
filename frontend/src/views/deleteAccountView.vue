@@ -1,7 +1,7 @@
 <template>
   <div class="view-container">
     <h1>Account löschen</h1>
-    <p>Wir finden es sehr schade, du deinen Account löschen möchtest.</p>
+    <p>Wir finden es sehr schade, du deinen Account und alle damit verbunden Daten löschen möchtest.</p>
     <p>Bitte nimm dir noch kurz Zeit und hilf uns, die App für andere User zu verbessern.</p>
     <div class="rating-container">
       <div class="rating">
