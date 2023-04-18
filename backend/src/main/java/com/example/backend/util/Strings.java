@@ -11,7 +11,7 @@
 package com.example.backend.util;
 
 public class Strings {
-    private static final String characterPool = "123467890qwertyuiopasdfghjklzxcvbnm-_+$#!QWERTYUIOPASDFGHJKLZXCVBNM";
+    private static final String characterPool = "123467890qwertyuiopasdfghjklzxcvbnm-_+$#!§°()QWERTYUIOPASDFGHJKLZXCVBNM";
 
     public static String generateToken() {
         StringBuilder token = new StringBuilder();
