@@ -34,7 +34,7 @@
       <div class="account-actions">
         <router-link class="router-link" to="/passwort-aendern">Passwort ändern</router-link>
         <button @click="logOutOverlayVisible = true">Abmelden</button>
-        <button class="delete-account" @click="deleteAccountOverlayVisible = true">Account löschen</button>
+        <router-link class="router-link delete-account" :to="`account-loeschen`">Account löschen</router-link>
       </div>
     </div>
     <Overlay :is-visible="logOutOverlayVisible" @close-overlay="logOutOverlayVisible=false">
@@ -49,19 +49,6 @@
         <button class="overlay-action" @click="requestLogout">Abmelden</button>
       </div>
       <p class="overlay-error">{{ getLogoutError }}</p>
-    </Overlay>
-    <Overlay :is-visible="deleteAccountOverlayVisible" @close-overlay="deleteAccountOverlayVisible=false">
-      <h1 class="overlay-header">Account löschen</h1>
-      <p class="overlay-info">
-        Bist du dir sicher, dass du deinen Account löschen möchtest?
-      </p>
-      <p class="overlay-info">
-        Dein Puzzlefortschritt und deine Sammelbuch-Einträge gehen verloren.
-      </p>
-      <div class="action-wrapper">
-        <button class="overlay-action" @click="requestAccountDelete">Account löschen</button>
-      </div>
-      <p class="overlay-error">{{ getDeleteAccountError }}</p>
     </Overlay>
     <NavBar :active-icon="1"></NavBar>
   </div>
