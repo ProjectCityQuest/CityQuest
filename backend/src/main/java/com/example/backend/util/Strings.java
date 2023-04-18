@@ -29,7 +29,7 @@ public class Strings {
         StringBuilder token = new StringBuilder();
 
         for (int i = 0; i < amount; i++) {
-            token.append(characterPool.charAt((int) (Math.random() * (characterPool.length() + 1))));
+            token.append(characterPool.charAt((int) (Math.random() * (characterPool.length()))));
         }
 
         return token.toString();
