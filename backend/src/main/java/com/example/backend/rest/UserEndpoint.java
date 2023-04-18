@@ -10,6 +10,7 @@ import com.example.backend.mapper.UserRegisterMapping;
 import com.example.backend.service.UserServiceImpl;
 import com.example.backend.util.Emails;
 import com.example.backend.util.Strings;
+import com.mysql.cj.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -42,9 +43,8 @@ public class UserEndpoint {
                 String key = Strings.generateToken(24);
                 Emails.sendVerificationMail(user.getEmail(), key);
                 UserServiceImpl.addPendingEmail(key, user.getEmail());
-                LOG.info("Email Verification for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
             } catch (MessagingException mex) {
-                mex.printStackTrace();
+                LOG.error("javax.mail.MessagingException occured while trying to send email verification to '" + user.getEmail() + "'");
             }
             return new ResponseEntity<>(new UserRegisterMapping(new UserRegisterDto(user), false), HttpStatus.CREATED);
         } else {
@@ -72,6 +72,7 @@ public class UserEndpoint {
             return new ResponseEntity<>(new ErrorDto("Die E-Mail-Adresse wurde noch nicht verifiziert"), HttpStatus.UNAUTHORIZED);
         } else {
             currentUser.setToken(Strings.generateToken());
+            LOG.info("Token for User: '" + user.getUsername() + "' has been set to: '" + currentUser.getToken() +"'");
             return new ResponseEntity<>(new AuthorizationDto(currentUser.getToken()), HttpStatus.OK);
         }
     }
@@ -99,8 +100,10 @@ public class UserEndpoint {
             if (validDate.after(date)) {
                 return new ResponseEntity<>(new ErrorDto("Der Link ist abgelaufen"), HttpStatus.UNAUTHORIZED);
             } else {
-                UserServiceImpl.getUserByEmail(request.getEmail()).setEmailIsVerified(true);
+                User user = UserServiceImpl.getUserByEmail(request.getEmail());
+                user.setEmailIsVerified(true);
                 UserServiceImpl.removePendingEmailVerification(request.getKey());
+                LOG.info("Email of User: '" + user.getUsername() + "' has been verified!");
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }
         }
@@ -117,8 +120,10 @@ public class UserEndpoint {
         LOG.info("GET /getusers issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
+            LOG.info("The given user token: '" + token + "' is not valid!");
             return new ResponseEntity<>(new ErrorDto("Es gibt keinen benutzer mit diesem Token"), HttpStatus.UNAUTHORIZED);
         } else {
+            LOG.info("The given user token: '" + token + "' is valid and belongs to the User: '" + user.getUsername() + "'");
             return new ResponseEntity<>(new UserLoginDto(user), HttpStatus.OK);
         }
     }
@@ -134,9 +139,11 @@ public class UserEndpoint {
         LOG.info("POST /logout issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
+            LOG.info("The given user token: '" + token + "' is not valid!");
             return new ResponseEntity<>(new ErrorDto("Es gibt keinen Benutzer mit diesem Token"), HttpStatus.BAD_REQUEST);
         } else {
             user.setToken(null);
+            LOG.info("User: '" + user.getUsername() + "' has been logged out!");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
@@ -152,9 +159,11 @@ public class UserEndpoint {
         LOG.info("DELETE /users issued with parameter: " + token);
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
+            LOG.info("The given user token: '" + token + "' is not valid!");
             return new ResponseEntity<>(new ErrorDto("Es gibt keinen Benutzer mit diesem Token"), HttpStatus.BAD_REQUEST);
         } else {
             UserServiceImpl.removeUser(user);
+            LOG.info("The User: '" + user.getUsername() + "' has been deleted!");
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
@@ -166,6 +175,7 @@ public class UserEndpoint {
         User user = UserServiceImpl.getUserByEmail(email);
 
         if (user == null) {
+            LOG.info("The given email address: '" + email + "' is does not exist!");
             return new ResponseEntity<>(new ErrorDto("Es gibt keinen Benutzer mit der angegebenen Email-Adresse"), HttpStatus.BAD_REQUEST);
         }
 
@@ -173,9 +183,8 @@ public class UserEndpoint {
             String key = Strings.generateToken(24);
             Emails.sendPasswordResetMail(user.getEmail(), key);
             UserServiceImpl.addPendingPasswordReset(key, user.getEmail());
-            LOG.info("Password reset email for User '" + user.getUsername() + "' sent to '" + user.getEmail() + "'");
         } catch (MessagingException mex) {
-            mex.printStackTrace();
+            LOG.error("javax.mail.MessagingException occured while trying to send a password reset email to '" + user.getEmail() + "'");
         }
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -206,7 +215,8 @@ public class UserEndpoint {
             if (validDate.after(date)) {
                 return new ResponseEntity<>(new ErrorDto("Der Link ist abgelaufen"), HttpStatus.UNAUTHORIZED);
             } else {
-                UserServiceImpl.changePassword(UserServiceImpl.getUserByEmail(request.getEmail()).getId(), request.getNew_password());
+                User user = UserServiceImpl.getUserByEmail(request.getEmail());
+                UserServiceImpl.changePassword(user.getId(), request.getNew_password());
                 UserServiceImpl.removePendingPasswordReset(request.getKey());
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -219,13 +229,35 @@ public class UserEndpoint {
 
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
-            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungueltig!"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
         }
         if (!user.getPassword().equals(request.getOldPassword())) {
             return new ResponseEntity<>(new ErrorDto("Das angegebene Passwort ist falsch"), HttpStatus.UNAUTHORIZED);
         } else {
             UserServiceImpl.changePassword(user.getId(), request.getNewPassword());
             return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+    }
+
+    @PostMapping("/verifyforgotpasswordkey")
+    public ResponseEntity<Object> verifyForgotPasswordKey(@RequestBody VerifyForgotPasswordKeyDto request) {
+        LOG.info("POST /verifyForgotPasswordKey issued with parameter: " + request);
+
+        Date date = UserServiceImpl.getPendingPasswordResetDate().getOrDefault(request.getKey(), null);
+        String email = UserServiceImpl.getPendingPasswordResetEmail().getOrDefault(request.getKey(), null);
+        if (date == null || email == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
+        } else {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date());
+            c.add(Calendar.MINUTE, -10);
+            Date validDate = c.getTime();
+            if (validDate.after(date)) {
+                return new ResponseEntity<>(new ErrorDto("Der Link ist abgelaufen"), HttpStatus.UNAUTHORIZED);
+            } else {
+                LOG.info("Der Key '" + request.getKey() + "' ist gültig");
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         }
     }
 }
