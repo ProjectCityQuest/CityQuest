@@ -31,7 +31,7 @@ import ForgotPasswordSuccess from "@/components/ForgotPasswordSuccess.vue";
 import ForgotPasswordError from "@/components/ForgotPasswordError.vue";
 
 export default {
-  name: "PasswortView",
+  name: "ForgotPasswordView",
   components: {ForgotPasswordError, ForgotPasswordSuccess, ForgotPasswordRequest, ForgotPasswordChange},
   props: {
     email: String,
