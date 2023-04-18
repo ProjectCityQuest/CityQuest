@@ -120,7 +120,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../assets/form";
+@import "src/assets/form";
 
 .forgot-password-wrapper {
   display: flex;
