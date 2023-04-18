@@ -9,11 +9,14 @@ package com.example.backend.db;
 import com.example.backend.entity.User;
 import com.example.backend.service.UserServiceImpl;
 import com.example.backend.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseAccessTestImplementation implements DatabaseAccess {
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     /**
      * userList contains all current Users
      */
@@ -89,5 +92,9 @@ public class DatabaseAccessTestImplementation implements DatabaseAccess {
 
     public void changePassword(User user, String password) {
         UserServiceImpl.getUserById(user.getId()).setPassword(password);
+    }
+
+    public void submitRatings(int[] ratings) {
+        LOG.info("A rating has been submitted {design: "+ratings[0]+", navigation: "+ratings[1]+", puzzle: " + ratings[2] + ", sammelbuch: " + ratings[3] + "}");
     }
 }

@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class UserServiceImpl {
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
     private static List<User> userList = new ArrayList<>();
     private static DatabaseAccess DATABASE;
 

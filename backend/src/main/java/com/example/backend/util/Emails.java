@@ -4,16 +4,16 @@
 
 package com.example.backend.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Properties;
 
 public class Emails {
+    private static final Logger LOG = LoggerFactory.getLogger(Emails.class);
 
     public static void sendVerificationMail(String email, String key) throws MessagingException {
         MimeMessage message = createMailTemplate(email);
@@ -28,6 +28,8 @@ public class Emails {
         message.setContent(emailVerificationTemplate.generateEmailTemplate(), "text/html");
 
         Transport.send(message);
+
+        LOG.info("Email Verification sent to '" + email + "' containig key: '" + key + "'");
     }
 
     public static void sendPasswordResetMail(String email, String key) throws MessagingException {
@@ -42,6 +44,8 @@ public class Emails {
 
         message.setContent(passwordResetEmailTemplate.generateEmailTemplate(), "text/html");
         Transport.send(message);
+
+        LOG.info("Email for password reset sent to '" + email + "' containig key: '" + key + "'");
     }
 
     private static MimeMessage createMailTemplate(String email) throws MessagingException {

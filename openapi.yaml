@@ -156,6 +156,27 @@ paths:
             application/json:
               example:
                 error: Der Passwort-Vergessen-Link ist ungültig oder abgelaufen
+  /verifyforgotpasswordkey:
+    post:
+      tags:
+        - public
+      description: Verifiziert den Key der Forgot Password request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                key: aa234adsklvneoiadv
+      responses:
+        200:
+          description: Der Key ist valide
+        401:
+          description: Verifizierungs-Key existiert nicht oder ist abgelaufen
+          content:
+            application/json:
+              example:
+                error: Der Verifizierungs-Link ist ungültig oder abgelaufen
   /getusers:
     get:
       tags:
