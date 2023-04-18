@@ -49,14 +49,15 @@ export default {
       const rating = await fetch(`http://${window.location.hostname}:8080/api/submitrating`, {
         method: 'POST',
         headers: {
-          sessionKey: this.getCookie('sessionKey')
+          sessionKey: this.getCookie('sessionKey'),
+          'Content-Type': 'application/json'
         },
-        body:{
-          "design": 2,
-          "navigation": 3,
-          "puzzle": 5,
-          "sammelbuch": 1
-        },
+        body:  JSON.stringify({
+          design: 2,
+          navigation: 3,
+          puzzle: 5,
+          sammelbuch: 1
+        }),
         withCredentials: true,
         credentials: 'same-origin'
       });
