@@ -115,6 +115,8 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         newUser.setId(id);
 
         userList.add(newUser);
+
+        LOG.info("User '" + username + "' has been created with ID: "+ id);
     }
 
     /**
