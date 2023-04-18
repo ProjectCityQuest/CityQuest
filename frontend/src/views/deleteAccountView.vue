@@ -22,6 +22,10 @@
         <Rating></Rating>
       </div>
     </div>
+    <div class="actions-container">
+      <router-link class="router-link" :to="`account`">Abbruch</router-link>
+      <button class="delete-account" @click="requestAccountDelete()">Account löschen</button>
+    </div>
   </div>
 </template>
 
@@ -41,6 +45,28 @@ export default {
   },
   methods: {
     async requestAccountDelete() {
+
+      const rating = await fetch(`http://${window.location.hostname}:8080/api/submitrating`, {
+        method: 'POST',
+        headers: {
+          sessionKey: this.getCookie('sessionKey')
+        },
+        body:{
+          "design": 2,
+          "navigation": 3,
+          "puzzle": 5,
+          "sammelbuch": 1
+        },
+        withCredentials: true,
+        credentials: 'same-origin'
+      });
+
+      if (rating.ok) {
+        console.log("DANI")
+      } else {
+        this.deleteAccountError(rating)
+      }
+      /*
       const response = await fetch(`http://${window.location.hostname}:8080/api/deleteusers`, {
         method: 'DELETE',
         headers: {
@@ -56,7 +82,7 @@ export default {
         document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
       } else {
         this.deleteAccountError(response)
-      }
+      }*/
     },
     deleteAccountError(response) {
       if (response.ok) return
@@ -86,6 +112,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "../assets/colors";
+
 .view-container {
   min-height: 100vh;
   background-image: url("../assets/background.png");
@@ -95,6 +123,71 @@ export default {
     font-size: 32px;
     padding: 1rem 1rem;
     text-align: center;
+  }
+
+  h2{
+    font-size: 1.3rem;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+
+  p{
+    margin: 10px auto 10px auto;
+    text-align: center;
+    width: 60%;
+  }
+
+  .rating-container{
+    padding-top: 10px;
+
+    .rating{
+      padding: 0;
+      width: calc(2rem * 5 + 4px);
+      margin: 0 auto 0 auto;
+
+      p{
+        font-size: 1.3rem;
+        text-align: left;
+        margin: 0;
+      }
+    }
+  }
+
+  .actions-container {
+    margin: 1.5rem auto 0 auto;
+    width: 60%;
+
+    button, .router-link {
+      font-family: 'Berlin Sans FB', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      width: 100%;
+      height: 2.5rem;
+      margin-top: 1rem;
+      font-weight: normal;
+      border-radius: 10px;
+      background: $white;
+      color: $dark_gray;
+      border: 2px solid $gray;
+
+      &:hover {
+        background: $gray;
+        color: $white;
+      }
+    }
+
+    .delete-account {
+      color: $dark_red;
+      border-color: $dark_red;
+
+      &:hover {
+        background: $dark_red;
+        color: $white;
+      }
+    }
+
   }
 }
 </style>
