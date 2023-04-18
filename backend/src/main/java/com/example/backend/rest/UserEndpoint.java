@@ -219,13 +219,35 @@ public class UserEndpoint {
 
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
-            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungueltig!"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
         }
         if (!user.getPassword().equals(request.getOldPassword())) {
             return new ResponseEntity<>(new ErrorDto("Das angegebene Passwort ist falsch"), HttpStatus.UNAUTHORIZED);
         } else {
             UserServiceImpl.changePassword(user.getId(), request.getNewPassword());
             return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+    }
+
+    @PostMapping("/verifyforgotpasswordkey")
+    public ResponseEntity<Object> verifyForgotPasswordKey(@RequestBody VerifyForgotPasswordKeyDto request) {
+        LOG.info("POST /verifyForgotPasswordKey issued with parameter: " + request);
+
+        Date date = UserServiceImpl.getPendingPasswordResetDate().getOrDefault(request.getKey(), null);
+        String email = UserServiceImpl.getPendingPasswordResetEmail().getOrDefault(request.getKey(), null);
+        if (date == null || email == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Link ist ungültig"), HttpStatus.UNAUTHORIZED);
+        } else {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date());
+            c.add(Calendar.MINUTE, -10);
+            Date validDate = c.getTime();
+            if (validDate.after(date)) {
+                return new ResponseEntity<>(new ErrorDto("Der Link ist abgelaufen"), HttpStatus.UNAUTHORIZED);
+            } else {
+                LOG.info("Der Key '" + request.getKey() + "' ist gültig");
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         }
     }
 }
