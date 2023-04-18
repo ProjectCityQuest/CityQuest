@@ -119,6 +119,10 @@ export default {
   background-image: url("../assets/background.png");
   background-position: center;
 
+  &:last-child{
+    padding-bottom: 1.5rem;
+  }
+
   h1 {
     font-size: 32px;
     padding: 1rem 1rem;
