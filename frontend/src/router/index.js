@@ -8,6 +8,7 @@ import AccountView from "@/views/AccountView.vue";
 import PuzzleView from "@/views/PuzzleView.vue";
 import CollectionView from "@/views/CollectionView.vue";
 import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
+import ChangePasswordView from "@/views/ChangePasswordView.vue";
 
 // gets the value of a cookie by name
 // if the cookie doesn't exist, the function returns 'false'
@@ -107,6 +108,15 @@ const router = createRouter({
             component: ForgotPasswordView,
             props: true,
             meta: {
+            }
+        },
+        {
+            path: '/passwort-aendern',
+            name: 'passwort-aendern',
+            component: ChangePasswordView,
+            props: true,
+            meta: {
+                requiresAuth: true
             }
         },
         {
