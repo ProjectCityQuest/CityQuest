@@ -1,25 +1,24 @@
 <template>
   <div class="view-container">
-    <h1>Mein Account</h1>
-    <h2>Account löschen</h2>
+    <h1>Account löschen</h1>
     <p>Wir finden es sehr schade, du deinen Account löschen möchtest.</p>
     <p>Bitte nimm dir noch kurz Zeit und hilf uns, die App für andere User zu verbessern.</p>
     <div class="rating-container">
       <div class="rating">
         <p>Design</p>
-        <Rating></Rating>
+        <Rating @changedRating="x => updateRating(0,x)"></Rating>
       </div>
       <div class="rating">
         <p>Navigation</p>
-        <Rating></Rating>
+        <Rating @changedRating="x => updateRating(1,x)"></Rating>
       </div>
       <div class="rating">
         <p>Puzzle</p>
-        <Rating></Rating>
+        <Rating @changedRating="x => updateRating(2,x)"></Rating>
       </div>
       <div class="rating">
         <p>Sammelbuch</p>
-        <Rating></Rating>
+        <Rating @changedRating="x => updateRating(3,x)"></Rating>
       </div>
     </div>
     <div class="actions-container">
@@ -39,13 +38,15 @@ export default {
     return {
       logOutOverlayVisible: false,
       deleteAccountOverlayVisible: false,
-      userData: {},
+      ratings: [0,0,0,0],
       errors: {}
     }
   },
   methods: {
+    updateRating(index, rating){
+      this.ratings[index] = rating
+    },
     async requestAccountDelete() {
-
       const rating = await fetch(`http://${window.location.hostname}:8080/api/submitrating`, {
         method: 'POST',
         headers: {
@@ -53,37 +54,35 @@ export default {
           'Content-Type': 'application/json'
         },
         body:  JSON.stringify({
-          design: 2,
-          navigation: 3,
-          puzzle: 5,
-          sammelbuch: 1
+          design: this.ratings[0],
+          navigation: this.ratings[1],
+          puzzle: this.ratings[2],
+          sammelbuch: this.ratings[3]
         }),
         withCredentials: true,
         credentials: 'same-origin'
       });
 
       if (rating.ok) {
-        console.log("DANI")
+        const response = await fetch(`http://${window.location.hostname}:8080/api/deleteusers`, {
+          method: 'DELETE',
+          headers: {
+            sessionKey: this.getCookie('sessionKey')
+          },
+          withCredentials: true,
+          credentials: 'same-origin'
+        });
+
+        if (response.ok) {
+          this.$router.push("/")
+          // deletes cookie
+          document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+        } else {
+          this.deleteAccountError(response)
+        }
       } else {
         this.deleteAccountError(rating)
       }
-      /*
-      const response = await fetch(`http://${window.location.hostname}:8080/api/deleteusers`, {
-        method: 'DELETE',
-        headers: {
-          sessionKey: this.getCookie('sessionKey')
-        },
-        withCredentials: true,
-        credentials: 'same-origin'
-      });
-
-      if (response.ok) {
-        this.$router.push("/")
-        // deletes cookie
-        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
-      } else {
-        this.deleteAccountError(response)
-      }*/
     },
     deleteAccountError(response) {
       if (response.ok) return

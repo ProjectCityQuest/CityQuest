@@ -79,6 +79,7 @@ export default {
   methods: {
     setRating(rating) {
       this.currentRating = rating
+      this.$emit('changedRating', this.currentRating)
     }
   }
 }
