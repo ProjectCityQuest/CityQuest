@@ -17,18 +17,22 @@
     </svg>
     <h1>Passwort Vergessen</h1>
     <ForgotPasswordRequest v-if="status === 'request'" :email-prop="email"></ForgotPasswordRequest>
-    <ForgotPasswordChange v-if="status === 'success'" :email="email"
+    <ForgotPasswordChange v-if="status === 'change'" :email="email"
                           :verification-key="verificationKey"></ForgotPasswordChange>
+    <ForgotPasswordError v-if="status === 'error'" :error-message="'Der Link ist abgelaufen.'"></ForgotPasswordError>
+    <ForgotPasswordSuccess v-if="status === 'success'"></ForgotPasswordSuccess>
   </div>
 </template>
 
 <script>
 import ForgotPasswordRequest from "@/components/ForgotPasswordRequest.vue";
 import ForgotPasswordChange from "@/components/ForgotPasswordChange.vue";
+import ForgotPasswordSuccess from "@/components/ForgotPasswordSuccess.vue";
+import ForgotPasswordError from "@/components/ForgotPasswordError.vue";
 
 export default {
   name: "PasswortView",
-  components: {ForgotPasswordRequest, ForgotPasswordChange},
+  components: {ForgotPasswordError, ForgotPasswordSuccess, ForgotPasswordRequest, ForgotPasswordChange},
   props: {
     email: String,
     verificationKey: String
@@ -40,8 +44,13 @@ export default {
   },
   mounted() {
     if (this.email && this.verificationKey) {
-      this.status = 'success';
+      this.status = 'error';
     } else {
+      this.status = 'request';
+    }
+  },
+  updated() {
+    if (!this.email && !this.verificationKey) {
       this.status = 'request';
     }
   }
