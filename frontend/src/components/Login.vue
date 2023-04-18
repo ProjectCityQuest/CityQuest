@@ -74,7 +74,7 @@ export default {
       }
     },
     async sendLogin() {
-      const response = await fetch('http://127.0.0.1:8080/api/login', {
+      const response = await fetch(`http://${window.location.hostname}:8080/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ export default {
         let data = await response.json()
         document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
         document.cookie = "sessionKey=" + data.sessionKey + "; path=/"
-        window.location.replace('http://localhost:5173/karte/')
+        this.$router.push("/karte");
       } else {
         this.error = true
       }
@@ -102,6 +102,7 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/colors.scss";
+@import "src/assets/form";
 
 .register-wrapper {
   width: 100%;
@@ -109,7 +110,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: $white;
 
   #response-error {
     color: $red;
@@ -124,76 +124,6 @@ export default {
 
   #spacer2 {
     height: 1rem;
-  }
-
-  form {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    label {
-      width: 100%;
-      text-align: left;
-      margin-top: 1rem;
-      margin-bottom: 5px;
-    }
-
-    input {
-      width: 100%;
-      height: 2.5rem;
-      border: 1px solid $gray;
-      border-radius: 10px;
-      background: white;
-      margin-bottom: 0.5rem;
-      padding-left: 0.5rem;
-
-      &.dirty {
-        border-color: $green;
-
-        &:focus {
-          outline-color: $green;
-        }
-      }
-
-      &.error {
-        border-color: $red;
-
-        &:focus {
-          outline-color: $red;
-        }
-      }
-    }
-
-    button {
-      width: 100%;
-      height: 3rem;
-      border: 2px solid transparent;
-      color: white;
-      margin-top: 2.5rem;
-      font-weight: bolder;
-      background: $blue;
-      border-radius: 10px;
-
-      &:disabled {
-        background: $gray;
-      }
-    }
-
-    .input-errors {
-      width: 100%;
-      margin-bottom: 0.5rem;
-    }
-
-    .error-msg {
-      color: $red;
-      text-align: left;
-    }
-
-    .router-link {
-      color: $black;
-    }
   }
 }
 </style>

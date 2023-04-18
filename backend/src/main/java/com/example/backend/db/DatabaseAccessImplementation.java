@@ -144,4 +144,12 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
 
         LOG.info("Password of User:'" + user.getUsername() + "' with Id: '" + user.getId() + "' has been changed from '" + oldPassword + "' to '" + password + "'");
     }
+
+    public void submitRatings(int[] ratings) {
+        String statement = "insert into Bewertung (design, navigation, puzzle, sammelbuch) values (?, ?, ?, ?);";
+        Object[] params = new Object[] {ratings[0], ratings[1], ratings[2], ratings[3]};
+        jdbcTemplate.update(statement, params);
+
+        LOG.info("A rating has been submitted {design: "+ratings[0]+", navigation: "+ratings[1]+", puzzle: " + ratings[2] + ", sammelbuch: " + ratings[3] + "}");
+    }
 }

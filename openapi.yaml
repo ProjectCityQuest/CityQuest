@@ -226,6 +226,32 @@ paths:
               example:
                 error: Es gibt keinen Benutzer mit diesem Token
           description: Es gibt keinen Benutzer mit diesem Token
+  /submitrating:
+    post:
+      tags:
+        - auth
+      description: Der Benutzer gibt eine Bewertung ab
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                design: 2
+                navigation: 3
+                puzzle: 5
+                sammelbuch: 1
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '201':
+          description: Die Bewertung wurde uebernommen
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
 components:
   securitySchemes:
     ApiKeyAuth:
