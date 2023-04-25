@@ -23,9 +23,9 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      * DB_PASSWORD is the database users password
      */
 
-    private final String DB_URL = "jdbc:mysql://localhost:3306/cityquest";
+    private final String DB_URL = "jdbc:h2:file:/data/demo";
     private final String DB_USERNAME = "root";
-    private final String DB_PASSWORD = "";
+    private final String DB_PASSWORD = "password";
 
     /**
      * jdbcTemplate handles all queries and requests to the database
@@ -42,7 +42,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      */
     public DatabaseAccessImplementation() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setUrl(DB_URL);
         dataSource.setUsername(DB_USERNAME);
         dataSource.setPassword(DB_PASSWORD);
@@ -54,7 +54,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      */
     @Override
     public List<User> getAllUser() {
-        List<Map<String, Object>> users = jdbcTemplate.queryForList("SELECT * FROM User");
+        List<Map<String, Object>> users = jdbcTemplate.queryForList("SELECT * FROM Users;");
 
         for (Map<String, Object> currentUser :users) {
             int id = Integer.parseInt(currentUser.get("pk_id")+"");

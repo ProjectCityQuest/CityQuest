@@ -1,4 +1,7 @@
-create table User (
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Bewertung;
+
+create table Users (
                       pk_id INTEGER primary key auto_increment,
                       username varchar(50),
                       password varchar(50),
@@ -13,7 +16,3 @@ create table Bewertung (
                            puzzle INTEGER,
                            sammelbuch INTEGER
 );
-
-insert into User (username, password, email, email_is_verified) values ('Daniel Pillwein', 'gutesPasswort', 'dani@gmail.com', true);
-insert into User (username, password, email, email_is_verified) values ('Lukas Schodl', 'besseresPasswort', 'luki@gmail.com', true);
-insert into User (username, password, email, email_is_verified) values ('Markus Wizany', 'schlechtesPasswort', 'markus@gmail.com', false);
