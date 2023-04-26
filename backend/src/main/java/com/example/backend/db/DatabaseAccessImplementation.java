@@ -22,8 +22,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      * DB_USERNAME is the database users username
      * DB_PASSWORD is the database users password
      */
-
-    private final String DB_URL = "jdbc:h2:file:/data/demo";
+    public static String DB_URL;
     private final String DB_USERNAME = "root";
     private final String DB_PASSWORD = "password";
 
@@ -97,11 +96,11 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      * @see DatabaseAccess
      */
     public void createUser(User user) {
-        String statement = "insert into User (username, password, email) values (?, ?, ?);";
+        String statement = "insert into Users (username, password, email) values (?, ?, ?);";
         Object[] params = new Object[] {user.getUsername(), user.getPassword(), user.getEmail()};
         jdbcTemplate.update(statement, params);
 
-        String statement1 = "SELECT * FROM User where username = ?;";
+        String statement1 = "SELECT * FROM Users where username = ?;";
         Object[] params1 = {user.getUsername()};
         List<Map<String, Object>> users = jdbcTemplate.queryForList(statement1, params1);
 
@@ -125,7 +124,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      */
 
     public void deleteUser(User user) {
-        String statement = "DELETE from User where pk_id = ?";
+        String statement = "DELETE from Users where pk_id = ?";
         jdbcTemplate.update(statement, user.getId());
 
         userList.remove(user);
@@ -134,7 +133,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
     }
 
     public void changePassword(User user, String password) {
-        String statement = "UPDATE User SET password = ? WHERE pk_id = ?";
+        String statement = "UPDATE Users SET password = ? WHERE pk_id = ?";
         Object[] params = new Object[] {password, user.getId()};
         jdbcTemplate.update(statement, params);
 
