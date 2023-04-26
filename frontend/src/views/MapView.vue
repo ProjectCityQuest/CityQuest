@@ -36,7 +36,8 @@ export default {
       map: undefined,
       vectorSource: undefined,
       vectorLayer: undefined,
-      locateButton: undefined
+      locateButton: undefined,
+      watcher: undefined
     }
   },
   methods: {
@@ -52,7 +53,7 @@ export default {
       });
     },
     trackUserPosition() {
-      navigator.geolocation.watchPosition(
+      this.watcher = navigator.geolocation.watchPosition(
           (pos) => {
             // centers map on user position
             if (!this.userPositionFound) {
@@ -153,6 +154,9 @@ export default {
 
     this.trackUserHeading()
   },
+  unmounted() {
+    navigator.geolocation.clearWatch(this.watcher)
+  }
 }
 </script>
 
