@@ -2,7 +2,6 @@ package com.example.backend.service;
 
 import com.example.backend.db.DatabaseAccess;
 import com.example.backend.db.DatabaseAccessImplementation;
-import com.example.backend.db.DatabaseAccessTestImplementation;
 
 public class RatingsService {
     private static final DatabaseAccess DATABASE = new DatabaseAccessImplementation();

@@ -10,7 +10,6 @@ import com.example.backend.mapper.UserRegisterMapping;
 import com.example.backend.service.UserServiceImpl;
 import com.example.backend.util.Emails;
 import com.example.backend.util.Strings;
-import com.mysql.cj.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

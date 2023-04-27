@@ -6,7 +6,6 @@ package com.example.backend.service;
 
 import com.example.backend.db.DatabaseAccess;
 import com.example.backend.db.DatabaseAccessImplementation;
-import com.example.backend.db.DatabaseAccessTestImplementation;
 import com.example.backend.entity.User;
 import com.example.backend.util.IP;
 import org.slf4j.Logger;
