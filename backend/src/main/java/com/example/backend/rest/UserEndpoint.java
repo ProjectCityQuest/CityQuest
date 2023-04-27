@@ -259,4 +259,16 @@ public class UserEndpoint {
             }
         }
     }
+
+    @PostMapping("changeusername")
+    public ResponseEntity<Object> changeUsername(@RequestBody ChangeUsernameDto request, @RequestHeader(value = "sessionKey") String token) {
+        LOG.info("POST /changeusername issued with parameter: " + request);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+        UserServiceImpl.changeUsername(user, request.getUsername());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

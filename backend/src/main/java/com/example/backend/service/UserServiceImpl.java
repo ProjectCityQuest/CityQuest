@@ -203,4 +203,6 @@ public class UserServiceImpl {
     public static void changePassword(int id, String password) {
         DATABASE.changePassword(getUserById(id), password);
     }
+
+    public static void changeUsername(User user, String username) {DATABASE.changeUsername(user, username);}
 }

@@ -144,6 +144,18 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         LOG.info("Password of User:'" + user.getUsername() + "' with Id: '" + user.getId() + "' has been changed from '" + oldPassword + "' to '" + password + "'");
     }
 
+    public void changeUsername(User user, String username) {
+        String statement = "UPDATE Users SET username = ? WHERE pk_id = ?";
+        Object[] params = new Object[] {username, user.getId()};
+        jdbcTemplate.update(statement, params);
+
+        User currentUser = UserServiceImpl.getUserById(user.getId());
+        String oldUsername = currentUser.getUsername();
+        currentUser.setUsername(username);
+
+        LOG.info("Username of User with Id:'" + user.getId() + "' has been changed from '" + oldUsername + "' to '" + username + "'");
+    }
+
     public void submitRatings(int[] ratings) {
         String statement = "insert into Bewertung (design, navigation, puzzle, sammelbuch) values (?, ?, ?, ?);";
         Object[] params = new Object[] {ratings[0], ratings[1], ratings[2], ratings[3]};

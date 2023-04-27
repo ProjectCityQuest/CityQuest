@@ -49,5 +49,7 @@ public interface DatabaseAccess {
 
     void changePassword(User user, String password);
 
+    void changeUsername(User user, String username);
+
     void submitRatings(int[] ratings);
 }
