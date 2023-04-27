@@ -10,6 +10,7 @@ import CollectionView from "@/views/CollectionView.vue";
 import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
 import ChangePasswordView from "@/views/ChangePasswordView.vue";
 import deleteAccountView from "@/views/deleteAccountView.vue";
+import CameraView from "@/views/CameraView.vue";
 
 // gets the value of a cookie by name
 // if the cookie doesn't exist, the function returns 'false'
@@ -156,6 +157,14 @@ const router = createRouter({
             path: '/sammelbuch',
             name: 'sammelbuch',
             component: CollectionView,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: '/kamera',
+            name: 'kamera',
+            component: CameraView,
             meta: {
                 requiresAuth: true
             }
