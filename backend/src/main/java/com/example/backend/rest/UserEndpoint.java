@@ -260,7 +260,7 @@ public class UserEndpoint {
         }
     }
 
-    @PostMapping("changeusername")
+    @PostMapping("/changeusername")
     public ResponseEntity<Object> changeUsername(@RequestBody ChangeUsernameDto request, @RequestHeader(value = "sessionKey") String token) {
         LOG.info("POST /changeusername issued with parameter: " + request);
 
