@@ -70,7 +70,7 @@ export default {
       const data = canvas.toDataURL("image/png")
       this.gallery.push(data)
 
-      if(this.gallery.length>0){
+      if (this.gallery.length > 0) {
         document.getElementById("last-shot").src = data;
       }
     }
@@ -120,12 +120,12 @@ export default {
     border-radius: 5px;
     margin: 7px 0 0 7px;
 
-    img{
+    img {
       height: 100%;
       width: 100%;
       object-fit: cover;
       padding: 0;
-      margin:0;
+      margin: 0;
       border-radius: 5px;
     }
   }
@@ -140,13 +140,13 @@ export default {
     border: solid 4px $white;
     box-sizing: border-box;
 
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
 
-    #inner-circle{
-      height:43px;
-      width:43px;
+    #inner-circle {
+      height: 43px;
+      width: 43px;
       background-color: $white;
       border-radius: 99999px;
       transition: transform 0.2s ease-in-out;
