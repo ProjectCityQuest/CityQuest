@@ -4,7 +4,7 @@
   </div>
   <div class="footer-wrapper">
     <canvas id="canvas"></canvas>
-    <div id="last-shot-container">
+    <div id="last-shot-container" @click="toGallery()">
       <img id="last-shot" src="">
     </div>
     <div id="take-photo">
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import router from '@/router'
 export default {
   name: "CameraView",
   data() {
@@ -73,6 +74,12 @@ export default {
       if (this.gallery.length > 0) {
         document.getElementById("last-shot").src = data;
       }
+    },
+    toGallery(){
+      this.$store.commit('setGallery', this.gallery)
+      console.log(this.gallery)
+      console.log(this.$store.state.gallery)
+      router.push('/galerie')
     }
   }
 
