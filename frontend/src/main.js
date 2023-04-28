@@ -16,6 +16,9 @@ const store = createStore({
         setGallery(state, newGallery){
             state.gallery = newGallery
         },
+        addImage(state, data){
+            state.gallery.push(data)
+        },
         resetGallery(state){
             state.gallery = []
         }
