@@ -6,27 +6,52 @@
     <p>1 Bild auswählen</p>
   </div>
   <div class="image-container">
-    <div class="image" v-for="(image, index) in gallery" :key="index">
-      <img :src="image"/>
+    <div class="image" v-for="(image, index) in gallery" :key="index" :style="{height: imageHeight}" @click="selectedImage = index">
+      <div v-if="selectedImage === index" class="cover" :style="{height: imageHeight}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+          <path d="M378 810 154 586l43-43 181 181 384-384 43 43-427 427Z"/>
+        </svg>
+      </div>
+      <img :id="index" :src="image" :style="{height: imageHeight}"/>
     </div>
   </div>
   <div class="footer-wrapper">
-
+    <CQButton b-style="login" :status="buttonStatus">Auswählen</CQButton>
   </div>
 </template>
 
 <script>
 import router from '@/router'
+import CQButton from "@/components/CQButton.vue";
+
 export default {
   name: "GalleryView",
+  data() {
+    return {
+      buttonStatus: "inactive",
+      selectedImage: null
+    }
+  },
+  components: {
+    CQButton
+  },
   computed: {
     gallery() {
       return this.$store.state.gallery
+    },
+    imageHeight() {
+      console.log((window.innerWidth * 0.45) + "px")
+      return (window.innerWidth * 0.45) + "px"
     }
   },
   methods: {
-    backToCamera(){
+    backToCamera() {
       router.push('/kamera')
+    }
+  },
+  watch:{
+    'selectedImage'(){
+      this.buttonStatus = this.selectedImage === null? 'inactive':'active'
     }
   }
 }
@@ -50,14 +75,14 @@ export default {
   gap: 0 0;
   grid-template-areas: ". . .";
 
-  svg{
+  svg {
     grid-column: 1;
     margin: auto 0 auto 10px;
     height: 35px;
     fill: $blue;
   }
 
-  p{
+  p {
     grid-column: 2;
     text-align: center;
     margin: auto 0 auto 0;
@@ -65,32 +90,57 @@ export default {
   }
 }
 
-.image-container{
-  width:100%;
-  margin-top:70px;
+.image-container {
+  width: 100%;
+  margin-top: 70px;
   height: calc(100vh - 140px);
   background-color: $white;
   overflow-y: scroll;
 
-  display:flex;
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
 
-  .image{
-    width:45%;
-    margin-top: 15px;
+  .image {
+    width: 45%;
+    margin-top: 10px;
+    position: relative;
+    border-radius: 10px;
+    border: solid $light_gray;
 
-    img{
+    img {
       height: 100%;
       width: 100%;
       object-fit: cover;
       padding: 0;
       margin: 0;
-      border-radius: 10px;
-
-      border: solid $light_gray;
       box-sizing: border-box;
+      border-radius: 10px;
+    }
+  }
+
+  .cover {
+    position: absolute;
+    background-color: $black;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    z-index: 1;
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg{
+      fill: $white;
+      width: 60px;
+      height: 60px;
+      opacity: 1;
+      z-index: 2;
     }
   }
 }
@@ -103,5 +153,14 @@ export default {
   height: 70px;
   background-color: $white;
   z-index: 9999;
+  box-shadow: 0px -5px 80px 0px rgba(0, 0, 0, 0.75);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  * {
+    width: 60%;
+  }
 }
 </style>
