@@ -47,6 +47,8 @@ export default {
     },
     safeImage(){
       this.buttonStatus = "waiting"
+      let gallery = JSON.parse(sessionStorage.getItem('gallery')) || []
+      sessionStorage.setItem("selectedImage",gallery[gallery.length-1])
       sessionStorage.removeItem("gallery")
     }
   },
