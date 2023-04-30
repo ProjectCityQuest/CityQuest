@@ -1,6 +1,10 @@
 <template>
   <div class="camera">
     <video id="video"></video>
+    <div class="hr top"></div>
+    <div class="hr bottom"></div>
+    <div class="vr left"></div>
+    <div class="vr right"></div>
   </div>
   <div class="footer-wrapper">
     <canvas id="canvas"></canvas>
@@ -15,6 +19,7 @@
 
 <script>
 import router from '@/router'
+
 export default {
   name: "CameraView",
   data() {
@@ -74,18 +79,18 @@ export default {
         document.getElementById("last-shot").src = data;
       }
     },
-    toGallery(){
+    toGallery() {
       router.push('/galerie')
     }
   },
-  computed:{
+  computed: {
     gallery() {
       return this.$store.state.gallery;
     },
-    lastShot(){
-      if (this.$store.state.gallery.length>0){
+    lastShot() {
+      if (this.$store.state.gallery.length > 0) {
         return this.$store.state.gallery[this.$store.state.gallery.length - 1]
-      }else{
+      } else {
         return ""
       }
     }
@@ -98,7 +103,7 @@ export default {
 @import "src/assets/colors.scss";
 
 .camera {
-  background-color: $red;
+  background-color: $light_gray;
   width: 100%;
   height: 100vh;
   z-index: 1;
@@ -106,6 +111,39 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  .hr,
+  .vr {
+    position: absolute;
+    background-color: $white;
+    opacity: 0.5;
+    z-index: 2;
+  }
+
+  .hr {
+    width:100%;
+    height: 1px;
+
+    &.top {
+      top: 33%;
+    }
+
+    &.bottom {
+      bottom: 33%;
+    }
+  }
+  .vr {
+    height:100%;
+    width: 1px;
+
+    &.left {
+      left: 33%;
+    }
+
+    &.right {
+      right: 33%;
+    }
+  }
 }
 
 .footer-wrapper {
