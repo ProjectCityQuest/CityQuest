@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="footer-wrapper">
-    <CQButton b-style="login" :status="buttonStatus">Auswählen</CQButton>
+    <CQButton b-style="login" :status="buttonStatus" @click="safeImage()">Auswählen</CQButton>
   </div>
 </template>
 
@@ -40,13 +40,16 @@ export default {
       return this.$store.state.gallery
     },
     imageHeight() {
-      console.log((window.innerWidth * 0.45) + "px")
       return (window.innerWidth * 0.45) + "px"
     }
   },
   methods: {
     backToCamera() {
       router.push('/kamera')
+    },
+    safeImage(){
+      this.buttonStatus = "waiting"
+      this.$store.commit("setSelectedImage",document.getElementById(this.selectedImage).src)
     }
   },
   watch:{
@@ -100,11 +103,12 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  align-content: flex-start;
   justify-content: space-around;
 
   .image {
     width: 45%;
-    margin-top: 10px;
+    margin-top: 15px;
     position: relative;
     border-radius: 10px;
     border: solid $light_gray;
@@ -116,7 +120,7 @@ export default {
       padding: 0;
       margin: 0;
       box-sizing: border-box;
-      border-radius: 10px;
+      border-radius: 6px;
     }
   }
 
@@ -129,7 +133,7 @@ export default {
     left: 0;
     opacity: 0.5;
     z-index: 1;
-    border-radius: 10px;
+    border-radius: 6px;
 
     display: flex;
     justify-content: center;
