@@ -1,5 +1,13 @@
 <template>
   <div class="camera">
+    <svg class="close-icon" xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 50 50">
+      <circle cx="25" cy="25" r="25" style="fill:#e73829"/>
+      <rect x="23" y="9.3" width="4" height="30.41" rx="1.24" transform="translate(24.65 -10.5) rotate(45)"
+            style="fill:#f9f9f9"/>
+      <rect x="23" y="9.8" width="4" height="30.41" rx="1.24" transform="translate(60.36 25) rotate(135)"
+            style="fill:#f9f9f9"/>
+    </svg>
     <video id="video"></video>
     <div class="hr top"></div>
     <div class="hr bottom"></div>
@@ -9,7 +17,7 @@
   <div class="footer-wrapper">
     <canvas id="canvas"></canvas>
     <div id="last-shot-container" @click="toGallery()">
-      <img id="last-shot" :src="lastShot">
+      <img v-if="this.$store.state.gallery.length>0" id="last-shot" :src="lastShot">
     </div>
     <div id="take-photo">
       <div id="inner-circle"></div>
@@ -120,8 +128,18 @@ export default {
     z-index: 2;
   }
 
+  .close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+  }
+
   .hr {
-    width:100%;
+    width: 100%;
     height: 1px;
 
     &.top {
@@ -132,8 +150,9 @@ export default {
       bottom: 33%;
     }
   }
+
   .vr {
-    height:100%;
+    height: 100%;
     width: 1px;
 
     &.left {
