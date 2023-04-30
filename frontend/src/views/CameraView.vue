@@ -17,7 +17,7 @@
   <div class="footer-wrapper">
     <canvas id="canvas"></canvas>
     <div id="last-shot-container" @click="toGallery()">
-      <img v-if="this.$store.state.gallery.length>0" id="last-shot" :src="lastShot">
+      <img v-if="this.gallery.length > 0" id="last-shot" :src="lastShot">
     </div>
     <div id="take-photo">
       <div id="inner-circle"></div>
@@ -36,7 +36,8 @@ export default {
       height: 100,
       streaming: false,
       video: null,
-      canvas: null
+      canvas: null,
+      gallery: JSON.parse(sessionStorage.getItem('gallery')) || []
     }
   },
   mounted() {
@@ -78,32 +79,31 @@ export default {
           }, false)
     },
     takePicture() {
-      const context = this.canvas.getContext("2d")
-      context.drawImage(this.video, 0, 0, this.width, this.height)
-      const data = canvas.toDataURL("image/png")
-      this.$store.commit('addImage', data)
+      const context = this.canvas.getContext("2d");
+      context.drawImage(this.video, 0, 0, this.width, this.height);
+      const data = canvas.toDataURL("image/png");
+      this.gallery = JSON.parse(sessionStorage.getItem('gallery')) || []
+      this.gallery.push(data);
+      sessionStorage.setItem('gallery', JSON.stringify(this.gallery))
 
-      if (this.$store.state.gallery.length > 0) {
-        document.getElementById("last-shot").src = data;
+      if (this.gallery.length > 0) {
+        document.getElementById("last-shot").src = data
       }
     },
     toGallery() {
-      router.push('/galerie')
+      router.push('/galerie');
     }
   },
   computed: {
-    gallery() {
-      return this.$store.state.gallery;
-    },
     lastShot() {
-      if (this.$store.state.gallery.length > 0) {
-        return this.$store.state.gallery[this.$store.state.gallery.length - 1]
+      const gallery = JSON.parse(sessionStorage.getItem('gallery')) || [];
+      if (gallery.length > 0) {
+        return gallery[gallery.length - 1];
       } else {
-        return ""
+        return "";
       }
     }
   }
-
 }
 </script>
 

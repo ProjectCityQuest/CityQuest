@@ -29,16 +29,14 @@ export default {
   data() {
     return {
       buttonStatus: "inactive",
-      selectedImage: null
+      selectedImage: null,
+      gallery: JSON.parse(sessionStorage.getItem('gallery')) || []
     }
   },
   components: {
     CQButton
   },
   computed: {
-    gallery() {
-      return this.$store.state.gallery
-    },
     imageHeight() {
       return (window.innerWidth * 0.45) + "px"
     }
@@ -49,7 +47,7 @@ export default {
     },
     safeImage(){
       this.buttonStatus = "waiting"
-      this.$store.commit("setSelectedImage",document.getElementById(this.selectedImage).src)
+      sessionStorage.removeItem("gallery")
     }
   },
   watch:{
@@ -108,7 +106,8 @@ export default {
 
   .image {
     width: 45%;
-    margin-top: 15px;
+    margin-top: 10px;
+    margin-bottom: 7px;
     position: relative;
     border-radius: 10px;
     border: solid $light_gray;
