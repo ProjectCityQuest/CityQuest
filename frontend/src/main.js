@@ -9,12 +9,16 @@ const app = createApp(App)
 const store = createStore({
     state () {
         return {
-            gallery: []
+            gallery: [],
+            seletedImage : ""
         }
     },
     mutations: {
         setGallery(state, newGallery){
             state.gallery = newGallery
+        },
+        setSelectedImage(state, seletedImage){
+            state.seletedImage = seletedImage
         },
         addImage(state, data){
             state.gallery.push(data)
