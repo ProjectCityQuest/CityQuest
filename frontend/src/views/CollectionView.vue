@@ -23,14 +23,14 @@ export default {
           location: "Zentralfriedhof",
           date: "21.03.2019",
           text: "Der Zentralfriedhof war ein wirklich beeindruckender Ort mit seinen riesigen Gräbern und Gedenkstätten. Es war erstaunlich zu sehen, wie gut die Gräber gepflegt und in Stand gehalten wurden.",
-          image: null
+          image: "https://www.geschichtewiki.wien.gv.at/images/3/39/Zentralfriedhof-Vogelschau.jpg"
         },
         {
           id: 2,
           location: "Schafbergbad",
           date: "12.06.2018",
           text: "Das Schafbergbad war eine tolle Möglichkeit, an einem heißen Sommertag abzukühlen. Das Schwimmbecken und die Liegewiese waren beide sehr gepflegt und das Wasser war erfrischend.",
-          image: null
+          image: "https://www.wien.gv.at/freizeit/baeder/images/schafbergbad5-gr.jpg"
         },
         {
           id: 3,
@@ -101,6 +101,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/assets/colors";
+.entry-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
+  *{
+    width:90%;
+    margin-top: 15px;
+  }
+}
 </style>
