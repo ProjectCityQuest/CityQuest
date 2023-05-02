@@ -1,6 +1,6 @@
 <template>
   <div class="register-wrapper">
-    <p v-if="error" id="response-error">Der Benutzername/die E-Mail-Adresse existieren bereits. Bitte wähle einen/eine andern/andere.</p>
+    <p v-if="error" id="response-error">{{ errorMessage }}</p>
     <div v-else id="spacer"></div>
     <form @submit.prevent>
       <!-- Username -->
@@ -43,7 +43,7 @@
         <div class="error-msg">{{ error.$message }}</div>
       </div>
 
-      <button :disabled="v$.form.$invalid" @click="sendRegistration()">Registrieren</button>
+      <CQButton b-style="register" :status="state" @click="sendRegistration()">Registrieren</CQButton>
     </form>
     <div id="spacer"></div>
     <router-link class="router-link" to="/login">Login</router-link>
@@ -53,9 +53,11 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required$, email$, passwordMinLength$, passwordSameAs$} from "@/validators";
+import CQButton from "@/components/CQButton.vue";
 
 export default {
   name: "Register",
+  components: {CQButton},
   setup() {
     return {v$: useVuelidate()}
   },
@@ -67,7 +69,9 @@ export default {
         password: "",
         confirmPassword: ""
       },
-      error: false
+      error: false,
+      errorMessage: "",
+      state: "inactive"
     }
   },
   validations() {
@@ -97,8 +101,11 @@ export default {
         dirty: validation.$dirty
       }
     },
-    sendRegistration() {
-      fetch(`http://${window.location.hostname}:8080/api/register`, {
+    async sendRegistration() {
+      this.resetError();
+      this.state = "waiting";
+
+      await fetch(`http://${window.location.hostname}:8080/api/register`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -110,14 +117,35 @@ export default {
               'email': this.form.email
             }
         )
-      })
-          .then(response => {
-            if (response.status === 201) {
-              this.$router.push('/email-verifizierung/' + (this.form.email.replaceAll('.','-')))
-            } else {
-              this.error = true
-            }
-          })
+      }).then(response => {
+        if (response.status === 201) {
+          this.$router.push('/email-verifizierung/' + (this.form.email.replaceAll('.', '-')))
+        } else {
+          this.setError("Der Benutzername/die E-Mail-Adresse existieren bereits. Bitte wähle einen/eine andern/andere.")
+        }
+      }).catch((err) => {
+        this.state = "active";
+        if (err.message === 'Failed to fetch') {
+          this.setError("Verbindung konnte nicht hergestellt werden.");
+        } else {
+          this.setError("Das hat nicht geklappt ):");
+        }
+      });
+
+      this.state = "active";
+    },
+    resetError() {
+      this.error = false;
+      this.errorMessage = "";
+    },
+    setError(message) {
+      this.error = true;
+      this.errorMessage = message;
+    }
+  },
+  watch: {
+    'v$.form.$invalid'() {
+      this.state = this.v$.form.$invalid ? 'inactive' : 'active'
     }
   }
 }
@@ -138,13 +166,14 @@ export default {
     margin-bottom: 2rem;
   }
 
-  #response-error{
+  #response-error {
     color: $red;
     text-align: center;
     margin: 1.5rem 0 1.5rem 0;
+    width: 90%;
   }
 
-  #spacer{
+  #spacer {
     height: 2rem;
   }
 }
