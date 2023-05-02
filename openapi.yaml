@@ -339,6 +339,62 @@ paths:
               example:
                 error: Der Token ist ungueltig
           description: Der Token ist ungueltig
+  /getcollection:
+    get:
+      tags:
+        - auth
+      description: Liefert die Sammelbucheinträge
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                entries: [
+                  {id: 1, timestamp: "2004-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"},
+                  {id: 2, timestamp: "2015-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
+                ]
+          description: Liefert die Sammelbucheinträge
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+  /getentry:
+    get:
+      tags:
+        - auth
+      description: Liefert einen einzelnen Sammelbucheintrag
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                id: 8324
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                entry: {id: 8324, timestamp: "2015-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
+          description: Liefert die Sammelbucheinträge
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+        '403': 
+          content:
+            application/json:
+              example:
+                error: Es gibt keinen entry mit dieser ID
+              description: Es gibt keinen entry mit dieser ID
 components:
   securitySchemes:
     ApiKeyAuth:
