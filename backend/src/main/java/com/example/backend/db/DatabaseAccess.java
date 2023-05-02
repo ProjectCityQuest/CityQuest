@@ -52,4 +52,17 @@ public interface DatabaseAccess {
     void changeUsername(User user, String username);
 
     void submitRatings(int[] ratings);
+
+    /**
+     *
+     * @param id of the profile pictures user
+     */
+    String getProfilePicture(int id);
+
+    /**
+     *
+     * @param id of the user which changes his image
+     * @param data contains base64 coded data of the profile picture
+     */
+    void changeProfilePicture(int id, String data);
 }
