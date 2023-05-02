@@ -14,7 +14,8 @@
         <div class="user-data-container">
           <div class="username">
             <h2>Benutzername</h2>
-            <input type="text" v-model="v$.changedUsername.$model" :class="status(v$.changedUsername)">
+            <input type="text" v-model="v$.changedUsername.$model" :class="status(v$.changedUsername)"
+                   @input="changeUsername">
             <!-- error message -->
             <div class="input-errors" v-for="(error, index) of v$.changedUsername.$errors" :key="index">
               <div class="error-msg">{{ error.$message }}</div>
@@ -25,8 +26,8 @@
             <p>{{ getEmail }}</p>
           </div>
         </div>
-        <div class="image-container">
-          <div class="image edit">
+        <router-link to="kamera/account" class="image-container">
+          <div class="image edit" :style="getProfilePictureStyle">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 139.81 139.31">
               <path
                   d="M8.05,140.17l17.76-3.39a3.61,3.61,0,0,0,1.87-6.1L13.32,116.32a3.61,3.61,0,0,0-6.1,1.87L3.83,136A3.61,3.61,0,0,0,8.05,140.17Z"
@@ -38,7 +39,7 @@
                   transform="translate(-3.76 -0.92)"/>
             </svg>
           </div>
-        </div>
+        </router-link>
       </div>
       <div class="submit-container">
         <CQButton @click="updateProfile" b-style="login" :status="state">Speichern</CQButton>
@@ -69,7 +70,7 @@
           </div>
         </div>
         <div class="image-container">
-          <div class="image" ref="profilePicture"></div>
+          <div class="image" :style="getProfilePictureStyle"></div>
         </div>
       </div>
     </div>
@@ -114,8 +115,13 @@ export default {
         dirty: validation.$dirty
       }
     },
-    updateProfile() {
-      this.updateUsername();
+    async updateProfile() {
+      await this.updateUsername();
+      if (sessionStorage.getItem("selectedImage")) {
+        await this.updateProfilePicture();
+      }
+
+      await this.toggleEdit();
     },
     async updateUsername() {
       const response = await fetch(`http://${window.location.hostname}:8080/api/changeusername`, {
@@ -146,7 +152,42 @@ export default {
       if (response.ok) {
         this.state = "inactive";
         this.userData.name = this.changedUsername;
-        await this.toggleEdit();
+      } else {
+        let data = await response.json();
+        this.setError(data.error);
+      }
+    },
+    async updateProfilePicture() {
+      const response = await fetch(`http://${window.location.hostname}:8080/api/changeprofilepicture`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'sessionKey': this.getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin',
+        body: JSON.stringify({
+              'image': sessionStorage.getItem("selectedImage"),
+            }
+        )
+      }).catch((err) => {
+        this.state = "active";
+        if (err.message === 'Failed to fetch') {
+          this.setError("Verbindung konnte nicht hergestellt werden.");
+        } else {
+          this.setError("Das hat nicht geklappt ):");
+        }
+      });
+
+      if (!response) {
+        return;
+      }
+
+      if (response.ok) {
+        this.state = "inactive";
+
+        this.profilePicture = sessionStorage.getItem("selectedImage");
+        sessionStorage.removeItem("selectedImage");
       } else {
         let data = await response.json();
         this.setError(data.error);
@@ -168,9 +209,16 @@ export default {
     },
     async toggleEdit() {
       this.editingEnabled = !this.editingEnabled
+
+      // if editing is closed the image preview is discarded
+      if (this.editingEnabled === false) {
+        sessionStorage.removeItem("selectedImage");
+      }
+
       await this.fetchUserData();
       this.v$.changedUsername.$model = this.userData.name;
       this.v$.$reset();
+
       this.removeFeedback();
     },
     fetchUserData() {
@@ -211,6 +259,20 @@ export default {
         }
       }
       return false;
+    },
+    changeUsername(event) {
+      if (sessionStorage.getItem("selectedImage")) {
+        this.state = 'active';
+        return;
+      }
+
+      if (this.v$.$invalid) {
+        this.state = 'inactive';
+      } else if (this.userData.name === event.target.value) {
+        this.state = 'inactive';
+      } else {
+        this.state = 'active';
+      }
     }
   },
   computed: {
@@ -222,26 +284,29 @@ export default {
     },
     getDeleteAccountError() {
       return this.errors.deleteAccount;
-    }
-  },
-  watch: {
-    changedUsername(newValue) {
-      if (this.v$.$invalid) {
-        this.state = 'inactive';
-      } else if (this.userData.name === newValue) {
-        this.state = 'inactive';
-      } else {
-        this.state = 'active';
+    },
+    getProfilePictureStyle() {
+      if (sessionStorage.getItem("selectedImage") && this.editingEnabled) {
+        return `background-image: url(${sessionStorage.getItem("selectedImage")})`;
       }
-    },
-    profilePicture(newValue) {
-      this.$refs.profilePicture.style.backgroundImage = `url(${newValue})`
-    },
+      return `background-image: url(${this.profilePicture})`;
+    }
   },
   async mounted() {
     await this.fetchUserData();
     this.v$.changedUsername.$model = this.userData.name;
+
     await this.fetchProfilePicture();
+
+    const prevRoute = this.$router.options.history.state.back;
+
+    if (prevRoute.includes("kamera") || prevRoute.includes("galerie")) {
+      await this.toggleEdit();
+    }
+
+    if (sessionStorage.getItem("selectedImage")) {
+      this.state = "active";
+    }
   },
 }
 </script>
@@ -328,15 +393,14 @@ export default {
 
       .image {
         background-image: url("/src/assets/placeholder_profile.png");
-        background-size: 120px;
         background-position: center;
+        background-size: cover;
         display: flex;
         justify-content: center;
         align-items: center;
         border-radius: 10px;
         width: 100px;
         height: 100px;
-        object-fit: cover;
 
         svg {
           fill: white;
