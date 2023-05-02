@@ -1,11 +1,8 @@
 package com.example.backend.config;
 
 import com.example.backend.db.DatabaseAccessImplementation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -13,9 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 // TODO: adjust CORS mapping to not allow everything
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-  @Autowired
-  public Environment env;
 
   @Value("${spring.datasource.url}")
   public String DB_URL;

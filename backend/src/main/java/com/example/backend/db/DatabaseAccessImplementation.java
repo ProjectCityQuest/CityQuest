@@ -81,16 +81,30 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      */
     @Override
     public User getUserById(int id) {
-        return null;
-    } // TODO: implement
+        String statement = "SELECT * FROM Users where pk_id = ?;";
+        User user = jdbcTemplate.queryForObject(statement, new Object[]{id}, (rs, rowNum) -> {
+            int pk_id = Integer.parseInt(rs.getInt("pk_id")+"");
+            String username = rs.getString("username")+"";
+            String password = rs.getString("password")+"";
+            String email = rs.getString("email")+"";
+            boolean emailIsVerified;
+            if (rs.getString("email_is_verified") == null) {
+                emailIsVerified = false;
+            } else {
+                emailIsVerified = Boolean.parseBoolean(rs.getString("email_is_verified"));
+            }
 
-    /**
-     * @see DatabaseAccess
-     */
-    @Override
-    public User getUserByEmail(String email) {
-        return null;
-    } // TODO: implement
+            User newUser = new User(username, email, password);
+            newUser.setId(pk_id);
+            newUser.setEmailIsVerified(emailIsVerified);
+
+            return newUser;
+        });
+
+        LOG.info("DB ACCESSED to retrieve User with id: '" + id + "'");
+
+        return user;
+    }
 
     /**
      * @see DatabaseAccess
