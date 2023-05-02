@@ -26,6 +26,9 @@ import CQButton from "@/components/CQButton.vue";
 
 export default {
   name: "GalleryView",
+  props: {
+    source: String
+  },
   data() {
     return {
       buttonStatus: "inactive",
@@ -50,6 +53,7 @@ export default {
       let gallery = JSON.parse(sessionStorage.getItem('gallery')) || []
       sessionStorage.setItem("selectedImage",gallery[gallery.length-1])
       sessionStorage.removeItem("gallery")
+      router.push('/' + this.source)
     }
   },
   watch:{

@@ -163,17 +163,19 @@ const router = createRouter({
             }
         },
         {
-            path: '/kamera',
+            path: '/kamera/:source',
             name: 'kamera',
             component: CameraView,
+            props: true,
             meta: {
                 requiresAuth: true
             }
         },
         {
-            path: '/galerie',
+            path: '/galerie/:source',
             name: 'galerie',
             component: GalleryView,
+            props: true,
             meta: {
                 requiresAuth: true
             }

@@ -1,13 +1,15 @@
 <template>
   <div class="camera">
-    <svg class="close-icon" xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 50 50">
-      <circle cx="25" cy="25" r="25" style="fill:#e73829"/>
-      <rect x="23" y="9.3" width="4" height="30.41" rx="1.24" transform="translate(24.65 -10.5) rotate(45)"
-            style="fill:#f9f9f9"/>
-      <rect x="23" y="9.8" width="4" height="30.41" rx="1.24" transform="translate(60.36 25) rotate(135)"
-            style="fill:#f9f9f9"/>
-    </svg>
+    <div class="close-icon" @click="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 50 50">
+        <circle cx="25" cy="25" r="25" style="fill:#e73829"/>
+        <rect x="23" y="9.3" width="4" height="30.41" rx="1.24" transform="translate(24.65 -10.5) rotate(45)"
+              style="fill:#f9f9f9"/>
+        <rect x="23" y="9.8" width="4" height="30.41" rx="1.24" transform="translate(60.36 25) rotate(135)"
+              style="fill:#f9f9f9"/>
+      </svg>
+    </div>
     <video id="video"></video>
     <div class="hr top"></div>
     <div class="hr bottom"></div>
@@ -30,6 +32,9 @@ import router from '@/router'
 
 export default {
   name: "CameraView",
+  props: {
+    source: String
+  },
   data() {
     return {
       width: 0,
@@ -91,7 +96,12 @@ export default {
       }
     },
     toGallery() {
-      router.push('/galerie');
+      router.push('/galerie/'+ this.source);
+    },
+    goBack() {
+      sessionStorage.removeItem("gallery")
+      sessionStorage.removeItem("selectedImage")
+      router.push('/' + this.source)
     }
   },
   computed: {
@@ -136,6 +146,7 @@ export default {
     width: 25px;
     height: 25px;
     background-color: transparent;
+    z-index: 3;
   }
 
   .hr {
@@ -172,7 +183,7 @@ export default {
   width: 100%;
   height: 70px;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  z-index: 3;
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
