@@ -273,6 +273,72 @@ paths:
               example:
                 error: Der Token ist ungueltig
           description: Der Token ist ungueltig
+  /changeusername:
+    post:
+      tags:
+        - auth
+      description: Der Benutzername wird geändert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                username: "neuer Benutzername"
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '201':
+          description: Der Benutzername wurde gespeichert
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+  /changeprofilepicture:
+    post:
+      tags:
+        - auth
+      description: Das Profilbild wird geändert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                image: "some base64 data"
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '201':
+          description: Das Profilbild wurde gespeichert
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+  /getprofilepicture:
+    get:
+      tags:
+        - auth
+      description: Das Profilbild wird geändert
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                image: some base64 data
+          description: Liefert das Profilbild zurück
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
 components:
   securitySchemes:
     ApiKeyAuth:
