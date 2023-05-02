@@ -1,36 +1,15 @@
 <template>
   <div class="view-container">
+    <Header>
+      <h1>Account</h1>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+        <path d="M25,25.59c-7.09,0-12.88,6.44-13.21,14.52H38.21C37.88,32,32.09,25.59,25,25.59Z" transform="translate(0)"
+              style="fill:#b41919"/>
+        <circle cx="25" cy="16.56" r="6.45" style="fill:#b41919"/>
+      </svg>
+    </Header>
     <div class="account-wrapper">
-      <h1>Mein Account</h1>
-      <div class="profile-settings">
-        <nav>
-          <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg"
-               viewBox="0 0 139.81 139.31">
-            <path
-                d="M8.05,140.17l17.76-3.39a3.61,3.61,0,0,0,1.87-6.1L13.32,116.32a3.61,3.61,0,0,0-6.1,1.87L3.83,136A3.61,3.61,0,0,0,8.05,140.17Z"
-                transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
-            <path d="M127,49l12.74-12.74a13.09,13.09,0,0,0,0-18.52l-13-13a13.09,13.09,0,0,0-18.52,0L95.5,17.5Z"
-                  transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
-            <path d="M117.5,58.5,86,27,14.75,98.25A29,29,0,0,1,18.5,98,28.5,28.5,0,0,1,47,126.5c0,.89,0,1.76-.13,2.63Z"
-                  transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
-          </svg>
-        </nav>
-        <div class="edit-profile">
-          <div class="user-data-container">
-            <div class="username">
-              <h2>Benutzername</h2>
-              <p>{{ getUsername }}</p>
-            </div>
-            <div class="email">
-              <h2>E-Mail-Adresse</h2>
-              <p>{{ getEmail }}</p>
-            </div>
-          </div>
-          <div class="image-container">
-            <img class="profile-picture" src="../assets/placeholder_profile.png" alt="Profilbild">
-          </div>
-        </div>
-      </div>
+      <Profile></Profile>
       <div class="account-actions">
         <router-link class="router-link" to="/passwort-aendern">Passwort ändern</router-link>
         <button @click="logOutOverlayVisible = true">Abmelden</button>
@@ -57,15 +36,16 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import Overlay from "@/components/Overlay.vue";
+import Profile from "@/components/Profile.vue";
+import Header from "@/components/Header.vue";
 
 export default {
   name: "AccountView",
-  components: {NavBar, Overlay},
+  components: {NavBar, Overlay, Profile, Header},
   data() {
     return {
       logOutOverlayVisible: false,
       deleteAccountOverlayVisible: false,
-      userData: {},
       errors: {}
     }
   },
@@ -139,113 +119,37 @@ export default {
       }
       return false;
     },
-    fetchData() {
-      return fetch(`http://${window.location.hostname}:8080/api/getusers`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'sessionKey': this.getCookie('sessionKey')
-        },
-        withCredentials: true,
-        credentials: 'same-origin'
-      }).then(response => response.json())
-    }
+
   },
   computed: {
-    getUsername() {
-      return this.userData.name;
-    },
-    getEmail() {
-      return this.userData.email;
-    },
     getDeleteAccountError() {
       return this.errors.deleteAccount;
     },
     getLogoutError() {
       return this.errors.logout;
     }
-  },
-  async mounted() {
-    await this.fetchData().then(data => this.userData = data)
   }
 }
 </script>
 
 <style scoped lang="scss">
-@import "../assets/colors";
+@import "src/assets/colors";
 
 .view-container {
-  min-height: 100vh;
   background-image: url("../assets/background.png");
   background-position: center;
 
   .account-wrapper {
+    padding-top: 100px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: scroll;
 
     h1 {
       font-size: 32px;
       margin: 1rem 1rem;
-    }
-
-    .profile-settings {
-      width: 90%;
-      border-radius: 10px;
-      background: $light_gray;
-      padding: 0.5rem 0 1rem 0;
-
-      nav {
-        display: flex;
-        justify-content: flex-end;
-        padding-right: 1rem;
-        margin-bottom: 0.5rem;
-
-        .edit-icon {
-          height: 25px;
-          width: 25px;
-        }
-      }
-
-      .edit-profile {
-        display: flex;
-        width: 100%;
-
-        .user-data-container {
-          width: 50%;
-          padding-left: 1rem;
-
-          h2 {
-            font-size: 20px;
-            margin-top: 1rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-
-          p {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
-
-        .image-container {
-          width: 50%;
-          padding-right: 1rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          overflow: hidden;
-
-          .profile-picture {
-            border-radius: 10px;
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-          }
-        }
-      }
     }
 
     .account-actions {
