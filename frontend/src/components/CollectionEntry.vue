@@ -76,6 +76,7 @@ export default {
       -webkit-line-clamp: 6;
       text-overflow: ellipsis;
       overflow: hidden;
+      font-size: 0.95rem;
     }
 
 
