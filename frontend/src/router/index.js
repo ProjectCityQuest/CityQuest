@@ -110,8 +110,7 @@ const router = createRouter({
             name: 'passwort-vergessen-change',
             component: ForgotPasswordView,
             props: true,
-            meta: {
-            }
+            meta: {}
         },
         {
             path: '/passwort-aendern',
