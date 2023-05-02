@@ -259,4 +259,40 @@ public class UserEndpoint {
             }
         }
     }
+
+    @PostMapping("/changeusername")
+    public ResponseEntity<Object> changeUsername(@RequestBody ChangeUsernameDto request, @RequestHeader(value = "sessionKey") String token) {
+        LOG.info("POST /changeusername issued with parameter: " + request);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+        UserServiceImpl.changeUsername(user, request.getUsername());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getprofilepicture")
+    public ResponseEntity<Object> getProfilePicture(@RequestHeader(value = "sessionKey") String token) {
+        LOG.info("GET /getprofilepicture issued with parameter " + token);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+        String image = UserServiceImpl.getProfilePicture(user.getId());
+        return new ResponseEntity<>(new GetImageDto(image), HttpStatus.OK);
+    }
+
+    @PostMapping("/changeprofilepicture")
+    public ResponseEntity<Object> changeProfilePicture(@RequestBody ChangeImageDto request, @RequestHeader(value = "sessionKey") String token) {
+        LOG.info("POST /changeprofilepicture issued with parameter: " + request);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+        UserServiceImpl.changeProfilePicture(user.getId(), request.getImage());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }
