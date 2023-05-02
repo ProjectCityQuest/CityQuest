@@ -331,7 +331,7 @@ paths:
           content:
             application/json:
               example:
-                image: [some base64 data]
+                image: some base64 data
           description: Liefert das Profilbild zurück
         '401':
           content:
