@@ -96,7 +96,7 @@ export default {
       }
     },
     toGallery() {
-      router.push('/galerie/'+ this.source);
+      router.push('/galerie/' + this.source);
     },
     goBack() {
       sessionStorage.removeItem("gallery")

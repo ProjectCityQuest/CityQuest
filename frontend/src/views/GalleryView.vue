@@ -6,7 +6,8 @@
     <p>1 Bild auswählen</p>
   </div>
   <div class="image-container">
-    <div class="image" v-for="(image, index) in gallery" :key="index" :style="{height: imageHeight}" @click="selectedImage = index">
+    <div class="image" v-for="(image, index) in gallery" :key="index" :style="{height: imageHeight}"
+         @click="selectedImage = index">
       <div v-if="selectedImage === index" class="cover" :style="{height: imageHeight}">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
           <path d="M378 810 154 586l43-43 181 181 384-384 43 43-427 427Z"/>
@@ -48,17 +49,17 @@ export default {
     backToCamera() {
       router.push('/kamera')
     },
-    safeImage(){
+    safeImage() {
       this.buttonStatus = "waiting"
       let gallery = JSON.parse(sessionStorage.getItem('gallery')) || []
-      sessionStorage.setItem("selectedImage",gallery[gallery.length-1])
+      sessionStorage.setItem("selectedImage", gallery[gallery.length - 1])
       sessionStorage.removeItem("gallery")
       router.push('/' + this.source)
     }
   },
-  watch:{
-    'selectedImage'(){
-      this.buttonStatus = this.selectedImage === null? 'inactive':'active'
+  watch: {
+    'selectedImage'() {
+      this.buttonStatus = this.selectedImage === null ? 'inactive' : 'active'
     }
   }
 }
@@ -144,7 +145,7 @@ export default {
     justify-content: center;
     align-items: center;
 
-    svg{
+    svg {
       fill: $white;
       width: 60px;
       height: 60px;
