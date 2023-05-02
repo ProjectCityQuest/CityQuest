@@ -6,6 +6,7 @@ package com.example.backend.service;
 
 import com.example.backend.db.DatabaseAccess;
 import com.example.backend.db.DatabaseAccessImplementation;
+import com.example.backend.entity.CollectionEntry;
 import com.example.backend.entity.User;
 import com.example.backend.util.IP;
 import org.slf4j.Logger;
@@ -214,5 +215,13 @@ public class UserServiceImpl {
 
     public static void changeProfilePicture(int id, String data) {
         DATABASE.changeProfilePicture(id, data);
+    }
+
+    public static List<CollectionEntry> getAllCollectionEntries(int id) {
+        return DATABASE.getAllCollectionEntries(id);
+    }
+
+    public static CollectionEntry getCollectionEntry(int entryId, int userId) {
+        return DATABASE.getCollectionEntry(entryId, userId);
     }
 }
