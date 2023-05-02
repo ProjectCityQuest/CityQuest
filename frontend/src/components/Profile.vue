@@ -14,7 +14,11 @@
         <div class="user-data-container">
           <div class="username">
             <h2>Benutzername</h2>
-            <input type="text" :value="getUsername">
+            <input type="text" v-model="v$.changedUsername.$model" :class="status(v$.changedUsername)">
+            <!-- error message -->
+            <div class="input-errors" v-for="(error, index) of v$.changedUsername.$errors" :key="index">
+              <div class="error-msg">{{ error.$message }}</div>
+            </div>
           </div>
           <div class="email">
             <h2>E-Mail-Adresse</h2>
@@ -37,7 +41,7 @@
         </div>
       </div>
       <div class="submit-container">
-        <CQButton b-style="login" status="inactive">Speichern</CQButton>
+        <CQButton @click="updateProfile" b-style="login" :status="getFormStatus()">Speichern</CQButton>
       </div>
     </div>
     <div v-else class="profile-overview">
@@ -73,20 +77,73 @@
 
 <script>
 import CQButton from "@/components/CQButton.vue";
+import useVuelidate from "@vuelidate/core";
+import {required$} from "@/validators";
 
 export default {
   name: "Profile",
   components: {CQButton},
-
+  setup() {
+    return {v$: useVuelidate()}
+  },
   data() {
     return {
+      changedUsername: "",
       userData: {},
       editingEnabled: false
     }
   },
+  validations() {
+    return {
+      changedUsername: {
+        required$
+      },
+    }
+  },
   methods: {
-    toggleEdit() {
+    status(validation) {
+      return {
+        error: validation.$error,
+        dirty: validation.$dirty
+      }
+    },
+    getFormStatus() {
+      if (this.userData.name === this.changedUsername) {
+        return "inactive";
+      }
+
+      if (this.v$.$invalid) {
+        return "inactive";
+      }
+
+      return "active";
+    },
+    updateProfile() {
+      this.updateUsername();
+    },
+    updateUsername() {
+      if (this.getFormStatus() === "inactive") {
+        return;
+      }
+
+      fetch(`http://${window.location.hostname}:8080/api/changeusername`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'sessionKey': this.getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin',
+        body: JSON.stringify({
+              'username': this.changedUsername,
+            }
+        )
+      });
+    },
+    async toggleEdit() {
       this.editingEnabled = !this.editingEnabled
+      this.v$.changedUsername.$model = this.userData.name;
+      this.v$.$reset();
     },
     fetchData() {
       return fetch(`http://${window.location.hostname}:8080/api/getusers`, {
@@ -127,7 +184,8 @@ export default {
     }
   },
   async mounted() {
-    await this.fetchData().then(data => this.userData = data)
+    await this.fetchData().then(data => this.userData = data);
+    this.v$.changedUsername.$model = this.userData.name;
   }
 }
 </script>
@@ -180,9 +238,9 @@ export default {
         width: 90%;
         height: 1.5rem;
         border: 1px solid $gray;
-        border-radius: 10px;
+        border-radius: 5px;
         background: white;
-        margin-bottom: 0.5rem;
+        margin: 0.25rem 0 0.5rem 0;
         padding-left: 0.5rem;
 
         &.dirty {
@@ -200,6 +258,11 @@ export default {
             outline-color: $red;
           }
         }
+      }
+
+      .error-msg {
+        color: $red;
+        text-align: left;
       }
     }
 
