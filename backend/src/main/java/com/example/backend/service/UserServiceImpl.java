@@ -203,4 +203,16 @@ public class UserServiceImpl {
     public static void changePassword(int id, String password) {
         DATABASE.changePassword(getUserById(id), password);
     }
+
+    public static void changeUsername(User user, String username) {
+        DATABASE.changeUsername(user, username);
+    }
+
+    public static String getProfilePicture(int id) {
+        return DATABASE.getProfilePicture(id);
+    }
+
+    public static void changeProfilePicture(int id, String data) {
+        DATABASE.changeProfilePicture(id, data);
+    }
 }

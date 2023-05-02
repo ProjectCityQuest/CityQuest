@@ -82,7 +82,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
     @Override
     public User getUserById(int id) {
         return null;
-    }
+    } // TODO: implement
 
     /**
      * @see DatabaseAccess
@@ -90,7 +90,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
     @Override
     public User getUserByEmail(String email) {
         return null;
-    }
+    } // TODO: implement
 
     /**
      * @see DatabaseAccess
@@ -144,11 +144,42 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         LOG.info("Password of User:'" + user.getUsername() + "' with Id: '" + user.getId() + "' has been changed from '" + oldPassword + "' to '" + password + "'");
     }
 
+    public void changeUsername(User user, String username) {
+        String statement = "UPDATE Users SET username = ? WHERE pk_id = ?";
+        Object[] params = new Object[] {username, user.getId()};
+        jdbcTemplate.update(statement, params);
+
+        User currentUser = UserServiceImpl.getUserById(user.getId());
+        String oldUsername = currentUser.getUsername();
+        currentUser.setUsername(username);
+
+        LOG.info("Username of User with Id:'" + user.getId() + "' has been changed from '" + oldUsername + "' to '" + username + "'");
+    }
+
     public void submitRatings(int[] ratings) {
         String statement = "insert into Bewertung (design, navigation, puzzle, sammelbuch) values (?, ?, ?, ?);";
         Object[] params = new Object[] {ratings[0], ratings[1], ratings[2], ratings[3]};
         jdbcTemplate.update(statement, params);
 
         LOG.info("A rating has been submitted {design: "+ratings[0]+", navigation: "+ratings[1]+", puzzle: " + ratings[2] + ", sammelbuch: " + ratings[3] + "}");
+    }
+
+    public String getProfilePicture(int id) {
+        String statement = "SELECT profile_picture FROM Users where pk_id = ?;";
+        String profilePicture = jdbcTemplate.queryForObject(statement, new Object[]{id}, (rs, rowNum) -> rs.getString("profile_picture"));
+
+        LOG.info("DB ACCESSED to retrieve Profile Picture of user with id: '" + id + "'");
+
+        return profilePicture;
+    }
+
+    public void changeProfilePicture(int id, String data) {
+        String statement = "UPDATE Users SET profile_picture = ? WHERE pk_id = ?";
+        Object[] params = new Object[] {data, id};
+        jdbcTemplate.update(statement, params);
+
+        User currentUser = UserServiceImpl.getUserById(id);
+
+        LOG.info("Profile Picture of User: '" + currentUser.getUsername() + "' with Id:'" + id + "' has been changed");
     }
 }
