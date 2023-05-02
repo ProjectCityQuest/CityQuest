@@ -25,15 +25,6 @@ public interface DatabaseAccess {
      */
     User getUserById(int id);
 
-
-    /**
-     *
-     * @param email of the user that is to be returned
-     * @return a user object that matches the email
-     */
-    User getUserByEmail(String email);
-
-
     /**
      *
      * @param user creates a user object
