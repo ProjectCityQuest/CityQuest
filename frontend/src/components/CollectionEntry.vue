@@ -2,7 +2,7 @@
   <div class="entry">
     <div class="top">
       <h3>{{ this.location }}</h3>
-      <p>{{ this.date }}</p>
+      <p>{{ this.dateFormatted }}</p>
     </div>
     <div class="hr"></div>
     <div class="bottom">
@@ -21,6 +21,12 @@ export default {
     date: String,
     text: String,
     image: String
+  },
+  computed:{
+    dateFormatted(){
+
+      return (this.date.split("T")[0]+"").split("-").reverse().join(".")
+    }
   }
 }
 </script>
