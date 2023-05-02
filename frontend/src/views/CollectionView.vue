@@ -1,6 +1,28 @@
 <template>
-  <div class="entry-container" v-for="entry in entries">
-    <CollectionEntry :id="entry.id" :location="entry.location" :date="entry.date" :text="entry.text" :image="entry.image"></CollectionEntry>
+  <div class="header">
+    <div class="heading">
+      <h1>Sammelbuch</h1>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="collection-icon">
+        <path
+            d="M35.21,11.16H14.51a.78.78,0,0,0-.78.78V38.51a.78.78,0,0,0,.78.79h20.7a.79.79,0,0,0,.79-.79V11.94A.78.78,0,0,0,35.21,11.16ZM31.67,21.28,29.06,18a.59.59,0,0,0-.94,0l-2.62,3.3V13.87h6.17Z"/>
+      </svg>
+    </div>
+    <div class="filter">
+      <input type="text" id="searchText" v-model="inputText" name="searchText" placeholder="Suchtext eingeben">
+      <div @click="this.sortingOverlay = !this.sortingOverlay">
+        <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48">
+          <path
+              d="M322 606V290L202 410l-42-42 193-193 193 193-42 42-122-121v317h-60Zm285 369L414 781l42-41 120 120V544h60v317l122-121 42 42-193 193Z"/>
+        </svg>
+      </div>
+      <CQButton @click="filter()" b-style="login" status="active">Suchen</CQButton>
+    </div>
+    <div class="hr"></div>
+  </div>
+  <div class="entry-container">
+    <CollectionEntry v-for="entry in filteredEntries" :id="entry.id" :location="entry.location" :date="entry.date"
+                     :text="entry.text"
+                     :image="entry.image"></CollectionEntry>
   </div>
   <NavBar :active-icon="4"></NavBar>
 </template>
@@ -8,15 +30,20 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import CollectionEntry from "@/components/CollectionEntry.vue";
+import CQButton from "@/components/CQButton.vue";
 
 export default {
   name: "CollectionView",
   components: {
     NavBar,
-    CollectionEntry
+    CollectionEntry,
+    CQButton
   },
   data() {
     return {
+      sortingOverlay: false,
+      inputText: "",
+      filterText: "",
       entries: [
         {
           id: 1,
@@ -95,7 +122,21 @@ export default {
           text: "Das Cafe Sacher war ein Genuss für die Sinne. Die Innenausstattung und Atmosphäre waren klassisch und elegant, und der Kaffee und die Sachertorte waren ausgezeichnet. Das Personal war freundlich und aufmerksam.",
           image: null
         }
-      ]
+      ],
+    }
+  },
+  computed: {
+    filteredEntries() {
+      if (this.filterText !== "") {
+        return this.entries.filter(entry => entry.text.includes(this.filterText) || entry.location.includes(this.filterText))
+      } else {
+        return this.entries
+      }
+    }
+  },
+  methods: {
+    filter() {
+      this.filterText = this.inputText
     }
   }
 }
@@ -103,13 +144,76 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/colors";
-.entry-container{
+
+.header {
+  background-color: $white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  .heading {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    height: 100px;
+
+    h1 {
+      font-size: 32px;
+    }
+
+    svg {
+      height: 45px;
+      fill: $orange;
+    }
+  }
+
+  .filter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 auto 0 auto;
+    width: 90%;
+
+    * {
+      height: 2rem;
+    }
+
+    input {
+      border: solid #757575 2px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      padding-left: 5px;
+      width: 100%;
+    }
+
+    button {
+      border-radius: 5px;
+      text-align: center;
+      max-width: 110px;
+    }
+  }
+
+  .hr {
+    width: 100%;
+    height: 2px;
+    background-color: $light_gray;
+    margin-top: 15px;
+  }
+}
+
+.entry-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: calc(117px + 2rem);
+  width: 100%;
 
-  *{
-    width:90%;
+  * {
+    width: 90%;
     margin-top: 15px;
   }
 }
