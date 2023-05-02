@@ -41,8 +41,9 @@
         </div>
       </div>
       <div class="submit-container">
-        <CQButton @click="updateProfile" b-style="login" :status="getFormStatus()">Speichern</CQButton>
+        <CQButton @click="updateProfile" b-style="login" :status="state">Speichern</CQButton>
       </div>
+      <p v-html="feedback.message" class="feedback-message" :class="feedback.hasError ? 'error' : 'success'"></p>
     </div>
     <div v-else class="profile-overview">
       <nav>
@@ -90,7 +91,12 @@ export default {
     return {
       changedUsername: "",
       userData: {},
-      editingEnabled: false
+      editingEnabled: false,
+      state: "inactive",
+      feedback: {
+        message: "",
+        hasError: false
+      }
     }
   },
   validations() {
@@ -107,26 +113,11 @@ export default {
         dirty: validation.$dirty
       }
     },
-    getFormStatus() {
-      if (this.userData.name === this.changedUsername) {
-        return "inactive";
-      }
-
-      if (this.v$.$invalid) {
-        return "inactive";
-      }
-
-      return "active";
-    },
     updateProfile() {
       this.updateUsername();
     },
-    updateUsername() {
-      if (this.getFormStatus() === "inactive") {
-        return;
-      }
-
-      fetch(`http://${window.location.hostname}:8080/api/changeusername`, {
+    async updateUsername() {
+      const response = await fetch(`http://${window.location.hostname}:8080/api/changeusername`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -138,12 +129,48 @@ export default {
               'username': this.changedUsername,
             }
         )
+      }).catch((err) => {
+        this.state = "active";
+        if (err.message === 'Failed to fetch') {
+          this.setError("Verbindung konnte nicht hergestellt werden.");
+        } else {
+          this.setError("Das hat nicht geklappt ):");
+        }
       });
+
+      if (!response) {
+        return;
+      }
+
+      if (response.ok) {
+        this.state = "inactive";
+        this.userData.name = this.changedUsername;
+        await this.toggleEdit();
+      } else {
+        let data = await response.json();
+        this.setError(data.error);
+      }
+    },
+    setError(message) {
+      this.feedback = {
+        hasError: true,
+        message: message
+      };
+
+      setTimeout(this.removeFeedback, 4000)
+    },
+    removeFeedback() {
+      this.feedback = {
+        hasError: false,
+        message: ""
+      };
     },
     async toggleEdit() {
       this.editingEnabled = !this.editingEnabled
+      await this.fetchData();
       this.v$.changedUsername.$model = this.userData.name;
       this.v$.$reset();
+      this.removeFeedback();
     },
     fetchData() {
       return fetch(`http://${window.location.hostname}:8080/api/getusers`, {
@@ -155,6 +182,7 @@ export default {
         withCredentials: true,
         credentials: 'same-origin'
       }).then(response => response.json())
+          .then(data => this.userData = data)
     },
     getCookie(cname) {
       let name = cname + "=";
@@ -183,10 +211,21 @@ export default {
       return this.errors.deleteAccount;
     }
   },
+  watch: {
+    changedUsername(newValue) {
+      if (this.v$.$invalid) {
+        this.state = 'inactive';
+      } else if (this.userData.name === newValue) {
+        this.state = 'inactive';
+      } else {
+        this.state = 'active';
+      }
+    }
+  },
   async mounted() {
-    await this.fetchData().then(data => this.userData = data);
+    await this.fetchData();
     this.v$.changedUsername.$model = this.userData.name;
-  }
+  },
 }
 </script>
 
@@ -294,6 +333,19 @@ export default {
   .submit-container {
     margin: 1rem auto 0 auto;
     width: 80%;
+  }
+
+  .feedback-message {
+    margin-top: 0.5rem;
+    text-align: center;
+
+    &.error {
+      color: $red;
+    }
+
+    &.success {
+      color: $dark_green;
+    }
   }
 }
 </style>
