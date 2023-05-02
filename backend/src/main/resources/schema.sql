@@ -19,3 +19,14 @@ create table Bewertung
     puzzle     INTEGER,
     sammelbuch INTEGER
 );
+
+create table Sammelbucheintrag
+(
+    pk_id      INTEGER primary key auto_increment,
+    timestamp  varchar(100),
+    location   varchar(200),
+    text       varchar(5000),
+    bild       varchar(50000),
+    fk_user_id INTEGER,
+    FOREIGN KEY (fk_user_id) REFERENCES Users (pk_id)
+);
