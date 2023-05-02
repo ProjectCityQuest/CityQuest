@@ -3,7 +3,7 @@
     <div v-if="editingEnabled" class="profile-edit">
       <nav @click="toggleEdit">
         <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-          <circle cx="25" cy="25" r="25" style="fill:#e73829"/>
+          <circle cx="25" cy="25" r="25" style="fill:#B51515"/>
           <rect x="23" y="9.3" width="4" height="30.41" rx="1.24" transform="translate(24.65 -10.5) rotate(45)"
                 style="fill:#f9f9f9"/>
           <rect x="23" y="9.8" width="4" height="30.41" rx="1.24" transform="translate(60.36 25) rotate(135)"
@@ -51,11 +51,11 @@
         <svg @click="toggleEdit" class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 139.81 139.31">
           <path
               d="M8.05,140.17l17.76-3.39a3.61,3.61,0,0,0,1.87-6.1L13.32,116.32a3.61,3.61,0,0,0-6.1,1.87L3.83,136A3.61,3.61,0,0,0,8.05,140.17Z"
-              transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
+              transform="translate(-3.76 -0.92)" style="fill:white"/>
           <path d="M127,49l12.74-12.74a13.09,13.09,0,0,0,0-18.52l-13-13a13.09,13.09,0,0,0-18.52,0L95.5,17.5Z"
-                transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
+                transform="translate(-3.76 -0.92)" style="fill:white"/>
           <path d="M117.5,58.5,86,27,14.75,98.25A29,29,0,0,1,18.5,98,28.5,28.5,0,0,1,47,126.5c0,.89,0,1.76-.13,2.63Z"
-                transform="translate(-3.76 -0.92)" style="fill:#1d1d1b"/>
+                transform="translate(-3.76 -0.92)" style="fill:white"/>
         </svg>
       </nav>
       <div class="profile">
@@ -323,8 +323,9 @@ export default {
   nav {
     display: flex;
     justify-content: flex-end;
-    padding-right: 1rem;
+    padding: .25rem 1rem 0.25rem;
     margin-bottom: 0.5rem;
+    background: $gray;
 
     .edit-icon {
       height: 25px;
@@ -333,6 +334,7 @@ export default {
   }
 
   .profile {
+    margin-top: 1rem;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -340,10 +342,13 @@ export default {
     .user-data-container {
       width: 50%;
       padding-left: 1rem;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+      justify-content: center;
 
       h2 {
         font-size: 20px;
-        margin-top: 1rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -390,6 +395,9 @@ export default {
     .image-container {
       padding-right: 1rem;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       .image {
         background-image: url("/src/assets/placeholder_profile.png");

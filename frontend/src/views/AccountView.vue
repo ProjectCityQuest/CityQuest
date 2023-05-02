@@ -1,7 +1,14 @@
 <template>
   <div class="view-container">
+    <Header>
+      <h1>Account</h1>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+        <path d="M25,25.59c-7.09,0-12.88,6.44-13.21,14.52H38.21C37.88,32,32.09,25.59,25,25.59Z" transform="translate(0)"
+              style="fill:#b41919"/>
+        <circle cx="25" cy="16.56" r="6.45" style="fill:#b41919"/>
+      </svg>
+    </Header>
     <div class="account-wrapper">
-      <h1>Mein Account</h1>
       <Profile></Profile>
       <div class="account-actions">
         <router-link class="router-link" to="/passwort-aendern">Passwort ändern</router-link>
@@ -30,10 +37,11 @@
 import NavBar from "@/components/NavBar.vue";
 import Overlay from "@/components/Overlay.vue";
 import Profile from "@/components/Profile.vue";
+import Header from "@/components/Header.vue";
 
 export default {
   name: "AccountView",
-  components: {NavBar, Overlay, Profile},
+  components: {NavBar, Overlay, Profile, Header},
   data() {
     return {
       logOutOverlayVisible: false,
@@ -128,14 +136,16 @@ export default {
 @import "src/assets/colors";
 
 .view-container {
-  min-height: 100vh;
   background-image: url("../assets/background.png");
   background-position: center;
 
   .account-wrapper {
+    padding-top: 100px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: scroll;
 
     h1 {
       font-size: 32px;
