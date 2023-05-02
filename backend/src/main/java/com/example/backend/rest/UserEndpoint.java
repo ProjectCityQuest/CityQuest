@@ -5,6 +5,7 @@
 package com.example.backend.rest;
 
 import com.example.backend.dto.*;
+import com.example.backend.entity.CollectionEntry;
 import com.example.backend.entity.User;
 import com.example.backend.mapper.UserRegisterMapping;
 import com.example.backend.service.UserServiceImpl;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api", method = {RequestMethod.GET, RequestMethod.PUT})
@@ -294,5 +296,29 @@ public class UserEndpoint {
         }
         UserServiceImpl.changeProfilePicture(user.getId(), request.getImage());
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getcollection")
+    public ResponseEntity<Object> getCollection(@RequestHeader(value = "sessionKey") String token) {
+        LOG.info("GET /getcollection issued with parameter " + token);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+        List<CollectionEntry> entries = UserServiceImpl.getAllCollectionEntries(user.getId());
+        return new ResponseEntity<>(new GetCollectionDto(entries), HttpStatus.OK);
+    }
+
+    @GetMapping("/getentry")
+    public ResponseEntity<Object> getEntry(@RequestBody GetEntryRequestDto request, @RequestHeader(value = "sessionKey") String token) {
+        LOG.info("GET /getentry issued with parameter " + request);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+        CollectionEntry entry = UserServiceImpl.getCollectionEntry(request.getId(), user.getId());
+        return new ResponseEntity<>(new GetEntryResponseDto(entry), HttpStatus.OK);
     }
 }
