@@ -1,7 +1,6 @@
 <template>
   <div class="register-wrapper">
-    <p v-if="error" id="response-error">Der angegebene Benutzername oder das Passwort sind falsch. Bitte versuche es
-      erneut.</p>
+    <p v-if="error" id="response-error">{{ errorMessage }}</p>
     <div v-else id="spacer"></div>
     <form @submit.prevent>
       <!-- Benutzername -->
@@ -24,7 +23,7 @@
         <div class="error-msg">{{ error.$message }}</div>
       </div>
 
-      <button :disabled="v$.form.$invalid" @click="sendLogin()">Login</button>
+      <CQButton b-style="login" :status="state" @click="sendLogin()">Login</CQButton>
     </form>
     <div id="spacer"></div>
     <router-link class="router-link" to="/passwort-vergessen">Passwort vergessen?</router-link>
@@ -36,9 +35,11 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required$, passwordMinLength$} from "@/validators";
+import CQButton from "@/components/CQButton.vue";
 
 export default {
   name: "Login",
+  components: {CQButton},
   setup() {
     return {v$: useVuelidate()}
   },
@@ -48,9 +49,11 @@ export default {
         username: "",
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
       },
-      error: false
+      error: false,
+      errorMessage: "",
+      state: "inactive"
     }
   },
   validations() {
@@ -74,6 +77,9 @@ export default {
       }
     },
     async sendLogin() {
+      this.resetError();
+      this.state = "waiting";
+
       const response = await fetch(`http://${window.location.hostname}:8080/api/login`, {
         method: 'POST',
         headers: {
@@ -86,15 +92,42 @@ export default {
               'password': this.form.password
             }
         )
+      }).catch((err) => {
+        this.state = "active";
+        if (err.message === 'Failed to fetch') {
+          this.setError("Verbindung konnte nicht hergestellt werden.");
+        } else {
+          this.setError("Das hat nicht geklappt ):");
+        }
       })
+
+      this.state = "active";
+
+      if (!response) {
+        return;
+      }
+
       if (response.status === 200) {
-        let data = await response.json()
-        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
-        document.cookie = "sessionKey=" + data.sessionKey + "; path=/"
+        let data = await response.json();
+        document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "sessionKey=" + data.sessionKey + "; path=/";
         this.$router.push("/karte");
       } else {
-        this.error = true
+        this.setError("Der angegebene Benutzername oder das Passwort sind falsch. Bitte versuche es erneut")
       }
+    },
+    resetError() {
+      this.error = false;
+      this.errorMessage = "";
+    },
+    setError(message) {
+      this.error = true;
+      this.errorMessage = message;
+    }
+  },
+  watch: {
+    'v$.form.$invalid'() {
+      this.state = this.v$.form.$invalid ? 'inactive' : 'active'
     }
   }
 }

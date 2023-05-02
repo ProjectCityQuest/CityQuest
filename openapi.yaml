@@ -273,6 +273,128 @@ paths:
               example:
                 error: Der Token ist ungueltig
           description: Der Token ist ungueltig
+  /changeusername:
+    post:
+      tags:
+        - auth
+      description: Der Benutzername wird geändert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                username: "neuer Benutzername"
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '201':
+          description: Der Benutzername wurde gespeichert
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+  /changeprofilepicture:
+    post:
+      tags:
+        - auth
+      description: Das Profilbild wird geändert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                image: "some base64 data"
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '201':
+          description: Das Profilbild wurde gespeichert
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+  /getprofilepicture:
+    get:
+      tags:
+        - auth
+      description: Das Profilbild wird geändert
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                image: some base64 data
+          description: Liefert das Profilbild zurück
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+  /getcollection:
+    get:
+      tags:
+        - auth
+      description: Liefert die Sammelbucheinträge
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                entries: [
+                  {id: 1, timestamp: "2004-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"},
+                  {id: 2, timestamp: "2015-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
+                ]
+          description: Liefert die Sammelbucheinträge
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+  /getentry:
+    get:
+      tags:
+        - auth
+      description: Liefert einen einzelnen Sammelbucheintrag
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                id: 8324
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                entry: {id: 8324, timestamp: "2015-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
+          description: Liefert die Sammelbucheinträge
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+        '403': 
+          content:
+            application/json:
+              example:
+                error: Es gibt keinen entry mit dieser ID
+              description: Es gibt keinen entry mit dieser ID
 components:
   securitySchemes:
     ApiKeyAuth:

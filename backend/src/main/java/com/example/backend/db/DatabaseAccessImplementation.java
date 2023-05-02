@@ -5,6 +5,7 @@
 
 package com.example.backend.db;
 
+import com.example.backend.entity.CollectionEntry;
 import com.example.backend.entity.User;
 import com.example.backend.service.UserServiceImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,11 +56,11 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
     public List<User> getAllUser() {
         List<Map<String, Object>> users = jdbcTemplate.queryForList("SELECT * FROM Users;");
 
-        for (Map<String, Object> currentUser :users) {
-            int id = Integer.parseInt(currentUser.get("pk_id")+"");
-            String username = currentUser.get("username")+"";
-            String password = currentUser.get("password")+"";
-            String email = currentUser.get("email")+"";
+        for (Map<String, Object> currentUser : users) {
+            int id = Integer.parseInt(currentUser.get("pk_id") + "");
+            String username = currentUser.get("username") + "";
+            String password = currentUser.get("password") + "";
+            String email = currentUser.get("email") + "";
             boolean emailIsVerified;
             if (currentUser.get("email_is_verified") == null) {
                 emailIsVerified = false;
@@ -81,15 +82,29 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      */
     @Override
     public User getUserById(int id) {
-        return null;
-    }
+        String statement = "SELECT * FROM Users where pk_id = ?;";
+        User user = jdbcTemplate.queryForObject(statement, new Object[]{id}, (rs, rowNum) -> {
+            int pk_id = Integer.parseInt(rs.getInt("pk_id")+"");
+            String username = rs.getString("username")+"";
+            String password = rs.getString("password")+"";
+            String email = rs.getString("email")+"";
+            boolean emailIsVerified;
+            if (rs.getString("email_is_verified") == null) {
+                emailIsVerified = false;
+            } else {
+                emailIsVerified = Boolean.parseBoolean(rs.getString("email_is_verified"));
+            }
 
-    /**
-     * @see DatabaseAccess
-     */
-    @Override
-    public User getUserByEmail(String email) {
-        return null;
+            User newUser = new User(username, email, password);
+            newUser.setId(pk_id);
+            newUser.setEmailIsVerified(emailIsVerified);
+
+            return newUser;
+        });
+
+        LOG.info("DB ACCESSED to retrieve User with id: '" + id + "'");
+
+        return user;
     }
 
     /**
@@ -97,7 +112,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
      */
     public void createUser(User user) {
         String statement = "insert into Users (username, password, email) values (?, ?, ?);";
-        Object[] params = new Object[] {user.getUsername(), user.getPassword(), user.getEmail()};
+        Object[] params = new Object[]{user.getUsername(), user.getPassword(), user.getEmail()};
         jdbcTemplate.update(statement, params);
 
         String statement1 = "SELECT * FROM Users where username = ?;";
@@ -106,20 +121,19 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
 
         Map<String, Object> currentUser = users.get(0);
 
-        int id = Integer.parseInt(currentUser.get("pk_id")+"");
-        String username = currentUser.get("username")+"";
-        String password = currentUser.get("password")+"";
-        String email = currentUser.get("email")+"";
+        int id = Integer.parseInt(currentUser.get("pk_id") + "");
+        String username = currentUser.get("username") + "";
+        String password = currentUser.get("password") + "";
+        String email = currentUser.get("email") + "";
         User newUser = new User(username, email, password);
         newUser.setId(id);
 
         userList.add(newUser);
 
-        LOG.info("User '" + username + "' has been created with ID: "+ id);
+        LOG.info("User '" + username + "' has been created with ID: " + id);
     }
 
     /**
-     *
      * @see DatabaseAccess
      */
 
@@ -134,7 +148,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
 
     public void changePassword(User user, String password) {
         String statement = "UPDATE Users SET password = ? WHERE pk_id = ?";
-        Object[] params = new Object[] {password, user.getId()};
+        Object[] params = new Object[]{password, user.getId()};
         jdbcTemplate.update(statement, params);
 
         User currentUser = UserServiceImpl.getUserById(user.getId());
@@ -144,11 +158,70 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         LOG.info("Password of User:'" + user.getUsername() + "' with Id: '" + user.getId() + "' has been changed from '" + oldPassword + "' to '" + password + "'");
     }
 
-    public void submitRatings(int[] ratings) {
-        String statement = "insert into Bewertung (design, navigation, puzzle, sammelbuch) values (?, ?, ?, ?);";
-        Object[] params = new Object[] {ratings[0], ratings[1], ratings[2], ratings[3]};
+    public void changeUsername(User user, String username) {
+        String statement = "UPDATE Users SET username = ? WHERE pk_id = ?";
+        Object[] params = new Object[]{username, user.getId()};
         jdbcTemplate.update(statement, params);
 
-        LOG.info("A rating has been submitted {design: "+ratings[0]+", navigation: "+ratings[1]+", puzzle: " + ratings[2] + ", sammelbuch: " + ratings[3] + "}");
+        User currentUser = UserServiceImpl.getUserById(user.getId());
+        String oldUsername = currentUser.getUsername();
+        currentUser.setUsername(username);
+
+        LOG.info("Username of User with Id:'" + user.getId() + "' has been changed from '" + oldUsername + "' to '" + username + "'");
+    }
+
+    public void submitRatings(int[] ratings) {
+        String statement = "insert into Bewertung (design, navigation, puzzle, sammelbuch) values (?, ?, ?, ?);";
+        Object[] params = new Object[]{ratings[0], ratings[1], ratings[2], ratings[3]};
+        jdbcTemplate.update(statement, params);
+
+        LOG.info("A rating has been submitted {design: " + ratings[0] + ", navigation: " + ratings[1] + ", puzzle: " + ratings[2] + ", sammelbuch: " + ratings[3] + "}");
+    }
+
+    public String getProfilePicture(int id) {
+        String statement = "SELECT profile_picture FROM Users where pk_id = ?;";
+        String profilePicture = jdbcTemplate.queryForObject(statement, new Object[]{id}, (rs, rowNum) -> rs.getString("profile_picture"));
+
+        LOG.info("DB ACCESSED to retrieve Profile Picture of user with id: '" + id + "'");
+
+        return profilePicture;
+    }
+
+    public void changeProfilePicture(int id, String data) {
+        String statement = "UPDATE Users SET profile_picture = ? WHERE pk_id = ?";
+        Object[] params = new Object[]{data, id};
+        jdbcTemplate.update(statement, params);
+
+        User currentUser = UserServiceImpl.getUserById(id);
+
+        LOG.info("Profile Picture of User: '" + currentUser.getUsername() + "' with Id:'" + id + "' has been changed");
+    }
+
+    public List<CollectionEntry> getAllCollectionEntries(int id) {
+        List<CollectionEntry> collection = new LinkedList<>();
+
+        String statement = "SELECT * FROM Sammelbucheintrag where fk_user_id = ?;";
+        List<Map<String, Object>> entries = jdbcTemplate.queryForList(statement, new Object[]{id});
+
+        for (Map<String, Object> currentEntry : entries) {
+            int pk_id = Integer.parseInt(currentEntry.get("pk_id") + "");
+            String timestamp = currentEntry.get("timestamp") + "";
+            String location = currentEntry.get("location") + "";
+            String text = currentEntry.get("text") + "";
+            String bild = currentEntry.get("bild") + "";
+
+            CollectionEntry entry = new CollectionEntry(pk_id, timestamp, location, text, bild);
+
+            collection.add(entry);
+        }
+
+        return collection;
+    }
+
+    public CollectionEntry getCollectionEntry(int entryId, int userId) {
+        String statement = "SELECT * FROM Sammelbucheintrag where pk_id = ?;";
+        CollectionEntry entry = jdbcTemplate.queryForObject(statement, new Object[]{entryId}, (rs, rowNum) -> new CollectionEntry(rs.getInt("pk_id"), rs.getString("timestamp"), rs.getString("location"), rs.getString("text"), rs.getString("bild")));
+
+        return entry;
     }
 }
