@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="image-container">
-          <div class="image"></div>
+          <div class="image" ref="profilePicture"></div>
         </div>
       </div>
     </div>
@@ -96,7 +96,8 @@ export default {
       feedback: {
         message: "",
         hasError: false
-      }
+      },
+      profilePicture: ""
     }
   },
   validations() {
@@ -167,12 +168,12 @@ export default {
     },
     async toggleEdit() {
       this.editingEnabled = !this.editingEnabled
-      await this.fetchData();
+      await this.fetchUserData();
       this.v$.changedUsername.$model = this.userData.name;
       this.v$.$reset();
       this.removeFeedback();
     },
-    fetchData() {
+    fetchUserData() {
       return fetch(`http://${window.location.hostname}:8080/api/getusers`, {
         method: 'GET',
         headers: {
@@ -183,6 +184,18 @@ export default {
         credentials: 'same-origin'
       }).then(response => response.json())
           .then(data => this.userData = data)
+    },
+    fetchProfilePicture() {
+      return fetch(`http://${window.location.hostname}:8080/api/getprofilepicture`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'sessionKey': this.getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin'
+      }).then(response => response.json())
+          .then(data => this.profilePicture = data.image);
     },
     getCookie(cname) {
       let name = cname + "=";
@@ -220,11 +233,15 @@ export default {
       } else {
         this.state = 'active';
       }
-    }
+    },
+    profilePicture(newValue) {
+      this.$refs.profilePicture.style.backgroundImage = `url(${newValue})`
+    },
   },
   async mounted() {
-    await this.fetchData();
+    await this.fetchUserData();
     this.v$.changedUsername.$model = this.userData.name;
+    await this.fetchProfilePicture();
   },
 }
 </script>
