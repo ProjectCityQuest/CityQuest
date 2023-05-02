@@ -19,10 +19,22 @@
     </div>
     <div class="hr"></div>
   </div>
+  <div v-if="this.sortingOverlay" class="sortingOverlay">
+    <p class="sort">sortieren nach</p>
+    <div class="options">
+      <p>neueste Einträge zuerst</p>
+      <p>älteste Einträge zuerst</p>
+      <p>Spot-Name absteigend (A-Z)</p>
+      <p>Spot-Name aufsteigend (Z-A)</p>
+    </div>
+  </div>
   <div class="entry-container">
     <CollectionEntry v-for="entry in filteredEntries" :id="entry.id" :location="entry.location" :date="entry.date"
                      :text="entry.text"
-                     :image="entry.image"></CollectionEntry>
+                     :image="entry.image">
+    </CollectionEntry>
+    <div v-if="listEmpty" class="empty">Dein Suchtext wurde in keinem deiner Einträge gefunden</div>
+    <div v-else-if="filteredEntries.length===0" class="empty">Du hast noch keine Einträge</div>
   </div>
   <NavBar :active-icon="4"></NavBar>
 </template>
@@ -44,6 +56,7 @@ export default {
       sortingOverlay: false,
       inputText: "",
       filterText: "",
+      listEmpty: false,
       entries: [
         {
           id: 1,
@@ -128,8 +141,11 @@ export default {
   computed: {
     filteredEntries() {
       if (this.filterText !== "") {
-        return this.entries.filter(entry => entry.text.includes(this.filterText) || entry.location.includes(this.filterText))
+        let filtered = this.entries.filter(entry => entry.text.includes(this.filterText) || entry.location.includes(this.filterText))
+        this.listEmpty = filtered.length===0
+        return filtered
       } else {
+        this.listEmpty = false
         return this.entries
       }
     }
@@ -203,18 +219,59 @@ export default {
     background-color: $light_gray;
     margin-top: 15px;
   }
+
 }
 
+.sortingOverlay{
+  position: fixed;
+  z-index: 4;
+  left: 5%;
+  top: calc(117px + 2rem + 2px);
+  background-color: $white;
+  border-radius: 0 0 10px 10px;
+  border: solid #d9d9d9 2px;
+
+  .sort{
+    color: #838383;
+    font-size: 0.9rem;
+    padding: 10px 10px 0 10px;
+  }
+
+  .options{
+    *{
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      padding: 0 10px 0 10px;
+
+      &:hover{
+        background-color: #eaeaea;
+      }
+    }
+  }
+}
 .entry-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: calc(117px + 2rem);
   width: 100%;
+  height: calc(100vh - 187px - 2rem);
+  overflow: scroll;
+  background-image: url("../assets/background.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
 
   * {
     width: 90%;
     margin-top: 15px;
+  }
+
+  .empty{
+    text-align: center;
+    color: $gray;
+    margin: auto 0 auto 0;
   }
 }
 </style>
