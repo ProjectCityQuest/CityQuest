@@ -10,6 +10,8 @@ import CollectionView from "@/views/CollectionView.vue";
 import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
 import ChangePasswordView from "@/views/ChangePasswordView.vue";
 import deleteAccountView from "@/views/deleteAccountView.vue";
+import CameraView from "@/views/CameraView.vue";
+import GalleryView from "@/views/GalleryView.vue";
 
 // gets the value of a cookie by name
 // if the cookie doesn't exist, the function returns 'false'
@@ -108,8 +110,7 @@ const router = createRouter({
             name: 'passwort-vergessen-change',
             component: ForgotPasswordView,
             props: true,
-            meta: {
-            }
+            meta: {}
         },
         {
             path: '/passwort-aendern',
@@ -156,6 +157,24 @@ const router = createRouter({
             path: '/sammelbuch',
             name: 'sammelbuch',
             component: CollectionView,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: '/kamera/:source',
+            name: 'kamera',
+            component: CameraView,
+            props: true,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: '/galerie/:source',
+            name: 'galerie',
+            component: GalleryView,
+            props: true,
             meta: {
                 requiresAuth: true
             }
