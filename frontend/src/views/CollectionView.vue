@@ -67,35 +67,37 @@ export default {
   },
   computed: {
     filteredEntries() {
+      let list = this.getTextFilter()
       switch (this.sortType) {
         case 0:
-          return this.entries
+          return list
         case 1:
-          return this.entries.sort((x, y) => Date.parse(y.timestamp) - Date.parse(x.timestamp))
+          return list.sort((x, y) => Date.parse(y.timestamp) - Date.parse(x.timestamp))
         case 2:
-          return this.entries.sort((x, y) => Date.parse(x.timestamp) - Date.parse(y.timestamp))
+          return list.sort((x, y) => Date.parse(x.timestamp) - Date.parse(y.timestamp))
         case 3:
-          return this.entries.sort((x, y) => (x.location > y.location) ? 1 : -1)
+          return list.sort((x, y) => (x.location > y.location) ? 1 : -1)
         case 4:
-          return this.entries.sort((x, y) => (y.location > x.location) ? 1 : -1)
+          return list.sort((x, y) => (y.location > x.location) ? 1 : -1)
       }
+    }
+  },
+  methods: {
+    getTextFilter(){
       if (this.filterText !== "") {
         let filtered = this.entries.filter(entry => entry.text.includes(this.filterText) || entry.location.includes(this.filterText))
         this.listEmpty = filtered.length === 0
         return filtered
       } else {
-        this.listEmpty = false
+        this.listEmpty = this.entries.length === 0
         return this.entries
       }
-    }
-  },
-  methods: {
+    },
     filter() {
       this.filterText = this.inputText
       this.sortingOverlay = false
     },
     sortEntries(sortType) {
-      console.log(sortType)
       this.sortType = sortType
       this.sortingOverlay = false
     },
