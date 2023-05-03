@@ -30,7 +30,7 @@
     </div>
   </div>
   <div class="entry-container" @click="this.sortingOverlay=false">
-    <CollectionEntry v-for="entry in filteredEntries" :id="entry.id" :location="entry.location" :date="entry.date"
+    <CollectionEntry v-for="entry in filteredEntries" :id="entry.id" :location="entry.location" :date="entry.timestamp"
                      :text="entry.text"
                      :image="entry.image">
     </CollectionEntry>
@@ -59,86 +59,11 @@ export default {
       filterText: "",
       listEmpty: false,
       sortType: 0,
-      entries: [
-        {
-          id: 1,
-          location: "Zentralfriedhof",
-          date: "2020-06-02T12:34",
-          text: "Der Zentralfriedhof war ein wirklich beeindruckender Ort mit seinen riesigen Gräbern und Gedenkstätten. Es war erstaunlich zu sehen, wie gut die Gräber gepflegt und in Stand gehalten wurden.",
-          image: "https://www.geschichtewiki.wien.gv.at/images/3/39/Zentralfriedhof-Vogelschau.jpg"
-        },
-        {
-          id: 2,
-          location: "Schafbergbad",
-          date: "2022-05-03T00:00",
-          text: "Das Schafbergbad war eine tolle Möglichkeit, an einem heißen Sommertag abzukühlen. Das Schwimmbecken und die Liegewiese waren beide sehr gepflegt und das Wasser war erfrischend.",
-          image: "https://www.wien.gv.at/freizeit/baeder/images/schafbergbad5-gr.jpg"
-        },
-        {
-          id: 3,
-          location: "Bezirksmuseum Birgittenau",
-          date: "2022-05-04T07:15",
-          text: "Das Bezirksmuseum Birgittenau war eine interessante Möglichkeit, mehr über die Geschichte des Bezirks zu erfahren. Es gab viele Ausstellungsstücke und informative Texte, die einen Einblick in die Vergangenheit gaben.",
-          image: null
-        },
-        {
-          id: 4,
-          location: "Theresienbad",
-          date: "2022-05-05T18:45",
-          text: "Das Theresienbad war ein wunderschöner Ort, um zu entspannen und ein Bad zu nehmen. Die alten, traditionellen Gebäude und der Gartenbereich vermittelten eine angenehme Atmosphäre.",
-          image: null
-        },
-        {
-          id: 5,
-          location: "Burgtheater",
-          date: "2022-05-06T11:20",
-          text: "Das Burgtheater war ein fantastischer Ort für eine Aufführung. Die Architektur und die Innenausstattung waren atemberaubend und die Vorstellung war unglaublich unterhaltsam.",
-          image: null
-        },
-        {
-          id: 6,
-          location: "Cafe Sacher",
-          date: "2022-05-07T15:55",
-          text: "Das Cafe Sacher war ein gemütlicher Ort für einen Kaffee und ein Stück Sachertorte. Die Atmosphäre war angenehm und das Personal war freundlich und zuvorkommend.",
-          image: null
-        },
-        {
-          id: 7,
-          location: "Funkhaus Wien",
-          date: "2022-05-08T08:10",
-          text: "Das Funkhaus Wien war ein beeindruckendes Gebäude mit einer faszinierenden Geschichte. Es war interessant, die verschiedenen Studios und Aufnahmeräume zu sehen und mehr über die Arbeit hinter den Kulissen zu erfahren.",
-          image: null
-        },
-        {
-          id: 8,
-          location: "Zentralfriedhof",
-          date: "2022-05-09T23:59",
-          text: "Der Zentralfriedhof war an einem trüben Herbsttag etwas düster und unheimlich, aber dennoch faszinierend. Es war interessant, die verschiedenen Gräber und Gedenkstätten zu sehen und über die Persönlichkeiten hinter ihnen zu erfahren.",
-          image: null
-        },
-        {
-          id: 9,
-          location: "Bezirksmuseum Birgittenau",
-          date: "2022-05-10T14:30",
-          text: "Das Bezirksmuseum Birgittenau war eine interessante Entdeckung. Es war toll, mehr über die lokale Geschichte und Kultur zu erfahren. Die Exponate und Ausstellungsstücke waren informativ und ansprechend präsentiert.",
-          image: null
-        },
-        {
-          id: 10,
-          location: "Theresienbad",
-          date: "2022-05-11T06:40",
-          text: "Das Theresienbad war ein verstecktes Juwel mitten in der Stadt. Die alten Gebäude und der Gartenbereich schafften eine friedliche und entspannende Atmosphäre. Das Wasser im Schwimmbecken war sauber und erfrischend.",
-          image: null
-        },
-        {
-          id: 11,
-          location: "Cafe Sacher",
-          date: "2022-05-12T19:25",
-          text: "Das Cafe Sacher war ein Genuss für die Sinne. Die Innenausstattung und Atmosphäre waren klassisch und elegant, und der Kaffee und die Sachertorte waren ausgezeichnet. Das Personal war freundlich und aufmerksam.",
-          image: null
-        }
-      ],
+      entries: [],
     }
+  },
+  async mounted() {
+    await this.fetchData().then(data => this.entries = data.entries)
   },
   computed: {
     filteredEntries() {
@@ -173,6 +98,32 @@ export default {
       console.log(sortType)
       this.sortType = sortType
       this.sortingOverlay = false
+    },
+    getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return false;
+    },
+    fetchData() {
+      return fetch(`http://${window.location.hostname}:8080/api/getcollection`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'sessionKey': this.getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin'
+      }).then(response => response.json())
     }
   }
 }
