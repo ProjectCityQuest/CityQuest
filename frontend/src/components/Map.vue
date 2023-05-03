@@ -32,6 +32,8 @@ export default {
       map: undefined,
       positionSource: undefined,
       positionLayer: undefined,
+      rangeSource: undefined,
+      rangeLayer: undefined,
       locateButton: undefined,
       watcher: undefined,
       features: []
@@ -65,6 +67,7 @@ export default {
 
             const coords = [pos.coords.longitude, pos.coords.latitude];
 
+            this.drawRange(coords);
             this.drawPosition(coords);
           },
           function (error) {
@@ -88,6 +91,25 @@ export default {
 
       this.positionSource.clear(true);
       this.positionSource.addFeature(position);
+    },
+    drawRange(coords) {
+      const rangeCircle = new Feature(new Point(coords))
+
+      const iconStyle = new Style({
+        image: new Icon({
+          src: '/src/assets/range.svg',
+          imgSize: [64, 64],
+          rotateWithView: true,
+        }),
+      })
+
+      this.rangeLayer.setStyle((feature, resolution) => {
+        iconStyle.getImage().setScale(this.map.getView().getResolutionForZoom(17) / resolution);
+        return iconStyle;
+      })
+
+      this.rangeSource.clear(true);
+      this.rangeSource.addFeature(rangeCircle);
     },
     drawSpots() {
       let features = [];
@@ -142,8 +164,16 @@ export default {
       source: this.positionSource
     });
 
+    this.rangeSource = new VectorSource();
+    this.rangeLayer = new VectorLayer({
+      source: this.rangeSource,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+    })
+
     this.drawSpots();
 
+    this.map.addLayer(this.rangeLayer);
     this.map.addLayer(this.positionLayer);
 
     this.trackUserPosition();
