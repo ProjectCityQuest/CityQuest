@@ -1,5 +1,5 @@
 <template>
-  <div class="entry">
+  <div class="entry" @click="toDetail()">
     <div class="top">
       <h3>{{ this.location }}</h3>
       <p>{{ this.dateFormatted }}</p>
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
   name: "CollectionEntry",
   props:{
@@ -24,8 +25,12 @@ export default {
   },
   computed:{
     dateFormatted(){
-
       return (this.date.split("T")[0]+"").split("-").reverse().join(".")
+    }
+  },
+  methods:{
+    toDetail(){
+      router.push("/sammelbuch/eintrag/"+this.id)
     }
   }
 }
