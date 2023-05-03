@@ -18,9 +18,8 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import {circular} from 'ol/geom/Polygon';
 import Control from 'ol/control/Control';
-import {Icon, Stroke, Style} from 'ol/style';
+import {Icon, Style} from 'ol/style';
 import {fromLonLat} from "ol/proj";
 
 // styles nav elements on map
@@ -67,7 +66,7 @@ export default {
 
             const coords = [pos.coords.longitude, pos.coords.latitude];
 
-            this.drawPosition(coords, pos);
+            this.drawPosition(coords);
           },
           function (error) {
             alert(`ERROR: ${error.message}`);
@@ -77,25 +76,18 @@ export default {
           }
       );
     },
-    drawPosition(coords, pos) {
+    drawPosition(coords) {
       let feature = new Feature(new Point(fromLonLat(coords)));
       feature.setStyle(new Style({
-        stroke: new Stroke({
-          color: 'rgba(237, 54, 36, 0.6)',
-          lineDash: [4, 8]
-        }),
         image: new Icon({
-          src: '/src/assets/location-heading.svg',
-          imgSize: [64, 64],
+          src: '/src/assets/location.svg',
+          imgSize: [24, 24],
           rotateWithView: true,
         }),
       }));
 
-      const accuracy = circular(coords, pos.coords.accuracy);
-
       this.vectorSource.clear(true);
-      this.vectorSource.addFeatures([feature,
-        new Feature(new Point(fromLonLat(coords))),]);
+      this.vectorSource.addFeature(feature);
     },
     zoomToUser() {
       this.map.getView().fit(this.vectorSource.getExtent(), {
