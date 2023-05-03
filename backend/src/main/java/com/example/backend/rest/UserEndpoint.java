@@ -310,9 +310,9 @@ public class UserEndpoint {
         return new ResponseEntity<>(new GetCollectionDto(entries), HttpStatus.OK);
     }
 
-    @GetMapping("/getentry")
+    @PostMapping("/getentry")
     public ResponseEntity<Object> getEntry(@RequestBody GetEntryRequestDto request, @RequestHeader(value = "sessionKey") String token) {
-        LOG.info("GET /getentry issued with parameter " + request);
+        LOG.info("POST /getentry issued with parameter " + request);
 
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
