@@ -16,8 +16,10 @@ import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Control from 'ol/control/Control';
-import {Icon, Style} from 'ol/style';
-import {fromLonLat} from "ol/proj";
+import CircleStyle from "ol/style/Circle";
+import {Fill, Icon, Stroke, Style} from 'ol/style';
+import {useGeographic} from "ol/proj";
+import {spots} from "@/spots";
 
 // styles nav elements on map
 import 'ol/ol.css'
@@ -28,10 +30,11 @@ export default {
     return {
       userPositionFound: false,
       map: undefined,
-      vectorSource: undefined,
-      vectorLayer: undefined,
+      positionSource: undefined,
+      positionLayer: undefined,
       locateButton: undefined,
-      watcher: undefined
+      watcher: undefined,
+      features: []
     }
   },
   methods: {
@@ -56,7 +59,7 @@ export default {
 
                 this.userPositionFound = true;
               } catch (err) {
-                console.warn("User not located yet");
+                console.warn("user has not been located yet");
               }
             }
 
@@ -73,8 +76,9 @@ export default {
       );
     },
     drawPosition(coords) {
-      let feature = new Feature(new Point(fromLonLat(coords)));
-      feature.setStyle(new Style({
+      let position = new Feature(new Point(coords));
+
+      position.setStyle(new Style({
         image: new Icon({
           src: '/src/assets/location.svg',
           imgSize: [24, 24],
@@ -82,11 +86,39 @@ export default {
         }),
       }));
 
-      this.vectorSource.clear(true);
-      this.vectorSource.addFeature(feature);
+      this.positionSource.clear(true);
+      this.positionSource.addFeature(position);
+    },
+    drawSpots() {
+      let features = [];
+
+      for (let [lat, lon] of spots) {
+        features.push(new Feature(new Point([lon, lat])))
+      }
+
+      const spotsSource = new VectorSource({
+        features: features
+      });
+
+      const spotsLayer = new VectorLayer({
+        source: spotsSource,
+        style: new Style({
+          image: new CircleStyle({
+            radius: 5,
+            stroke: new Stroke({
+              color: '#fff',
+            }),
+            fill: new Fill({
+              color: '#3399CC',
+            }),
+          })
+        })
+      });
+
+      this.map.addLayer(spotsLayer);
     },
     zoomToUser() {
-      this.map.getView().fit(this.vectorSource.getExtent(), {
+      this.map.getView().fit(this.positionSource.getExtent(), {
         maxZoom: 18,
         duration: 500,
       });
@@ -100,14 +132,19 @@ export default {
     },
   },
   mounted() {
+    // activates geographic coordinates
+    useGeographic();
+
     this.initiateMap(true);
 
-    this.vectorSource = new VectorSource();
-    this.vectorLayer = new VectorLayer({
-      source: this.vectorSource,
+    this.positionSource = new VectorSource();
+    this.positionLayer = new VectorLayer({
+      source: this.positionSource
     });
 
-    this.map.addLayer(this.vectorLayer);
+    this.drawSpots();
+
+    this.map.addLayer(this.positionLayer);
 
     this.trackUserPosition();
 
