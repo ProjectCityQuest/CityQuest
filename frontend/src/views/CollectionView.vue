@@ -71,9 +71,9 @@ export default {
         case 0:
           return this.entries
         case 1:
-          return this.entries.sort((x, y) => Date.parse(y.date) - Date.parse(x.date))
+          return this.entries.sort((x, y) => Date.parse(y.timestamp) - Date.parse(x.timestamp))
         case 2:
-          return this.entries.sort((x, y) => Date.parse(x.date) - Date.parse(y.date))
+          return this.entries.sort((x, y) => Date.parse(x.timestamp) - Date.parse(y.timestamp))
         case 3:
           return this.entries.sort((x, y) => (x.location > y.location) ? 1 : -1)
         case 4:

@@ -7,7 +7,7 @@
     <div class="hr"></div>
     <div class="bottom">
       <p>{{ this.text }}</p>
-      <img v-if="this.image!=null" :src="image">
+      <img v-if="this.image!=='null' && this.image!=null" :src="image">
     </div>
   </div>
 </template>
