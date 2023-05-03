@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     backToCamera() {
-      router.push('/kamera')
+      router.push('/kamera/' + this.source)
     },
     safeImage() {
       this.buttonStatus = "waiting"
