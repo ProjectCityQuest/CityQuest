@@ -46,7 +46,6 @@ export default {
         layers: [new TileLayer({
           // enables preloading (blurry low res tiles)
           preload: enablePreloading ? Infinity : 0,
-          maxZoom: 19,
           source: new OSM()
         })], view: new View({
           center: [0, 0],
