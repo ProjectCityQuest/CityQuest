@@ -47,6 +47,18 @@ button {
     background: transparent;
   }
 }
+.orange {
+  &.ready {
+    color: white;
+    background: $orange;
+  }
+
+  &.waiting {
+    color: $orange;
+    border-color: $orange;
+    background: transparent;
+  }
+}
 
 .delete {
   &.default {

@@ -15,17 +15,21 @@
     </div>
     <div class="hr"></div>
   </div>
-  <div class="entry-container">
-    <div class="entry">
-      <div class="top">
-        <h1>{{ location }}</h1>
-        <p>Besucht am: {{ timestampFormatted }}</p>
+  <div class="background">
+    <div class="entry-container">
+      <div class="entry">
+        <div class="top">
+          <h1>{{ location }}</h1>
+          <p>Besucht am: {{ timestampFormatted }}</p>
+        </div>
+        <div class="hr"></div>
+        <div :class="classList">
+          <img :src="image">
+          <p>{{ text }}</p>
+        </div>
       </div>
-      <div class="hr"></div>
-      <div class="body img-vert">
-        <img :src="image">
-        <p>{{ text }}</p>
-      </div>
+      <CQButton b-style="orange" :status="buttonState" @click="toMap()">Spot auf Karte anzeigen</CQButton>
+      <div class="spacer"></div>
     </div>
   </div>
   <NavBar :active-icon="4"></NavBar>
@@ -34,21 +38,28 @@
 <script>
 import router from "@/router";
 import NavBar from "@/components/NavBar.vue";
+import CQButton from "@/components/CQButton.vue";
 
 export default {
   name: "CollectionEntry",
   props: {id: String},
-  components: {NavBar},
+  components: {NavBar, CQButton},
   data() {
     return {
       image: null,
       location: "",
       text: "",
       timestamp: "",
+      classList: "",
+      buttonState: "ready"
     }
   },
   async mounted() {
     await this.fetchData()
+
+    let i = new Image()
+    i.src = this.image
+    this.classList = i.width > i.height ? "body img-hor" : "body img-vert"
   },
   methods: {
     fetchData() {
@@ -89,11 +100,15 @@ export default {
     },
     backToCollection() {
       router.push("/sammelbuch")
+    },
+    toMap() {
+      this.buttonState = "waiting"
+      //TODO: link to Map
     }
   },
   computed: {
     timestampFormatted() {
-      return (this.timestamp.split("T")[0]+"").split("-").reverse().join(".") + ", " + (this.timestamp.split("T")[1]+"").substring(0,5) + " Uhr"
+      return (this.timestamp.split("T")[0] + "").split("-").reverse().join(".") + ", " + (this.timestamp.split("T")[1] + "").substring(0, 5) + " Uhr"
     }
   }
 }
@@ -134,6 +149,7 @@ export default {
     height: 1rem;
     margin-left: 10px;
     color: $blue;
+    width: fit-content;
 
     svg {
       height: 1rem;
@@ -150,65 +166,85 @@ export default {
   }
 }
 
-.entry-container {
-  margin-top: calc(117px + 1rem);
+.background {
+  position: fixed;
+  left: 0;
+  top: calc(117px + 1rem);
   width: 100%;
   height: calc(100vh - 135px - 1rem);
   background-image: url("../assets/background.png");
   padding-top: 15px;
+  overflow: scroll;
 
-  .entry {
-    width: 90%;
-    background-color: #eaeaea;
-    border-radius: 10px;
-    margin: 0 auto 0 auto;
 
-    .top {
-      padding: 15px;
+  .entry-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-      h1 {
+    .entry {
+      width: 90%;
+      background-color: #eaeaea;
+      border-radius: 10px;
+      margin: 0 auto 0 auto;
+
+      .top {
+        padding: 15px;
         text-align: center;
-        font-size: 1.3rem;
-      }
 
-      p {
-        padding-top: 10px;
-        font-size: 0.95rem;
-      }
-    }
+        h1 {
+          font-size: 1.3rem;
+        }
 
-    .hr {
-      width: 100%;
-      height: 2px;
-      background-color: #c9c9c9;
-      margin-top: 10px;
-    }
-
-    .body{
-      display: flex;
-      gap: 15px;
-      padding: 15px;
-
-      img{
-        object-fit: cover;
-        border-radius: 5px;
-      }
-
-      p{
-        font-size: 0.95rem;
-      }
-
-      &.img-hor{
-        flex-direction: column;
-      }
-
-      &.img-vert{
-        flex-direction: row-reverse;
-
-        img{
-          width: 50%;
+        p {
+          padding-top: 10px;
+          font-size: 0.95rem;
         }
       }
+
+      .hr {
+        width: 100%;
+        height: 2px;
+        background-color: #c9c9c9;
+        margin-top: 10px;
+      }
+
+      .body {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+
+        img {
+          object-fit: cover;
+          border-radius: 5px;
+        }
+
+        p {
+          font-size: 0.95rem;
+        }
+
+        &.img-hor {
+          flex-direction: column;
+        }
+
+        &.img-vert {
+          flex-direction: row-reverse;
+
+          img {
+            width: 50%;
+          }
+        }
+      }
+    }
+
+    button {
+      width: 60%;
+      margin-top: 30px;
+    }
+
+    .spacer{
+      height: 90px;
+      width: 100%;
     }
   }
 }
