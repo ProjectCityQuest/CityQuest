@@ -16,13 +16,13 @@ import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Control from 'ol/control/Control';
-import CircleStyle from "ol/style/Circle";
-import {Fill, Icon, Stroke, Style} from 'ol/style';
+import {Fill, Icon, Text, Style} from 'ol/style';
 import {useGeographic} from "ol/proj";
 import {spots} from "@/spots";
 
 // styles nav elements on map
 import 'ol/ol.css'
+import {Cluster} from "ol/source";
 
 export default {
   name: 'Map',
@@ -42,12 +42,16 @@ export default {
   methods: {
     initiateMap(enablePreloading) {
       this.map = new Map({
-        target: 'map', layers: [new TileLayer({
+        target: 'map',
+        layers: [new TileLayer({
           // enables preloading (blurry low res tiles)
           preload: enablePreloading ? Infinity : 0,
+          maxZoom: 19,
           source: new OSM()
         })], view: new View({
-          center: [0, 0], zoom: 2
+          center: [0, 0],
+          zoom: 2,
+          maxZoom: 19
         })
       });
     },
@@ -122,19 +126,51 @@ export default {
         features: features
       });
 
+      const clusterSource = new Cluster({
+        distance: 30,
+        minDistance: 10,
+        source: spotsSource
+      })
+
+      const styleCache = {};
       const spotsLayer = new VectorLayer({
-        source: spotsSource,
-        style: new Style({
-          image: new CircleStyle({
-            radius: 5,
-            stroke: new Stroke({
-              color: '#fff',
-            }),
-            fill: new Fill({
-              color: '#3399CC',
-            }),
-          })
-        })
+        source: clusterSource,
+        style: function (feature) {
+          const size = feature.get('features').length;
+          let style = styleCache[size];
+
+          let icon;
+          let text = "";
+
+          if (!style) {
+            if (size === 1) {
+              icon = new Icon({
+                src: '/src/assets/spot/spot.svg',
+                imgSize: [80, 80]
+              });
+            } else {
+              icon = new Icon({
+                src: '/src/assets/spot/cluster.svg',
+                imgSize: [80, 80]
+              });
+
+              text = String(size);
+            }
+
+            style = new Style({
+              image: icon,
+              text: new Text({
+                text: [text, "14px Berlin Sans FB"],
+                offsetY: -20,
+                fill: new Fill({
+                  color: '#fff',
+                }),
+              }),
+            });
+            styleCache[size] = style;
+          }
+          return style;
+        },
       });
 
       this.map.addLayer(spotsLayer);
@@ -171,10 +207,9 @@ export default {
       updateWhileInteracting: true,
     })
 
-    this.drawSpots();
-
     this.map.addLayer(this.rangeLayer);
     this.map.addLayer(this.positionLayer);
+    this.drawSpots();
 
     this.trackUserPosition();
 
