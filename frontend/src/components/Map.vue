@@ -16,14 +16,15 @@ import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Control from 'ol/control/Control';
-import {Fill, Icon, Text, Style} from 'ol/style';
-import {useGeographic} from "ol/proj";
+import {Fill, Icon, Text, Style, Stroke} from 'ol/style';
+import {Cluster} from "ol/source";
+import {Overlay} from "ol";
+import {Circle} from "ol/geom";
+import {transform, useGeographic} from "ol/proj";
 import {spots} from "@/spots";
 
 // styles nav elements on map
 import 'ol/ol.css'
-import {Cluster} from "ol/source";
-import {Overlay} from "ol";
 
 export default {
   name: 'Map',
@@ -33,7 +34,9 @@ export default {
       map: undefined,
       positionSource: undefined,
       positionLayer: undefined,
+      spotsLayer: undefined,
       rangeSource: undefined,
+      rangeCircle: undefined,
       rangeLayer: undefined,
       locateButton: undefined,
       watcher: undefined,
@@ -72,6 +75,7 @@ export default {
             const coords = [pos.coords.longitude, pos.coords.latitude];
 
             this.drawRange(coords);
+            this.getSpotsInRange();
             this.drawPosition(coords);
           },
           function (error) {
@@ -96,24 +100,34 @@ export default {
       this.positionSource.clear(true);
       this.positionSource.addFeature(position);
     },
+    getSpotsInRange() {
+      const extent = this.rangeCircle.getExtent();
+
+      let features = this.spotsLayer.getSource().getFeaturesInExtent(extent);
+
+      if (features.length === 0) {
+        console.log("no spots found");
+      }
+
+      features.forEach(function (feature) {
+        let features = feature.get("features");
+        if (features.length === 1) {
+          // alert(features[0].id_);
+        }
+      });
+    },
     drawRange(coords) {
-      const rangeCircle = new Feature(new Point(coords))
+      const radius = 20;
 
-      const iconStyle = new Style({
-        image: new Icon({
-          src: '/src/assets/range.svg',
-          imgSize: [64, 64],
-          rotateWithView: true,
-        }),
-      })
+      this.rangeCircle = new Circle(
+          transform(coords, 'EPSG:4326', 'EPSG:3857'),
+          radius
+      ).transform('EPSG:3857', 'EPSG:4326');
 
-      this.rangeLayer.setStyle((feature, resolution) => {
-        iconStyle.getImage().setScale(this.map.getView().getResolutionForZoom(17) / resolution);
-        return iconStyle;
-      })
+      const rangeFeature = new Feature(this.rangeCircle);
 
-      this.rangeSource.clear(true);
-      this.rangeSource.addFeature(rangeCircle);
+      this.rangeSource.clear();
+      this.rangeSource.addFeature(rangeFeature);
     },
     drawSpots() {
       let features = [];
@@ -142,7 +156,7 @@ export default {
       })
 
       const styleCache = {};
-      const spotsLayer = new VectorLayer({
+      this.spotsLayer = new VectorLayer({
         source: clusterSource,
         style: function (feature) {
           const size = feature.get('features').length;
@@ -182,7 +196,7 @@ export default {
         },
       });
 
-      this.map.addLayer(spotsLayer);
+      this.map.addLayer(this.spotsLayer);
     },
     zoomToUser() {
       this.map.getView().fit(this.positionSource.getExtent(), {
@@ -236,8 +250,15 @@ export default {
     this.rangeSource = new VectorSource();
     this.rangeLayer = new VectorLayer({
       source: this.rangeSource,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
+      style: new Style({
+        stroke: new Stroke({
+          color: 'blue',
+          width: 2
+        }),
+        fill: new Fill({
+          color: 'rgba(0, 0, 255, 0.1)'
+        })
+      }),
     })
 
     this.map.addLayer(this.rangeLayer);
