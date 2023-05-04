@@ -1,6 +1,6 @@
 <template>
-  <div ref="map-root" id="map">
-  </div>
+  <div ref="map-root" id="map"></div>
+  <div ref="popup" class="popup" hidden="hidden"></div>
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
@@ -23,6 +23,7 @@ import {spots} from "@/spots";
 // styles nav elements on map
 import 'ol/ol.css'
 import {Cluster} from "ol/source";
+import {Overlay} from "ol";
 
 export default {
   name: 'Map',
@@ -116,9 +117,18 @@ export default {
     },
     drawSpots() {
       let features = [];
+      let counter = 0;
 
       for (let [lat, lon] of spots) {
-        features.push(new Feature(new Point([lon, lat])))
+        let feature = new Feature({
+          geometry: new Point([lon, lat])
+        });
+
+        feature.setId("CityQuest" + counter);
+
+        counter++;
+
+        features.push(feature);
       }
 
       const spotsSource = new VectorSource({
@@ -187,6 +197,30 @@ export default {
           })
       );
     },
+    interact(event) {
+      let features = [];
+      let popup = new Overlay({
+        element: this.$refs.popup,
+        offset: [-9, -9]
+      });
+
+      this.map.addOverlay(popup);
+
+      this.map.forEachFeatureAtPixel(event.pixel,
+          (feature) => {
+            features = feature.get('features');
+            let valueToShow = "";
+
+            if (features.length === 1) {
+              valueToShow = features[0].id_;
+            }
+
+            this.$refs.popup.innerHTML = valueToShow;
+            this.$refs.popup.hidden = false;
+
+            popup.setPosition(feature.getGeometry().getCoordinates());
+          })
+    },
   },
   mounted() {
     // activates geographic coordinates
@@ -213,6 +247,8 @@ export default {
     this.trackUserPosition();
 
     this.createLocateButton();
+
+    this.map.on("click", this.interact);
   },
   unmounted() {
     navigator.geolocation.clearWatch(this.watcher);
@@ -232,6 +268,13 @@ export default {
     // slightly illegal
     display: none;
   }
+}
+
+.popup {
+  border-radius: 5px;
+  border: 1px solid grey;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2px;
 }
 
 .locate {
