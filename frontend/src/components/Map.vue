@@ -4,7 +4,7 @@
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
-  <p ref="log" class="log">tests</p>
+  <p ref="log" class="log"></p>
 </template>
 
 <script>
@@ -112,14 +112,11 @@ export default {
         return;
       }
 
-      console.log(this.$refs.log)
-
       this.$refs.log.innerHTML = "";
 
       features.forEach((feature) => {
         let features = feature.get("features");
         if (features.length === 1) {
-          // alert(features[0].id_);
           console.log(features[0].id_)
           this.$refs.log.innerHTML += features[0].id_ + ", ";
         }
@@ -157,8 +154,8 @@ export default {
       });
 
       const clusterSource = new Cluster({
-        distance: 30,
-        minDistance: 10,
+        distance: 15,
+        minDistance: 50,
         source: spotsSource
       })
 
