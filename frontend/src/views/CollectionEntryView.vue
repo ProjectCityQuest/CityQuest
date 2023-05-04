@@ -22,7 +22,7 @@
         <p>Besucht am: {{ timestampFormatted }}</p>
       </div>
       <div class="hr"></div>
-      <div class="body imgHor">
+      <div class="body img-vert">
         <img :src="image">
         <p>{{ text }}</p>
       </div>
@@ -185,6 +185,9 @@ export default {
     }
 
     .body{
+      display: flex;
+      gap: 15px;
+      padding: 15px;
 
       img{
         object-fit: cover;
@@ -195,11 +198,16 @@ export default {
         font-size: 0.95rem;
       }
 
-      &.imgHor{
-        display: flex;
+      &.img-hor{
         flex-direction: column;
-        gap: 15px;
-        padding: 15px;
+      }
+
+      &.img-vert{
+        flex-direction: row-reverse;
+
+        img{
+          width: 50%;
+        }
       }
     }
   }
