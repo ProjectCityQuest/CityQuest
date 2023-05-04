@@ -29,12 +29,13 @@
       <p @click="sortEntries(4)">Spot-Name aufsteigend (Z-A)</p>
     </div>
   </div>
-  <div class="entry-container" @click="this.sortingOverlay=false">
+  <div :class="this.loading?'entry-container loading':'entry-container'" @click="this.sortingOverlay=false">
     <CollectionEntry v-for="entry in filteredEntries" :id="entry.id" :location="entry.location" :date="entry.timestamp"
                      :text="entry.text"
                      :image="entry.image">
     </CollectionEntry>
-    <div v-if="listEmpty" class="empty">Dein Suchtext wurde in keinem deiner Einträge gefunden</div>
+    <div v-if="loading" class="loading"></div>
+    <div v-else-if="listEmpty" class="empty">Dein Suchtext wurde in keinem deiner Einträge gefunden</div>
     <div v-else-if="filteredEntries.length===0" class="empty">Du hast noch keine Einträge</div>
   </div>
   <NavBar :active-icon="4"></NavBar>
@@ -60,10 +61,14 @@ export default {
       listEmpty: false,
       sortType: 0,
       entries: [],
+      loading: true,
     }
   },
   async mounted() {
-    await this.fetchData().then(data => this.entries = data.entries)
+    await this.fetchData().then(data => {
+      this.loading = false
+      this.entries = data.entries
+    })
   },
   computed: {
     filteredEntries() {
@@ -85,7 +90,7 @@ export default {
   methods: {
     getTextFilter(){
       if (this.filterText !== "") {
-        let filtered = this.entries.filter(entry => entry.text.includes(this.filterText) || entry.location.includes(this.filterText))
+        let filtered = this.entries.filter(entry => entry.text.toUpperCase().includes(this.filterText) || entry.location.toUpperCase().includes(this.filterText))
         this.listEmpty = filtered.length === 0
         return filtered
       } else {
@@ -94,7 +99,7 @@ export default {
       }
     },
     filter() {
-      this.filterText = this.inputText
+      this.filterText = this.inputText.toUpperCase()
       this.sortingOverlay = false
     },
     sortEntries(sortType) {
@@ -142,7 +147,6 @@ export default {
   width: 100%;
 
   .heading {
-
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -229,8 +233,9 @@ export default {
   flex-direction: column;
   align-items: center;
   margin-top: calc(117px + 2rem);
+  padding-bottom: 85px;
   width: 100%;
-  height: calc(100vh - 187px - 2rem);
+  height: calc(100vh - 100px - 2rem);
   overflow: scroll;
   background-image: url("../assets/background.png");
   background-repeat: no-repeat;
@@ -242,10 +247,37 @@ export default {
     margin-top: 15px;
   }
 
+  &.loading{
+    padding-bottom: 0;
+    justify-content: center;
+  }
+
+  .loading{
+    border: 1rem solid $light_gray;
+    border-radius: 50%;
+    border-top-color: $blue;
+    width: 100px;
+    height: 100px;
+    margin-top: -70px;
+
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+
   .empty {
     text-align: center;
     color: $gray;
     margin: auto 0 auto 0;
   }
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

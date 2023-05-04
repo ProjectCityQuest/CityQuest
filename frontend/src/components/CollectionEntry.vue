@@ -88,6 +88,8 @@ export default {
       text-overflow: ellipsis;
       overflow: hidden;
       font-size: 0.95rem;
+      text-align: justify;
+      hyphens: auto;
     }
 
 

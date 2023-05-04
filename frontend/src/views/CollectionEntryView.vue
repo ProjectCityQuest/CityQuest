@@ -24,7 +24,7 @@
         </div>
         <div class="hr"></div>
         <div :class="classList">
-          <img :src="image">
+          <img v-if="image!=null" :src="image">
           <p>{{ text }}</p>
         </div>
       </div>
@@ -221,6 +221,8 @@ export default {
 
         p {
           font-size: 0.95rem;
+          text-align: justify;
+          hyphens: auto;
         }
 
         &.img-hor {
