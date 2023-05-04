@@ -4,6 +4,7 @@
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
+  <p ref="log" class="log">tests</p>
 </template>
 
 <script>
@@ -35,6 +36,7 @@ export default {
       positionSource: undefined,
       positionLayer: undefined,
       spotsLayer: undefined,
+      range: 20,
       rangeSource: undefined,
       rangeCircle: undefined,
       rangeLayer: undefined,
@@ -107,21 +109,26 @@ export default {
 
       if (features.length === 0) {
         console.log("no spots found");
+        return;
       }
 
-      features.forEach(function (feature) {
+      console.log(this.$refs.log)
+
+      this.$refs.log.innerHTML = "";
+
+      features.forEach((feature) => {
         let features = feature.get("features");
         if (features.length === 1) {
           // alert(features[0].id_);
+          console.log(features[0].id_)
+          this.$refs.log.innerHTML += features[0].id_ + ", ";
         }
       });
     },
     drawRange(coords) {
-      const radius = 20;
-
       this.rangeCircle = new Circle(
           transform(coords, 'EPSG:4326', 'EPSG:3857'),
-          radius
+          this.range
       ).transform('EPSG:3857', 'EPSG:4326');
 
       const rangeFeature = new Feature(this.rangeCircle);
@@ -291,11 +298,10 @@ export default {
   }
 }
 
-.popup {
-  border-radius: 5px;
-  border: 1px solid grey;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 2px;
+.log {
+  position: fixed;
+  top: 6em;
+  left: 5em;
 }
 
 .locate {
