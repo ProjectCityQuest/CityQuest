@@ -112,6 +112,8 @@ export default {
         return;
       }
 
+      console.log(this.$refs.log)
+
       this.$refs.log.innerHTML = "";
 
       features.forEach((feature) => {
