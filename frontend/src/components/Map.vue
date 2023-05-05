@@ -8,6 +8,10 @@
 </template>
 
 <script>
+// styles nav elements on map
+import 'ol/ol.css'
+import {spots} from "@/spots";
+
 import View from 'ol/View'
 import Map from 'ol/Map'
 import TileLayer from 'ol/layer/Tile'
@@ -22,27 +26,22 @@ import {Cluster} from "ol/source";
 import {Overlay} from "ol";
 import {Circle, Polygon} from "ol/geom";
 import {transform, useGeographic} from "ol/proj";
-import {spots} from "@/spots";
-
-// styles nav elements on map
-import 'ol/ol.css'
+import {PinchRotate} from "ol/interaction";
 
 export default {
   name: 'Map',
   data() {
     return {
-      userPositionFound: false,
+      // in meters
+      range: 20,
       map: undefined,
       positionSource: undefined,
       positionLayer: undefined,
       spotsLayer: undefined,
-      range: 20,
       rangeSource: undefined,
       rangeCircle: undefined,
       rangeLayer: undefined,
-      locateButton: undefined,
-      watcher: undefined,
-      features: []
+      watcher: undefined
     }
   },
   methods: {
@@ -53,27 +52,27 @@ export default {
           // enables preloading (blurry low res tiles)
           preload: enablePreloading ? Infinity : 0,
           source: new OSM()
-        })], view: new View({
+        })],
+        view: new View({
           center: [0, 0],
           zoom: 2,
           maxZoom: 19
         })
       });
+
+      this.disablePinchToRotate();
+    },
+    disablePinchToRotate() {
+      let interactions = this.map.getInteractions().getArray();
+      let pinchRotateInteraction = interactions.filter(function(interaction) {
+        return interaction instanceof PinchRotate;
+      })[0];
+
+      pinchRotateInteraction.setActive(false);
     },
     trackUserPosition() {
       this.watcher = navigator.geolocation.watchPosition(
           (pos) => {
-            // centers map on user position
-            if (!this.userPositionFound) {
-              try {
-                this.zoomToUser();
-
-                this.userPositionFound = true;
-              } catch (err) {
-                console.warn("user has not been located yet");
-              }
-            }
-
             const coords = [pos.coords.longitude, pos.coords.latitude];
 
             this.drawRange(coords);
@@ -218,7 +217,6 @@ export default {
       );
     },
     interact(event) {
-      let features = [];
       let popup = new Overlay({
         element: this.$refs.popup,
         offset: [-9, -9]
@@ -229,27 +227,11 @@ export default {
       this.map.forEachFeatureAtPixel(event.pixel,
           (feature) => {
 
-            features = feature.get('features');
-
-            let polygonPoints = []
-            features.forEach(elem => polygonPoints.push(elem.getGeometry().getCoordinates()));
-
-            let polygon = new Polygon([polygonPoints])
-            let polyFeature = new Feature(polygon);
-            let vectorSource = new VectorSource({});
-            vectorSource.addFeature(polyFeature);
-            let layer = new VectorLayer({
-              source: vectorSource});
-
-            this.map.addLayer(layer);
-
-            // zooms to feature
-            this.map.getView().fit(polyFeature.getGeometry().getExtent(), {
-              maxZoom: 16,
-              duration: 500
-            })
+            this.zoomToFeature(feature);
 
             let valueToShow = "";
+
+            let features = feature.get('features');
 
             if (features.length === 1) {
               valueToShow = features[0].id_;
@@ -261,6 +243,22 @@ export default {
             popup.setPosition(feature.getGeometry().getCoordinates());
           })
     },
+    zoomToFeature(feature) {
+      let features = feature.get('features');
+
+      // create polygon geometry with all the features of a cluster in it
+      let polygonPoints = []
+      features.forEach(elem => polygonPoints.push(elem.getGeometry().getCoordinates()));
+      let polygon = new Polygon([polygonPoints])
+
+      // scale the polygon for some padding
+      polygon.scale(1.5);
+
+      // zoom to feature
+      this.map.getView().fit(polygon.getExtent(), {
+        duration: 500
+      })
+    }
   },
   mounted() {
     // activates geographic coordinates
