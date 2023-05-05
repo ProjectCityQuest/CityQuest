@@ -237,7 +237,7 @@ export default {
   width: 100%;
   height: calc(100vh - 100px - 2rem);
   overflow: scroll;
-  background-image: url("../assets/background.png");
+  background-image: url("src/assets/background.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
 

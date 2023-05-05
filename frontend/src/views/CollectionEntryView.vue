@@ -172,7 +172,7 @@ export default {
   top: calc(117px + 1rem);
   width: 100%;
   height: calc(100vh - 135px - 1rem);
-  background-image: url("../assets/background.png");
+  background-image: url("src/assets/background.png");
   padding-top: 15px;
   overflow: scroll;
 
