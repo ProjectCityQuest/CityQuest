@@ -224,4 +224,15 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
 
         return entry;
     }
+
+    public boolean deleteEntry(int id) {
+        String statement = "SELECT count(pk_id) FROM Sammelbucheintrag where pk_id = ?;";
+        int entry = jdbcTemplate.queryForObject(statement, new Object[] {id}, Integer.class);
+
+        if (entry == 0) return false;
+
+        String deleteStatement = "DELETE FROM Sammelbucheintrag WHERE pk_id = ?";
+        jdbcTemplate.update(deleteStatement, new Object[] {id});
+        return true;
+    }
 }
