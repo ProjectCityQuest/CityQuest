@@ -4,7 +4,7 @@
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
-  <p ref="log" class="log">tests</p>
+  <p ref="log" class="log"></p>
 </template>
 
 <script>
@@ -20,7 +20,7 @@ import Control from 'ol/control/Control';
 import {Fill, Icon, Text, Style, Stroke} from 'ol/style';
 import {Cluster} from "ol/source";
 import {Overlay} from "ol";
-import {Circle} from "ol/geom";
+import {Circle, Polygon} from "ol/geom";
 import {transform, useGeographic} from "ol/proj";
 import {spots} from "@/spots";
 
@@ -112,15 +112,12 @@ export default {
         return;
       }
 
-      console.log(this.$refs.log)
-
       this.$refs.log.innerHTML = "";
 
       features.forEach((feature) => {
         let features = feature.get("features");
         if (features.length === 1) {
-          // alert(features[0].id_);
-          console.log(features[0].id_)
+          // console.log(features[0].id_)
           this.$refs.log.innerHTML += features[0].id_ + ", ";
         }
       });
@@ -229,6 +226,12 @@ export default {
 
       this.map.forEachFeatureAtPixel(event.pixel,
           (feature) => {
+            // zooms to feature
+            this.map.getView().fit(feature.getGeometry().getExtent(), {
+              maxZoom: 16,
+              duration: 500
+            })
+
             features = feature.get('features');
             let valueToShow = "";
 
