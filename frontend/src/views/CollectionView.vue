@@ -253,11 +253,11 @@ export default {
   }
 
   .loading{
-    border: 1rem solid $light_gray;
+    border: 0.8rem solid $light_gray;
     border-radius: 50%;
     border-top-color: $blue;
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     margin-top: -70px;
 
     -webkit-animation: spin 2s linear infinite;
