@@ -226,13 +226,27 @@ export default {
 
       this.map.forEachFeatureAtPixel(event.pixel,
           (feature) => {
+
+            features = feature.get('features');
+
+            let polygonPoints = []
+            features.forEach(elem => polygonPoints.push(elem.getGeometry().getCoordinates()));
+
+            let polygon = new Polygon([polygonPoints])
+            let polyFeature = new Feature(polygon);
+            let vectorSource = new VectorSource({});
+            vectorSource.addFeature(polyFeature);
+            let layer = new VectorLayer({
+              source: vectorSource});
+
+            this.map.addLayer(layer);
+
             // zooms to feature
-            this.map.getView().fit(feature.getGeometry().getExtent(), {
+            this.map.getView().fit(polyFeature.getGeometry().getExtent(), {
               maxZoom: 16,
               duration: 500
             })
 
-            features = feature.get('features');
             let valueToShow = "";
 
             if (features.length === 1) {
