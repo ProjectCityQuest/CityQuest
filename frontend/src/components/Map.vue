@@ -174,15 +174,12 @@ export default {
         source: clusterSource,
         style: (feature) => {
           const size = feature.get('features').length;
-          // let style = styleCache[size];
+          let style = styleCache[size];
 
           let icon;
           let text = "";
 
-          // if (!style) {
           if (size === 1) {
-            // this.getSpotsInRange();
-
             let featureId = feature.get('features')[0].id_;
 
             if (this.spotsInRange.includes(featureId)) {
@@ -196,27 +193,34 @@ export default {
                 imgSize: [80, 80]
               });
             }
-          } else {
+
+            return new Style({
+              image: icon
+            });
+          }
+
+
+          if (!style) {
             icon = new Icon({
               src: '/src/assets/spot/cluster.svg',
               imgSize: [80, 80]
             });
 
             text = String(size);
-          }
 
-          return new Style({
-            image: icon,
-            text: new Text({
-              text: [text, "14px Berlin Sans FB"],
-              offsetY: -20,
-              fill: new Fill({
-                color: '#fff',
+            style = new Style({
+              image: icon,
+              text: new Text({
+                text: [text, "14px Berlin Sans FB"],
+                offsetY: -20,
+                fill: new Fill({
+                  color: '#fff',
+                }),
               }),
-            }),
-          });
-          // styleCache[size] = style;
-          // return style;
+            });
+          }
+          styleCache[size] = style;
+          return style;
         },
       });
 
