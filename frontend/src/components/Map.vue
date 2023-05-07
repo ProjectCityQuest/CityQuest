@@ -97,6 +97,10 @@ export default {
       this.positionSource.addFeature(position);
     },
     getSpotsInRange() {
+      if (!this.rangeCircle) {
+        return;
+      }
+
       const extent = this.rangeCircle.getExtent();
 
       let features = this.spotsLayer.getSource().getFeaturesInExtent(extent);
@@ -191,6 +195,11 @@ export default {
       return features;
     },
     zoomToUser() {
+      if (this.positionSource.getExtent()[0] === Infinity) {
+        // user position not found
+        return;
+      }
+
       this.map.getView().fit(this.positionSource.getExtent(), {
         maxZoom: 18,
         duration: 500,
