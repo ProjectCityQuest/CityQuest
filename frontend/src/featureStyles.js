@@ -1,0 +1,58 @@
+import {Fill, Icon, Stroke, Style, Text} from "ol/style";
+
+export function getSpotStyle(isInRange) {
+    let icon;
+
+    if (isInRange) {
+        icon = new Icon({
+            src: '/src/assets/spot/in_range.svg',
+            imgSize: [80, 80]
+        });
+    } else {
+        icon = new Icon({
+            src: '/src/assets/spot/spot.svg',
+            imgSize: [80, 80]
+        });
+    }
+
+    return new Style({
+        image: icon
+    });
+}
+export function getClusterStyle(text) {
+    return new Style({
+        image: new Icon({
+            src: '/src/assets/spot/cluster.svg',
+            imgSize: [80, 80]
+        }),
+        text: new Text({
+            text: [text, "14px Berlin Sans FB"],
+            offsetY: -20,
+            fill: new Fill({
+                color: '#fff',
+            }),
+        }),
+    });
+}
+
+export function getPositionStyle() {
+    return new Style({
+        image: new Icon({
+            src: '/src/assets/location.svg',
+            imgSize: [24, 24],
+            rotateWithView: true,
+        }),
+    });
+}
+
+export function getRangeCircleStyle() {
+    return new Style({
+        stroke: new Stroke({
+            color: 'blue',
+            width: 2
+        }),
+        fill: new Fill({
+            color: 'rgba(0, 0, 255, 0.1)'
+        })
+    });
+}

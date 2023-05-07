@@ -11,6 +11,7 @@
 // styles nav elements on map
 import 'ol/ol.css'
 import {spots} from "@/spots";
+import * as featureStyles from "@/featureStyles";
 
 import View from 'ol/View'
 import Map from 'ol/Map'
@@ -21,7 +22,6 @@ import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Control from 'ol/control/Control';
-import {Fill, Icon, Text, Style, Stroke} from 'ol/style';
 import {Cluster} from "ol/source";
 import {Overlay} from "ol";
 import {Circle, Polygon} from "ol/geom";
@@ -91,13 +91,7 @@ export default {
     drawPosition(coords) {
       let position = new Feature(new Point(coords));
 
-      position.setStyle(new Style({
-        image: new Icon({
-          src: '/src/assets/location.svg',
-          imgSize: [24, 24],
-          rotateWithView: true,
-        }),
-      }));
+      position.setStyle(featureStyles.getPositionStyle());
 
       this.positionSource.clear(true);
       this.positionSource.addFeature(position);
@@ -152,50 +146,27 @@ export default {
       this.spotsLayer = new VectorLayer({
         source: clusterSource,
         style: (feature) => {
-          const size = feature.get('features').length;
-          let style = styleCache[size];
+          const clusterSize = feature.get('features').length;
 
-          if (size === 1) {
-            let icon;
+          if (clusterSize === 1) {
             let featureId = feature.get('features')[0].id_;
 
             if (this.spotsInRange.includes(featureId)) {
-              icon = new Icon({
-                src: '/src/assets/spot/in_range.svg',
-                imgSize: [80, 80]
-              });
+              return featureStyles.getSpotStyle(true);
             } else {
-              icon = new Icon({
-                src: '/src/assets/spot/spot.svg',
-                imgSize: [80, 80]
-              });
+              return featureStyles.getSpotStyle(false);
             }
-
-            return new Style({
-              image: icon
-            });
           }
 
+          let cachedStyle = styleCache[clusterSize];
 
-          if (!style) {
-            let featureText = String(size);
+          if (!cachedStyle) {
+            let featureText = String(clusterSize);
 
-            style = new Style({
-              image: new Icon({
-                src: '/src/assets/spot/cluster.svg',
-                imgSize: [80, 80]
-              }),
-              text: new Text({
-                text: [featureText, "14px Berlin Sans FB"],
-                offsetY: -20,
-                fill: new Fill({
-                  color: '#fff',
-                }),
-              }),
-            });
+            cachedStyle = featureStyles.getClusterStyle(featureText);
           }
-          styleCache[size] = style;
-          return style;
+          styleCache[clusterSize] = cachedStyle;
+          return cachedStyle;
         },
       });
 
@@ -289,7 +260,18 @@ export default {
       this.map.getView().fit(polygon.getExtent(), {
         duration: 500
       })
-    }
+    },
+    updateSpotsInRangeOnZoom() {
+      let currZoom = this.map.getView().getZoom();
+      this.map.on('moveend', () => {
+        let newZoom = this.map.getView().getZoom();
+        if (currZoom !== newZoom) {
+          currZoom = newZoom;
+
+          this.getSpotsInRange();
+        }
+      });
+    },
   },
   mounted() {
     // activates geographic coordinates
@@ -305,15 +287,7 @@ export default {
     this.rangeSource = new VectorSource();
     this.rangeLayer = new VectorLayer({
       source: this.rangeSource,
-      style: new Style({
-        stroke: new Stroke({
-          color: 'blue',
-          width: 2
-        }),
-        fill: new Fill({
-          color: 'rgba(0, 0, 255, 0.1)'
-        })
-      }),
+      style: featureStyles.getRangeCircleStyle,
     })
 
     this.map.addLayer(this.rangeLayer);
@@ -325,6 +299,8 @@ export default {
     this.createLocateButton();
 
     this.map.on("click", this.interact);
+
+    this.updateSpotsInRangeOnZoom();
 
     setInterval(this.getSpotsInRange, 500);
   },
