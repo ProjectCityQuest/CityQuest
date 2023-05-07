@@ -119,14 +119,6 @@ export default {
         if (features.length === 1) {
           let featureId = features[0].id_;
 
-          /* feature.setStyle(new Style({
-            image: new Icon({
-              src: '/src/assets/spot/in_range.svg',
-              imgSize: [92, 92]
-            })
-          }));
-           */
-
           this.$refs.log.innerHTML += featureId + ", ";
           this.spotsInRange.push(featureId);
         }
@@ -144,20 +136,7 @@ export default {
       this.rangeSource.addFeature(rangeFeature);
     },
     drawSpots() {
-      let features = [];
-      let counter = 0;
-
-      for (let [lat, lon] of spots) {
-        let feature = new Feature({
-          geometry: new Point([lon, lat])
-        });
-
-        feature.setId("CityQuest" + counter);
-
-        counter++;
-
-        features.push(feature);
-      }
+      let features = this.generateSpots();
 
       const spotsSource = new VectorSource({
         features: features
@@ -176,10 +155,8 @@ export default {
           const size = feature.get('features').length;
           let style = styleCache[size];
 
-          let icon;
-          let text = "";
-
           if (size === 1) {
+            let icon;
             let featureId = feature.get('features')[0].id_;
 
             if (this.spotsInRange.includes(featureId)) {
@@ -201,17 +178,15 @@ export default {
 
 
           if (!style) {
-            icon = new Icon({
-              src: '/src/assets/spot/cluster.svg',
-              imgSize: [80, 80]
-            });
-
-            text = String(size);
+            let featureText = String(size);
 
             style = new Style({
-              image: icon,
+              image: new Icon({
+                src: '/src/assets/spot/cluster.svg',
+                imgSize: [80, 80]
+              }),
               text: new Text({
-                text: [text, "14px Berlin Sans FB"],
+                text: [featureText, "14px Berlin Sans FB"],
                 offsetY: -20,
                 fill: new Fill({
                   color: '#fff',
@@ -225,6 +200,24 @@ export default {
       });
 
       this.map.addLayer(this.spotsLayer);
+    },
+    generateSpots() {
+      let features = [];
+      let counter = 0;
+
+      for (let [lat, lon] of spots) {
+        let feature = new Feature({
+          geometry: new Point([lon, lat])
+        });
+
+        feature.setId("CityQuest" + counter);
+
+        counter++;
+
+        features.push(feature);
+      }
+
+      return features;
     },
     zoomToUser() {
       this.map.getView().fit(this.positionSource.getExtent(), {
