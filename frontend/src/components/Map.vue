@@ -148,6 +148,8 @@ export default {
 
       spotsSource.setLoader(() => {
         let load = () => {
+          this.getSpotsInRange();
+          spotsSource.clear(true);
           spotsSource.addFeatures(features);
         }
 
@@ -321,7 +323,7 @@ export default {
 
     this.updateSpotsInRangeOnZoom();
 
-    setInterval(this.getSpotsInRange, 500);
+    // setInterval(this.getSpotsInRange, 500);
   },
   unmounted() {
     navigator.geolocation.clearWatch(this.watcher);
