@@ -41,6 +41,7 @@ export default {
       rangeSource: undefined,
       rangeCircle: undefined,
       rangeLayer: undefined,
+      spotsInRange: [],
       watcher: undefined
     }
   },
@@ -64,7 +65,7 @@ export default {
     },
     disablePinchToRotate() {
       let interactions = this.map.getInteractions().getArray();
-      let pinchRotateInteraction = interactions.filter(function(interaction) {
+      let pinchRotateInteraction = interactions.filter(function (interaction) {
         return interaction instanceof PinchRotate;
       })[0];
 
@@ -107,19 +108,27 @@ export default {
       let features = this.spotsLayer.getSource().getFeaturesInExtent(extent);
 
       if (features.length === 0) {
-        console.log("no spots found");
         return;
       }
 
-      console.log(this.$refs.log)
-
       this.$refs.log.innerHTML = "";
+      this.spotsInRange = [];
 
       features.forEach((feature) => {
         let features = feature.get("features");
         if (features.length === 1) {
-          // console.log(features[0].id_)
-          this.$refs.log.innerHTML += features[0].id_ + ", ";
+          let featureId = features[0].id_;
+
+          /* feature.setStyle(new Style({
+            image: new Icon({
+              src: '/src/assets/spot/in_range.svg',
+              imgSize: [92, 92]
+            })
+          }));
+           */
+
+          this.$refs.log.innerHTML += featureId + ", ";
+          this.spotsInRange.push(featureId);
         }
       });
     },
@@ -163,41 +172,51 @@ export default {
       const styleCache = {};
       this.spotsLayer = new VectorLayer({
         source: clusterSource,
-        style: function (feature) {
+        style: (feature) => {
           const size = feature.get('features').length;
-          let style = styleCache[size];
+          // let style = styleCache[size];
 
           let icon;
           let text = "";
 
-          if (!style) {
-            if (size === 1) {
+          // if (!style) {
+          if (size === 1) {
+            // this.getSpotsInRange();
+
+            let featureId = feature.get('features')[0].id_;
+
+            if (this.spotsInRange.includes(featureId)) {
               icon = new Icon({
-                src: '/src/assets/spot/spot.svg',
+                src: '/src/assets/spot/in_range.svg',
                 imgSize: [80, 80]
               });
             } else {
               icon = new Icon({
-                src: '/src/assets/spot/cluster.svg',
+                src: '/src/assets/spot/spot.svg',
                 imgSize: [80, 80]
               });
-
-              text = String(size);
             }
-
-            style = new Style({
-              image: icon,
-              text: new Text({
-                text: [text, "14px Berlin Sans FB"],
-                offsetY: -20,
-                fill: new Fill({
-                  color: '#fff',
-                }),
-              }),
+          } else {
+            icon = new Icon({
+              src: '/src/assets/spot/cluster.svg',
+              imgSize: [80, 80]
             });
-            styleCache[size] = style;
+
+            text = String(size);
           }
-          return style;
+
+          return new Style({
+            image: icon,
+            text: new Text({
+              text: [text, "14px Berlin Sans FB"],
+              offsetY: -20,
+              fill: new Fill({
+                color: '#fff',
+              }),
+            }),
+          });
+          // styleCache[size] = style;
+          // return style;
         },
       });
 
@@ -233,8 +252,19 @@ export default {
 
             let features = feature.get('features');
 
+            if (!features) {
+              return;
+            }
+
             if (features.length === 1) {
-              valueToShow = features[0].id_;
+              let featureId = features[0].id_;
+
+              valueToShow = featureId;
+
+              if (this.spotsInRange.includes(featureId)) {
+                console.log(featureId, " is in range");
+                valueToShow += " IN RANGE";
+              }
             }
 
             this.$refs.popup.innerHTML = valueToShow;
@@ -246,8 +276,12 @@ export default {
     zoomToFeature(feature) {
       let features = feature.get('features');
 
+      if (!features) {
+        return;
+      }
+
       // create polygon geometry with all the features of a cluster in it
-      let polygonPoints = []
+      let polygonPoints = [];
       features.forEach(elem => polygonPoints.push(elem.getGeometry().getCoordinates()));
       let polygon = new Polygon([polygonPoints])
 
@@ -294,6 +328,8 @@ export default {
     this.createLocateButton();
 
     this.map.on("click", this.interact);
+
+    setInterval(this.getSpotsInRange, 500);
   },
   unmounted() {
     navigator.geolocation.clearWatch(this.watcher);
