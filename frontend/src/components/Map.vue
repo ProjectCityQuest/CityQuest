@@ -146,6 +146,16 @@ export default {
         source: spotsSource
       })
 
+      spotsSource.setLoader(() => {
+        let load = () => {
+          spotsSource.addFeatures(features);
+        }
+
+        load();
+
+        setInterval(load, 500);
+      })
+
       const styleCache = {};
       this.spotsLayer = new VectorLayer({
         source: clusterSource,
