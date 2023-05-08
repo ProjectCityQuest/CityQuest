@@ -4,8 +4,7 @@
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
-  <p ref="log" class="log"></p>
-  <SpotInfo></SpotInfo>
+  <SpotInfo :is-visible="spotInfoIsVisible" @close="spotInfoIsVisible=false"></SpotInfo>
 </template>
 
 <script>
@@ -28,6 +27,7 @@ import {Cluster} from "ol/source";
 import {Circle, Polygon} from "ol/geom";
 import {transform, useGeographic} from "ol/proj";
 import {PinchRotate} from "ol/interaction";
+import {Overlay} from "ol";
 
 export default {
   name: 'Map',
@@ -45,7 +45,7 @@ export default {
       rangeLayer: undefined,
       spotsInRange: [],
       watcher: undefined,
-      overlayIsActive: false
+      spotInfoIsVisible: false
     }
   },
   methods: {
@@ -112,7 +112,6 @@ export default {
         return;
       }
 
-      // this.$refs.log.innerHTML = "";
       this.spotsInRange = [];
 
       features.forEach((feature) => {
@@ -120,7 +119,6 @@ export default {
         if (features.length === 1) {
           let featureId = features[0].id_;
 
-          // this.$refs.log.innerHTML += featureId + ", ";
           this.spotsInRange.push(featureId);
         }
       });
@@ -228,12 +226,12 @@ export default {
       );
     },
     interact(event) {
-      // let popup = new Overlay({
-      // element: this.$refs.popup,
-      // offset: [-9, -9]
-      // });
+      let popup = new Overlay({
+        element: this.$refs.popup,
+        offset: [22, -28]
+      });
 
-      // this.map.addOverlay(popup);
+      this.map.addOverlay(popup);
 
       this.map.forEachFeatureAtPixel(event.pixel,
           (feature) => {
@@ -251,18 +249,17 @@ export default {
             if (features.length === 1) {
               let featureId = features[0].id_;
 
-              valueToShow = featureId;
-
               if (this.spotsInRange.includes(featureId)) {
-                console.log(featureId, " is in range");
-                valueToShow += " IN RANGE";
+                this.spotInfoIsVisible = true;
               }
+
+              valueToShow = featureId;
             }
 
-            // this.$refs.popup.innerHTML = valueToShow;
-            // this.$refs.popup.hidden = false;
+            this.$refs.popup.innerHTML = valueToShow;
+            this.$refs.popup.hidden = false;
 
-            // popup.setPosition(feature.getGeometry().getCoordinates());
+            popup.setPosition(feature.getGeometry().getCoordinates());
           })
     },
     zoomToFeature(feature) {
@@ -292,7 +289,7 @@ export default {
 
     },
     centerFeatureInTopHalfOfScreen(feature) {
-      const paddingTop = -(this.map.getTargetElement().clientHeight/2)
+      const paddingTop = -(this.map.getTargetElement().clientHeight / 2)
 
       this.map.getView().fit(feature.getGeometry().getExtent(), {
         duration: 500,
@@ -349,6 +346,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "/src/assets/colors";
+
 #map {
   width: 100vw;
   height: 100vh;
@@ -371,5 +370,14 @@ export default {
 .locate {
   top: 6em;
   left: .5em;
+}
+
+.popup {
+  color: $blue;
+  letter-spacing: 0.05em;
+  text-shadow: -1px 1px 2px #fff,
+  1px 1px 2px #fff,
+  1px -1px 0 #fff,
+  -1px -1px 0 #fff;
 }
 </style>

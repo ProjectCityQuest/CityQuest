@@ -1,14 +1,14 @@
 <template>
-  <div class="info-wrapper">
+  <div class="info-wrapper" v-if="isVisible">
     <nav>
       <svg class="close-icon" xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 50 50">
+           viewBox="0 0 50 50" @click="close">
         <circle cx="25" cy="25" r="25" style="fill:#e73829"/>
         <rect x="23" y="9.3" width="4" height="30.41" rx="1.24" transform="translate(24.65 -10.5) rotate(45)"
               style="fill:#f9f9f9"/>
         <rect x="23" y="9.8" width="4" height="30.41" rx="1.24" transform="translate(60.36 25) rotate(135)"
               style="fill:#f9f9f9"/>
-        <rect class="close-btn" x="0" y="0" width="50" height="50"/>
+        <rect class="close-btn" x="0" y="0" width="50" height="50" @click="close"/>
       </svg>
     </nav>
     <div class="info-box">hallo test</div>
@@ -17,7 +17,16 @@
 
 <script>
 export default {
-  name: "SpotInfo"
+  name: "SpotInfo",
+  emits: ["close"],
+  props: {
+    isVisible: Boolean
+  },
+  methods: {
+    close() {
+      this.$emit("close");
+    }
+  }
 }
 </script>
 
