@@ -5,6 +5,7 @@
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
   <p ref="log" class="log"></p>
+  <SpotInfo></SpotInfo>
 </template>
 
 <script>
@@ -12,6 +13,7 @@
 import 'ol/ol.css'
 import {spots} from "@/spots";
 import * as featureStyles from "@/featureStyles";
+import SpotInfo from "@/components/SpotInfo.vue";
 
 import View from 'ol/View'
 import Map from 'ol/Map'
@@ -23,13 +25,13 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Control from 'ol/control/Control';
 import {Cluster} from "ol/source";
-import {Overlay} from "ol";
 import {Circle, Polygon} from "ol/geom";
 import {transform, useGeographic} from "ol/proj";
 import {PinchRotate} from "ol/interaction";
 
 export default {
   name: 'Map',
+  components: {SpotInfo},
   data() {
     return {
       // in meters
@@ -42,7 +44,8 @@ export default {
       rangeCircle: undefined,
       rangeLayer: undefined,
       spotsInRange: [],
-      watcher: undefined
+      watcher: undefined,
+      overlayIsActive: false
     }
   },
   methods: {
@@ -109,7 +112,7 @@ export default {
         return;
       }
 
-      this.$refs.log.innerHTML = "";
+      // this.$refs.log.innerHTML = "";
       this.spotsInRange = [];
 
       features.forEach((feature) => {
@@ -117,7 +120,7 @@ export default {
         if (features.length === 1) {
           let featureId = features[0].id_;
 
-          this.$refs.log.innerHTML += featureId + ", ";
+          // this.$refs.log.innerHTML += featureId + ", ";
           this.spotsInRange.push(featureId);
         }
       });
@@ -225,12 +228,12 @@ export default {
       );
     },
     interact(event) {
-      let popup = new Overlay({
-        element: this.$refs.popup,
-        offset: [-9, -9]
-      });
+      // let popup = new Overlay({
+      // element: this.$refs.popup,
+      // offset: [-9, -9]
+      // });
 
-      this.map.addOverlay(popup);
+      // this.map.addOverlay(popup);
 
       this.map.forEachFeatureAtPixel(event.pixel,
           (feature) => {
@@ -256,10 +259,10 @@ export default {
               }
             }
 
-            this.$refs.popup.innerHTML = valueToShow;
-            this.$refs.popup.hidden = false;
+            // this.$refs.popup.innerHTML = valueToShow;
+            // this.$refs.popup.hidden = false;
 
-            popup.setPosition(feature.getGeometry().getCoordinates());
+            // popup.setPosition(feature.getGeometry().getCoordinates());
           })
     },
     zoomToFeature(feature) {
@@ -277,10 +280,24 @@ export default {
       // scale the polygon for some padding
       polygon.scale(1.5);
 
+      if (features.length === 1) {
+        this.centerFeatureInTopHalfOfScreen(features[0])
+        return;
+      }
+
       // zoom to feature
       this.map.getView().fit(polygon.getExtent(), {
         duration: 500
-      })
+      });
+
+    },
+    centerFeatureInTopHalfOfScreen(feature) {
+      const paddingTop = -(this.map.getTargetElement().clientHeight/2)
+
+      this.map.getView().fit(feature.getGeometry().getExtent(), {
+        duration: 500,
+        padding: [paddingTop, 0, 0, 0]
+      });
     },
     updateSpotsInRangeOnZoom() {
       let currZoom = this.map.getView().getZoom();
