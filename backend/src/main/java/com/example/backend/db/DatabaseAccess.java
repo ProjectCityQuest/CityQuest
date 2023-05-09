@@ -61,4 +61,6 @@ public interface DatabaseAccess {
     List<CollectionEntry> getAllCollectionEntries(int id);
 
     CollectionEntry getCollectionEntry(int entryId, int userId);
+
+    boolean deleteEntry(int id);
 }
