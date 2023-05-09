@@ -62,8 +62,9 @@ button {
 
 .delete {
   &.default {
-    color: white;
-    background: $red;
+    color: $red;
+    border: solid 2px $red;
+    background: transparent;
   }
 
   &:hover{
@@ -71,7 +72,8 @@ button {
   }
 
   &.pending {
-
+    color: white;
+    background: $red;
   }
 }
 </style>

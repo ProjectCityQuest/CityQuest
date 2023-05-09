@@ -237,7 +237,7 @@ export default {
   width: 100%;
   height: calc(100vh - 100px - 2rem);
   overflow: scroll;
-  background-image: url("src/assets/background.png");
+  background-image: url("../assets/background.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
 
@@ -253,11 +253,11 @@ export default {
   }
 
   .loading{
-    border: 1rem solid $light_gray;
+    border: 0.8rem solid $light_gray;
     border-radius: 50%;
     border-top-color: $blue;
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     margin-top: -70px;
 
     -webkit-animation: spin 2s linear infinite;
