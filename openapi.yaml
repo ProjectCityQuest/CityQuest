@@ -395,6 +395,29 @@ paths:
               example:
                 error: Es gibt keinen entry mit dieser ID
               description: Es gibt keinen entry mit dieser ID
+  /deleteentry:
+    delete:
+      tags:
+        - auth
+      description: Löscht einen Sammelbuch-Eintrag
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                id: 8324
+      responses:
+        200:
+          description: Der Eintrag wurde gelöscht
+        400:
+          content:
+            application/json:
+              example:
+                error: Ungültige ID
+          description: Es existiert kein Eintrag mit dieser ID
 components:
   securitySchemes:
     ApiKeyAuth:
