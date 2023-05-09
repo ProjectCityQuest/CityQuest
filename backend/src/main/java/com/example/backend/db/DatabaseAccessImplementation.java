@@ -6,6 +6,7 @@
 package com.example.backend.db;
 
 import com.example.backend.entity.CollectionEntry;
+import com.example.backend.entity.Spot;
 import com.example.backend.entity.User;
 import com.example.backend.service.UserServiceImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -223,6 +224,25 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         CollectionEntry entry = jdbcTemplate.queryForObject(statement, new Object[]{entryId}, (rs, rowNum) -> new CollectionEntry(rs.getInt("pk_id"), rs.getString("timestamp"), rs.getString("location"), rs.getString("text"), rs.getString("bild")));
 
         return entry;
+    }
+
+    public List<Spot> getSpots() {
+        List<Map<String, Object>> spots = jdbcTemplate.queryForList("SELECT * FROM Spot;");
+
+        List<Spot> spotList = new LinkedList<>();
+
+        for (Map<String, Object> currentSpot : spots) {
+            int id = Integer.parseInt(currentSpot.get("pk_id") + "");
+            String name = currentSpot.get("name") + "";
+            double latitude = Double.parseDouble(currentSpot.get("latitude")+"");
+            double longitude = Double.parseDouble(currentSpot.get("longitude") + "");
+            String description = currentSpot.get("beschreibung")+"";
+
+            Spot spot = new Spot(id, name, new double[] {longitude, latitude}, description);
+            spotList.add(spot);
+        }
+
+        return spotList;
     }
 
     public boolean deleteEntry(int id) {
