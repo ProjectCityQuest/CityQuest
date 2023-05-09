@@ -11,7 +11,10 @@
         <rect class="close-btn" x="0" y="0" width="50" height="50" @click="close"/>
       </svg>
     </nav>
-    <div class="info-box">hallo test</div>
+    <h1>{{ name }}</h1>
+    <div class="info-box">
+      <p>{{ description }}</p>
+    </div>
   </div>
 </template>
 
@@ -20,7 +23,9 @@ export default {
   name: "SpotInfo",
   emits: ["close"],
   props: {
-    isVisible: Boolean
+    isVisible: Boolean,
+    name: String,
+    description: String
   },
   methods: {
     close() {
@@ -47,7 +52,7 @@ export default {
   nav {
     display: flex;
     justify-content: flex-end;
-    margin: 1rem;
+    margin: 1rem 1rem 0 1rem;
 
     .close-icon {
       height: 25px;
@@ -61,8 +66,21 @@ export default {
     }
   }
 
+  h1 {
+    font-size: 20px;
+    margin: 0 1rem 1rem 1rem;
+  }
+
   .info-box {
-    margin: 1rem;
+    margin: 0 1rem 1rem 1rem;
+    padding-right: 0.5rem;
+    overflow: scroll;
+    height: 65%;
+
+    p {
+      hyphens: auto;
+      overflow: scroll;
+    }
   }
 }
 </style>

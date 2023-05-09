@@ -4,14 +4,15 @@
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
-  <SpotInfo :is-visible="spotInfoIsVisible" @close="spotInfoIsVisible=false"></SpotInfo>
+  <SpotInfo :is-visible="spotInfo.isVisible" :name="spotInfo.name" :description="spotInfo.description"
+            @close="spotInfo.isVisible=false"></SpotInfo>
 </template>
 
 <script>
 // styles nav elements on map
 import 'ol/ol.css'
-import {spots} from "@/spots";
 import * as featureStyles from "@/featureStyles";
+import * as spotsHelper from "@/spotsHelper";
 import SpotInfo from "@/components/SpotInfo.vue";
 
 import View from 'ol/View'
@@ -35,6 +36,7 @@ export default {
   data() {
     return {
       // in meters
+      spots: [],
       range: 20,
       map: undefined,
       positionSource: undefined,
@@ -45,7 +47,11 @@ export default {
       rangeLayer: undefined,
       spotsInRange: [],
       watcher: undefined,
-      spotInfoIsVisible: false
+      spotInfo: {
+        isVisible: false,
+        name: "",
+        description: ""
+      }
     }
   },
   methods: {
@@ -134,8 +140,8 @@ export default {
       this.rangeSource.clear();
       this.rangeSource.addFeature(rangeFeature);
     },
-    drawSpots() {
-      let features = this.generateSpots();
+    async drawSpots() {
+      let features = this.generateSpots(this.spots);
 
       const spotsSource = new VectorSource({
         features: features
@@ -189,16 +195,19 @@ export default {
 
       this.map.addLayer(this.spotsLayer);
     },
-    generateSpots() {
+    generateSpots(spots) {
       let features = [];
       let counter = 0;
 
-      for (let [lat, lon] of spots) {
+      for (let spot of spots) {
+        let coords = spot.coordinates;
+        let id = spot.id;
+
         let feature = new Feature({
-          geometry: new Point([lon, lat])
+          geometry: new Point([coords[1], coords[0]])
         });
 
-        feature.setId("CityQuest" + counter);
+        feature.setId(id);
 
         counter++;
 
@@ -228,14 +237,12 @@ export default {
     interact(event) {
       let popup = new Overlay({
         element: this.$refs.popup,
-        offset: [22, -28]
       });
 
       this.map.addOverlay(popup);
 
       this.map.forEachFeatureAtPixel(event.pixel,
           (feature) => {
-
             this.zoomToFeature(feature);
 
             let valueToShow = "";
@@ -249,17 +256,24 @@ export default {
             if (features.length === 1) {
               let featureId = features[0].id_;
 
-              if (this.spotsInRange.includes(featureId)) {
-                this.spotInfoIsVisible = true;
-              }
+              spotsHelper.getSpotByID(featureId).then(spot => {
+                // show overlay
+                this.spotInfo.isVisible = true;
+                this.spotInfo.name = spot.name;
+                this.spotInfo.description = spot.description;
 
-              valueToShow = featureId;
+                // display popup
+                valueToShow = spot.name;
+                this.$refs.popup.innerHTML = valueToShow;
+                this.$refs.popup.hidden = false;
+
+                popup.setPosition(feature.getGeometry().getCoordinates());
+
+                let offsetX = this.$refs.popup.clientWidth/2;
+                popup.setOffset([-offsetX, 0])
+              });
             }
 
-            this.$refs.popup.innerHTML = valueToShow;
-            this.$refs.popup.hidden = false;
-
-            popup.setPosition(feature.getGeometry().getCoordinates());
           })
     },
     zoomToFeature(feature) {
@@ -308,9 +322,11 @@ export default {
       });
     },
   },
-  mounted() {
+  async mounted() {
     // activates geographic coordinates
     useGeographic();
+
+    await spotsHelper.getAll().then(data => this.spots = data);
 
     this.initiateMap(true);
 
