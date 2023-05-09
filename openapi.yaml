@@ -418,6 +418,29 @@ paths:
               example:
                 error: Ungültige ID
           description: Es existiert kein Eintrag mit dieser ID
+  /getspots:
+    get:
+      tags:
+        - auth
+      description: Liefert alle Spots zurück
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                spots: [
+                  {id: 1, name: "Parlament", coordinates: [48.232436, 16.351748], description: "Hier die Beschreibung."},
+                  {id: 2, name: "Stephansdom", coordinates: [48.232436, 16.351748], description: "Hier die Beschreibung."}
+                ]
+          description: Liefert die Spots zurück
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig   
 components:
   securitySchemes:
     ApiKeyAuth:
