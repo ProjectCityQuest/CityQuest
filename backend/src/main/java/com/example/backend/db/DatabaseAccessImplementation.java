@@ -236,7 +236,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
             String name = currentSpot.get("name") + "";
             double latitude = Double.parseDouble(currentSpot.get("latitude")+"");
             double longitude = Double.parseDouble(currentSpot.get("longitude") + "");
-            String description = currentSpot.get("description")+"";
+            String description = currentSpot.get("beschreibung")+"";
 
             Spot spot = new Spot(id, name, new double[] {longitude, latitude}, description);
             spotList.add(spot);
