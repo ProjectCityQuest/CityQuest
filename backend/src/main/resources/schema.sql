@@ -33,9 +33,9 @@ create table Sammelbucheintrag
 
 create table DefaultData
 (
-    pk_id INTEGER primary key auto_increment,
+    pk_id           INTEGER primary key auto_increment,
     profile_picture varchar(5000000)
-)
+);
 
 create table Spot
 (
@@ -44,4 +44,12 @@ create table Spot
     beschreibung varchar(1000),
     longitude    float,
     latitude     float
+);
+
+create table hat_besucht
+(
+    fk_pk_user INTEGER,
+    fk_pk_spot INTEGER,
+    FOREIGN KEY (fk_pk_user) REFERENCES Users (pk_id),
+    FOREIGN KEY (fk_pk_spot) REFERENCES Spot (pk_id)
 );
