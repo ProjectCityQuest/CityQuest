@@ -29,6 +29,7 @@
         </div>
       </div>
       <CQButton b-style="orange" :status="buttonState" @click="toMap()">Spot auf Karte anzeigen</CQButton>
+      <p class="delete" @click="deleteEntry()">Eintrag löschen</p>
       <div class="spacer"></div>
     </div>
   </div>
@@ -51,7 +52,8 @@ export default {
       text: "",
       timestamp: "",
       classList: "",
-      buttonState: "ready"
+      buttonState: "ready",
+      deleteState: "default"
     }
   },
   async mounted() {
@@ -104,6 +106,24 @@ export default {
     toMap() {
       this.buttonState = "waiting"
       //TODO: link to Map
+    },
+    deleteEntry() {
+      return fetch(`http://${window.location.hostname}:8080/api/deleteentry`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'sessionKey': this.getCookie('sessionKey')
+        },
+        body: JSON.stringify({
+          id: this.id
+        }),
+        withCredentials: true,
+        credentials: 'same-origin'
+      }).then(response => {
+        if (response.ok) {
+          router.push("/sammelbuch")
+        }
+      })
     }
   },
   computed: {
@@ -172,7 +192,7 @@ export default {
   top: calc(117px + 1rem);
   width: 100%;
   height: calc(100vh - 135px - 1rem);
-  background-image: url("src/assets/background.png");
+  background-image: url("../assets/background.png");
   padding-top: 15px;
   overflow: scroll;
 
@@ -241,11 +261,18 @@ export default {
 
     button {
       width: 60%;
-      margin-top: 30px;
+      margin-top: 15px;
     }
 
-    .spacer{
-      height: 90px;
+    .delete {
+      text-align: center;
+      margin-top: 15px;
+      text-decoration: underline;
+      color: $dark_gray;
+    }
+
+    .spacer {
+      height: 80px;
       width: 100%;
     }
   }
