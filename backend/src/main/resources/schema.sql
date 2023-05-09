@@ -31,6 +31,12 @@ create table Sammelbucheintrag
     FOREIGN KEY (fk_user_id) REFERENCES Users (pk_id)
 );
 
+create table DefaultData
+(
+    pk_id INTEGER primary key auto_increment,
+    profile_picture varchar(5000000)
+)
+
 create table Spot
 (
     pk_id        INTEGER primary key auto_increment,
