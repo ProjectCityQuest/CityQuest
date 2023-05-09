@@ -354,11 +354,6 @@ export default {
   border-style: none;
   margin: 0;
   padding: 0;
-
-  .ol-attribution {
-    // slightly illegal
-    display: none;
-  }
 }
 
 .log {

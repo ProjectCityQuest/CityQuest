@@ -6,7 +6,7 @@ export function getSpotStyle(isInRange) {
     if (isInRange) {
         icon = new Icon({
             src: '/src/assets/spot/in_range.svg',
-            imgSize: [80, 80]
+            imgSize: [98, 98]
         });
     } else {
         icon = new Icon({

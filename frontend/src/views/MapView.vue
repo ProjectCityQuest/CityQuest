@@ -14,4 +14,8 @@ export default {
 </script>
 
 <style lang="scss">
+.ol-attribution {
+  // slightly illegal
+  display: none;
+}
 </style>
