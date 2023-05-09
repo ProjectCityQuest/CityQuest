@@ -5,6 +5,7 @@
 package com.example.backend.db;
 
 import com.example.backend.entity.CollectionEntry;
+import com.example.backend.entity.Spot;
 import com.example.backend.entity.User;
 
 import java.util.List;
@@ -61,4 +62,6 @@ public interface DatabaseAccess {
     List<CollectionEntry> getAllCollectionEntries(int id);
 
     CollectionEntry getCollectionEntry(int entryId, int userId);
+
+    List<Spot> getSpots();
 }

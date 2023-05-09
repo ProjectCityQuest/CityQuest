@@ -30,3 +30,12 @@ create table Sammelbucheintrag
     fk_user_id INTEGER,
     FOREIGN KEY (fk_user_id) REFERENCES Users (pk_id)
 );
+
+create table Spot
+(
+    pk_id        INTEGER primary key auto_increment,
+    name         varchar(100),
+    beschreibung varchar(1000),
+    longitude    float,
+    latitude     float
+);
