@@ -25,7 +25,7 @@
                 style="fill:#fff"/>
           </svg>
         </CQButton>
-        <CQButton v-if="isInRange" b-style="collection-entry">Sammelbucheintrag erstellen</CQButton>
+        <CQButton v-if="isInRange" @click="createCollectionEntry" b-style="collection-entry">Sammelbucheintrag erstellen</CQButton>
         <p v-else class="info">{{
             isDiscovered ? "Hier warst du schon. Du kannst trotzdem nochmal vorbeikommen und einen Sammelbucheintrag erstellen." :
                 "Du hast diesen Ort noch nie besucht. Schau' vorbei und hol dir ein fehlendes Puzzleteil!"
@@ -68,7 +68,10 @@ export default {
     },
     collectPuzzlePiece() {
       this.$emit("collectPuzzlePiece", this.id);
-    }
+    },
+    createCollectionEntry() {
+      this.$router.push("/sammelbuch/neu/" + this.id.replace("CityQuest", ""));
+    },
   },
   watch: {
     id() {

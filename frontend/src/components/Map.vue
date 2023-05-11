@@ -93,7 +93,7 @@ export default {
             const coords = [pos.coords.longitude, pos.coords.latitude];
 
             this.drawRange(coords);
-            this.getSpotsInRange();
+            this.updateSpotsInRange();
             this.drawPosition(coords);
           },
           function (error) {
@@ -112,7 +112,7 @@ export default {
       this.positionSource.clear(true);
       this.positionSource.addFeature(position);
     },
-    getSpotsInRange() {
+    updateSpotsInRange() {
       if (!this.rangeCircle) {
         return;
       }
@@ -162,7 +162,7 @@ export default {
 
       spotsSource.setLoader(() => {
         let load = () => {
-          this.getSpotsInRange();
+          this.updateSpotsInRange();
           spotsSource.clear(true);
           spotsSource.addFeatures(features);
         }
@@ -211,7 +211,7 @@ export default {
 
       for (let spot of spots) {
         let coords = spot.coordinates;
-        let id = spot.id;
+        let id = "CityQuest" + spot.id;
 
         let feature = new Feature({
           geometry: new Point([coords[1], coords[0]])
@@ -246,7 +246,6 @@ export default {
       );
     },
     interact(event) {
-
       this.map.forEachFeatureAtPixel(event.pixel,
           (feature) => {
             this.zoomToFeature(feature);
@@ -259,6 +258,8 @@ export default {
 
             if (features.length === 1) {
               this.selectSpot(features[0]);
+
+              this.$router.replace('/karte/ort/' + features[0].id_.replace("CityQuest", ""), {silent:true})
             }
           })
     },
@@ -273,7 +274,7 @@ export default {
 
       let featureId = feature.id_;
 
-      await spotsHelper.getSpotByID(featureId).then(spot => {
+      await spotsHelper.getSpotByID(featureId.replace("CityQuest", "")).then(spot => {
         // show overlay
         this.spotInfo.isVisible = true;
         this.spotInfo.name = spot.name;
@@ -338,7 +339,7 @@ export default {
         if (currZoom !== newZoom) {
           currZoom = newZoom;
 
-          this.getSpotsInRange();
+          this.updateSpotsInRange();
         }
       });
     },
@@ -404,7 +405,7 @@ export default {
         // wait for the zoom
         setTimeout(() => {
           // now that feature is revealed get it by its id
-          let features = this.getFeatureById(this.locationRequest);
+          let features = this.getFeatureById("CityQuest" + this.locationRequest);
           let feature = features.get("features")[0];
 
           // position screen the right way
@@ -420,6 +421,8 @@ export default {
     this.updateSpotsInRangeOnZoom();
   },
   unmounted() {
+    this.updateSpotsInRange();
+    spotsHelper.saveSpotsInRange(this.spotsInRange.map(id => id.replace("CityQuest", "")));
     navigator.geolocation.clearWatch(this.watcher);
   }
 }
