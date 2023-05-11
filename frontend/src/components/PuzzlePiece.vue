@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" @click="openOverlay" class="piece-container" :style="{ 'grid-area': gridArea }">
+  <div @click="openOverlay" class="piece-container" :style="{ 'grid-area': gridArea }">
     <img @click="openOverlay" class="piece-image" v-if="image!==''" :src="image">
   </div>
 </template>
