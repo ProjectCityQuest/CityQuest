@@ -23,7 +23,7 @@ export async function getSpotByID(id) {
     await setup();
 
     for (let spot of spots) {
-        if (spot.id === id) {
+        if (spot.id.toLowerCase() === id.toLowerCase()) {
             return spot;
         }
     }

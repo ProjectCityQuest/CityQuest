@@ -34,6 +34,9 @@ import {Overlay} from "ol";
 export default {
   name: 'Map',
   components: {SpotInfo},
+  props: {
+    locationRequest: String
+  },
   data() {
     return {
       // in meters
@@ -288,6 +291,10 @@ export default {
           })
     },
     zoomToFeature(feature) {
+      if (!feature) {
+        return;
+      }
+
       let features = feature.get('features');
 
       if (!features) {
@@ -335,20 +342,23 @@ export default {
     collectPuzzlePiece(spotId) {
       this.spotInfo.isDiscovered = true;
 
-      let spot;
+      let spot = this.getFeatureById(spotId).get("features")[0];
 
+      spot.set("discovered", "true");
+      // TODO: also send to backend
+    },
+    getFeatureById(id) {
       for (let feature of this.spotsLayer.getSource().getFeatures()) {
         if (feature.get("features").length === 1) {
           let single = feature.get("features")[0];
           let featureId = single.id_;
-          if (spotId === featureId) {
-            spot = single;
+          if (id === featureId) {
+            return feature;
           }
         }
       }
 
-      spot.set("discovered", "true");
-      // TODO: also send to backend
+      return null;
     },
   },
   async mounted() {
@@ -377,6 +387,17 @@ export default {
     this.trackUserPosition();
 
     this.createLocateButton();
+
+    if (this.locationRequest) {
+      await spotsHelper.getSpotByID(this.locationRequest).then(spot => {
+        console.log(this.locationRequest)
+        let point = new Point([spot.coordinates[1], spot.coordinates[0]]);
+
+        this.map.getView().fit(point.getExtent(), {
+          duration: 500
+        });
+      });
+    }
 
     this.map.on("click", this.interact);
 

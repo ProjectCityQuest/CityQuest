@@ -1,5 +1,5 @@
 <template>
-  <Map></Map>
+  <Map :location-request="this.spotId"></Map>
   <NavBar :active-icon="2"></NavBar>
 </template>
 
@@ -9,7 +9,10 @@ import Map from "@/components/Map.vue";
 
 export default {
   name: 'MapView',
-  components: {Map, NavBar}
+  components: {Map, NavBar},
+  props: {
+    spotId: String,
+  }
 }
 </script>
 

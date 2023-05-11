@@ -146,6 +146,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/karte/ort/:spotId',
+            name: 'karte-ort',
+            component: MapView,
+            props: true,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
             path: '/puzzle',
             name: 'puzzle',
             component: PuzzleView,
