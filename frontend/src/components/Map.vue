@@ -1,11 +1,12 @@
 <template>
   <div ref="map-root" id="map"></div>
-  <div ref="popup" class="popup" hidden="hidden"></div>
+  <div ref="namePopup" class="name-popup" hidden="hidden"></div>
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
-  <SpotInfo :is-visible="spotInfo.isVisible" :name="spotInfo.name" :description="spotInfo.description" :is="spotInfo.id"
-            :is-discovered="spotInfo.isDiscovered" :is-in-range="spotInfo.isInRange" @close="spotInfo.isVisible=false"></SpotInfo>
+  <SpotInfo :is-visible="spotInfo.isVisible" :name="spotInfo.name" :description="spotInfo.description" :id="spotInfo.id"
+            :is-discovered="spotInfo.isDiscovered" :is-in-range="spotInfo.isInRange" @close="spotInfo.isVisible=false"
+            @collect-puzzle-piece="(spotId) => collectPuzzlePiece(spotId)"></SpotInfo>
 </template>
 
 <script>
@@ -243,7 +244,7 @@ export default {
     },
     interact(event) {
       let popup = new Overlay({
-        element: this.$refs.popup,
+        element: this.$refs.namePopup,
       });
 
       this.map.addOverlay(popup);
@@ -274,12 +275,12 @@ export default {
 
                 // display popup
                 valueToShow = spot.name;
-                this.$refs.popup.innerHTML = valueToShow;
-                this.$refs.popup.hidden = false;
+                this.$refs.namePopup.innerHTML = valueToShow;
+                this.$refs.namePopup.hidden = false;
 
                 popup.setPosition(feature.getGeometry().getCoordinates());
 
-                let offsetX = this.$refs.popup.clientWidth / 2;
+                let offsetX = this.$refs.namePopup.clientWidth / 2;
                 popup.setOffset([-offsetX, 0])
               });
             }
@@ -331,6 +332,24 @@ export default {
         }
       });
     },
+    collectPuzzlePiece(spotId) {
+      this.spotInfo.isDiscovered = true;
+
+      let spot;
+
+      for (let feature of this.spotsLayer.getSource().getFeatures()) {
+        if (feature.get("features").length === 1) {
+          let single = feature.get("features")[0];
+          let featureId = single.id_;
+          if (spotId === featureId) {
+            spot = single;
+          }
+        }
+      }
+
+      spot.set("discovered", "true");
+      // TODO: also send to backend
+    },
   },
   async mounted() {
     // activates geographic coordinates
@@ -362,8 +381,6 @@ export default {
     this.map.on("click", this.interact);
 
     this.updateSpotsInRangeOnZoom();
-
-    // setInterval(this.getSpotsInRange, 500);
   },
   unmounted() {
     navigator.geolocation.clearWatch(this.watcher);
@@ -393,7 +410,7 @@ export default {
   left: .5em;
 }
 
-.popup {
+.name-popup {
   color: $blue;
   letter-spacing: 0.05em;
   text-shadow: -1px 1px 2px #fff,
