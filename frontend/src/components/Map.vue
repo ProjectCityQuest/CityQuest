@@ -391,18 +391,23 @@ export default {
 
     this.createLocateButton();
 
+    // location requested by url: /karte/ort/cityquest1
     if (this.locationRequest) {
       spotsHelper.getSpotByID(this.locationRequest).then(spot => {
         let point = new Point([spot.coordinates[1], spot.coordinates[0]]);
 
+        // zooms to coordinates and reveals the feature
         this.map.getView().fit(point.getExtent(), {
           duration: 500
         });
 
+        // wait for the zoom
         setTimeout(() => {
+          // now that feature is revealed get it by its id
           let features = this.getFeatureById(this.locationRequest);
           let feature = features.get("features")[0];
 
+          // position screen the right way
           this.zoomToFeature(features);
 
           this.selectSpot(feature)
