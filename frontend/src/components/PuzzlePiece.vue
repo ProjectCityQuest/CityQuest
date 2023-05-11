@@ -1,22 +1,21 @@
 <template>
-  <div class="piece-container" ref="container" :style="{ 'grid-area': gridArea }">
+  <div @click="openOverlay" class="piece-container" ref="container" :style="{ 'grid-area': gridArea }">
   </div>
 </template>
 
 <script>
 export default {
   name: "PuzzlePiece",
+  emits: ['openOverlay'],
   props: {
     location_name: String,
-    visited: Boolean,
     image: String,
     row: Number,
     column: Number
   },
   mounted(){
-    if (this.visited){
+    if (this.image !== ""){
       this.$refs.container.style.backgroundImage  = 'url(' + this.image + ')'
-      //this.$refs.container.style.background = "rgb(" +(this.row * this.column * 2) +","+(this.row * this.column * 2)+","+(this.row * this.column * 2)+")"
     }
   },
   computed:{
@@ -24,6 +23,13 @@ export default {
       let row = String.fromCharCode('a'.charCodeAt(0) + (this.row -1 ))
       let column = String.fromCharCode('a'.charCodeAt(0) + (this.column -1 ))
       return column + row;
+    }
+  },
+  methods:{
+    openOverlay(event) {
+      if (event.target !== event.currentTarget) return
+
+      this.$emit('openOverlay')
     }
   }
 }
@@ -38,6 +44,7 @@ export default {
   background-color: transparent;
   border-style: solid;
   border-width: 1px;
+  border-color: $light_gray;
   box-sizing: border-box;
   background-position: center;
   background-size: cover;
