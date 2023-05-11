@@ -1,7 +1,7 @@
 let spots = [];
 
 async function setup() {
-    if (!sessionStorage.getItem("spots")) {
+    // if (!sessionStorage.getItem("spots")) {
         await fetch("/src/assets/spots.json")
             .then(res => res.json())
             .then(data => spots = data);
@@ -9,9 +9,9 @@ async function setup() {
         spots.forEach(spot => spot.id = "CityQuest" + spot.id);
 
         sessionStorage.setItem("spots", JSON.stringify(spots));
-    } else {
-        spots = JSON.parse(sessionStorage.getItem("spots"));
-    }
+    // } else {
+        // spots = JSON.parse(sessionStorage.getItem("spots"));
+    // }
 }
 
 export async function getAll() {

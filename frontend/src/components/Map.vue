@@ -172,12 +172,15 @@ export default {
           const clusterSize = feature.get('features').length;
 
           if (clusterSize === 1) {
-            let featureId = feature.get('features')[0].id_;
+            let spot = feature.get("features")[0];
+
+            let featureId = spot.id_;
+            let isDiscovered = spot.get("discovered") === "true";
 
             if (this.spotsInRange.includes(featureId)) {
-              return featureStyles.getSpotStyle(true);
+              return featureStyles.getSpotStyle(true, isDiscovered);
             } else {
-              return featureStyles.getSpotStyle(false);
+              return featureStyles.getSpotStyle(false, isDiscovered);
             }
           }
 
@@ -208,6 +211,7 @@ export default {
         });
 
         feature.setId(id);
+        feature.set("discovered", String(spot.discovered));
 
         counter++;
 
@@ -343,7 +347,7 @@ export default {
 
     this.map.addLayer(this.rangeLayer);
     this.map.addLayer(this.positionLayer);
-    this.drawSpots();
+    await this.drawSpots();
 
     this.trackUserPosition();
 

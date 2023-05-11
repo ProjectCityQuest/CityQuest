@@ -13,21 +13,43 @@
     </nav>
     <h1>{{ name }}</h1>
     <div class="info-box">
-      <p>{{ description }}</p>
+      <div class="description"  ref="description">
+        <p :class="isDescriptionExpanded ? 'more' : 'less'">{{ description }}</p>
+        <div class="expand" @click="expandDescription">{{ isDescriptionExpanded ? "weniger" : "mehr" }}</div>
+      </div>
+      <div class="actions">
+        <CQButton>Puzzleteil einsammeln</CQButton>
+        <CQButton>Sammelbucheintrag einsammeln</CQButton>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import CQButton from "@/components/CQButton.vue";
+
 export default {
   name: "SpotInfo",
+  components: {CQButton},
   emits: ["close"],
   props: {
     isVisible: Boolean,
     name: String,
     description: String
   },
+  data() {
+    return {
+      isDescriptionExpanded: false,
+    }
+  },
   methods: {
+    expandDescription() {
+      this.isDescriptionExpanded = !this.isDescriptionExpanded;
+
+      if (!this.isDescriptionExpanded) {
+        this.$refs.description.scrollTop = 0;
+      }
+    },
     close() {
       this.$emit("close");
     }
@@ -73,13 +95,34 @@ export default {
 
   .info-box {
     margin: 0 1rem 1rem 1rem;
+    height: 70%;
     padding-right: 0.5rem;
     overflow: scroll;
-    height: 65%;
 
-    p {
-      hyphens: auto;
-      overflow: scroll;
+    .description {
+
+      p {
+        hyphens: auto;
+
+        &.less {
+          overflow: hidden;
+          height: 2em;
+        }
+
+        &.more {
+          height: 100%;
+        }
+      }
+    }
+
+    .expand {
+      width: 100%;
+      height: 1rem;
+      color: $dark_gray;
+    }
+
+    .actions {
+      margin-top: 1rem;
     }
   }
 }

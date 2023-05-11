@@ -1,24 +1,39 @@
 import {Fill, Icon, Stroke, Style, Text} from "ol/style";
 
-export function getSpotStyle(isInRange) {
+export function getSpotStyle(isInRange, isDiscovered) {
     let icon;
 
     if (isInRange) {
-        icon = new Icon({
-            src: '/src/assets/spot/in_range.svg',
-            imgSize: [98, 98]
-        });
+        if (isDiscovered) {
+            icon = new Icon({
+                src: '/src/assets/spot/in_range_discovered.svg',
+                imgSize: [98, 98]
+            });
+        } else {
+            icon = new Icon({
+                src: '/src/assets/spot/in_range.svg',
+                imgSize: [98, 98]
+            });
+        }
     } else {
-        icon = new Icon({
-            src: '/src/assets/spot/spot.svg',
-            imgSize: [80, 80]
-        });
+        if (isDiscovered) {
+            icon = new Icon({
+                src: '/src/assets/spot/discovered.svg',
+                imgSize: [80, 80]
+            });
+        } else {
+            icon = new Icon({
+                src: '/src/assets/spot/spot.svg',
+                imgSize: [80, 80]
+            });
+        }
     }
 
     return new Style({
         image: icon
     });
 }
+
 export function getClusterStyle(text) {
     return new Style({
         image: new Icon({
