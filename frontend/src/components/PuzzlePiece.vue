@@ -1,5 +1,6 @@
 <template>
-  <div @click="openOverlay" class="piece-container" ref="container" :style="{ 'grid-area': gridArea }">
+  <div @click="openOverlay" class="piece-container" :style="{ 'grid-area': gridArea }">
+    <img @click="openOverlay" class="piece-image" v-if="image!==''" :src="image">
   </div>
 </template>
 
@@ -13,11 +14,6 @@ export default {
     row: Number,
     column: Number
   },
-  mounted(){
-    if (this.image !== ""){
-      this.$refs.container.style.backgroundImage  = 'url(' + this.image + ')'
-    }
-  },
   computed:{
     gridArea(){
       let row = String.fromCharCode('a'.charCodeAt(0) + (this.row -1 ))
@@ -28,8 +24,7 @@ export default {
   methods:{
     openOverlay(event) {
       if (event.target !== event.currentTarget) return
-
-      this.$emit('openOverlay')
+      this.$emit('openOverlay', {location_name: this.location_name, visited: this.image !== ""})
     }
   }
 }
@@ -40,13 +35,21 @@ export default {
 
 .piece-container{
   width: 100%;
-  height: 100%;
+  height: calc(calc(100vh - 140px) / 12);
   background-color: transparent;
   border-style: solid;
   border-width: 1px;
   border-color: $light_gray;
   box-sizing: border-box;
-  background-position: center;
-  background-size: cover;
+
+  &:hover{
+    cursor: pointer;
+  }
+
+  .piece-image{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
 }
 </style>
