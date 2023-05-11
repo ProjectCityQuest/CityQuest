@@ -6,6 +6,7 @@
 package com.example.backend.db;
 
 import com.example.backend.entity.CollectionEntry;
+import com.example.backend.entity.PuzzlePiece;
 import com.example.backend.entity.Spot;
 import com.example.backend.entity.User;
 import com.example.backend.service.UserServiceImpl;
@@ -254,5 +255,13 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         String deleteStatement = "DELETE FROM Sammelbucheintrag WHERE pk_id = ?";
         jdbcTemplate.update(deleteStatement, new Object[] {id});
         return true;
+    }
+
+    public List<PuzzlePiece> getPuzzle(int id) {
+        List<PuzzlePiece> puzzlePieces = new LinkedList<>();
+
+
+
+        return puzzlePieces;
     }
 }
