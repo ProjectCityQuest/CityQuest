@@ -1,5 +1,65 @@
 [
   {
+    "id": "d1",
+    "name": "D1",
+    "description": "",
+    "discovered": false,
+    "coordinates": [
+      48.232382,
+      16.351882
+    ]
+  },
+  {
+    "id": "o1",
+    "name": "Obdo1",
+    "description": "",
+    "discovered": false,
+    "coordinates": [
+      48.375389,
+      16.516226
+    ]
+  },
+  {
+    "id": "o2",
+    "name": "Obdo2",
+    "description": "",
+    "discovered": true,
+    "coordinates": [
+      48.375118,
+      16.516451
+    ]
+  },
+  {
+    "id": "o3",
+    "name": "Obdo3",
+    "description": "",
+    "discovered": false,
+    "coordinates": [
+      48.374869,
+      16.516666
+    ]
+  },
+  {
+    "id": "o4",
+    "name": "Obdo4",
+    "description": "",
+    "discovered": false,
+    "coordinates": [
+      48.375118,
+      16.517321
+    ]
+  },
+  {
+    "id": "o5",
+    "name": "Obdo5",
+    "description": "",
+    "discovered": false,
+    "coordinates": [
+      48.375475,
+      16.516371
+    ]
+  },
+  {
     "id": "t1",
     "name": "test",
     "description": "",

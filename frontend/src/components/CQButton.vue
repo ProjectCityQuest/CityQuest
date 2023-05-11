@@ -68,15 +68,24 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 
   &.active {
     color: white;
     background: $middle_green;
+    animation: puzzle-piece 1s;
+    animation-iteration-count: 3;
   }
 
   &.inactive {
     color: white;
     background: $gray;
+  }
+
+  @keyframes puzzle-piece {
+    0% {border: rgba(0, 0, 0, 0.0) 3px solid;}
+    50% {border: $green 3px solid;}
+    100% {border: rgba(0, 0, 0, 0.0) 3px solid;}
   }
 }
 
