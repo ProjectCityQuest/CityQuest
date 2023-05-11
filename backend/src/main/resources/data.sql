@@ -4,7 +4,8 @@ values ('Daniel Pillwein', 'gutesPasswort', 'dani@gmail.com', true,
 insert into Users (username, password, email, email_is_verified)
 values ('Lukas Schodl', 'besseresPasswort', 'luki@gmail.com', true);
 insert into Users (username, password, email, email_is_verified)
-values ('Markus Wizany', 'schlechtesPasswort', 'markus@gmail.com', false);
+values ('Luki', 'testtest', '9137@htl.rennweg.at', true);
+insert into Users (username, password, email, email_is_verified) values ('Markus Wizany', 'schlechtesPasswort', 'markus@gmail.com', false);
 
 insert into Sammelbucheintrag (timestamp, location, text, bild, fk_user_id)
 values ('2022-11-18T07:42:16', 'Funkhaus Wien',
