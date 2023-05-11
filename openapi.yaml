@@ -440,6 +440,29 @@ paths:
             application/json:
               example:
                 error: Der Token ist ungueltig
+          description: Der Token ist ungueltig  
+  /getpuzzle:
+    get:
+      tags:
+        - auth
+      description: Liefert alle Puzzle-Teile zurück
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                pieces: [
+                  {location_name: "Museum Moderner Kunst", image: "base64", column: 10, row: 5},
+                  {location_name: "Weinhaus Pfandler", image: "", column: 10, row: 6 }
+                ]
+          description: Liefert alle Puzzle-Teile zurück. das Attribut 'image' ist leer, wenn der Spot noch nicht besucht bzw. ein bas64-String des Bildausschnitts, wenn der Spot bereits besucht wurde. Das Array pieces muss alle Puzzle-Teile des Puzzles enthalten.
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
           description: Der Token ist ungueltig   
 components:
   securitySchemes:
