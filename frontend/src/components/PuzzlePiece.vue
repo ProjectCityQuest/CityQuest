@@ -1,5 +1,5 @@
 <template>
-  <div @click="openOverlay" class="piece-container" :style="{ 'grid-area': gridArea }">
+  <div :id="id" @click="openOverlay" class="piece-container" :style="{ 'grid-area': gridArea }">
     <img @click="openOverlay" class="piece-image" v-if="image!==''" :src="image">
   </div>
 </template>
@@ -12,7 +12,8 @@ export default {
     location_name: String,
     image: String,
     row: Number,
-    column: Number
+    column: Number,
+    id: Number
   },
   computed:{
     gridArea(){
@@ -24,7 +25,7 @@ export default {
   methods:{
     openOverlay(event) {
       if (event.target !== event.currentTarget) return
-      this.$emit('openOverlay', {location_name: this.location_name, visited: this.image !== ""})
+      this.$emit('openOverlay', {location_name: this.location_name, visited: this.image !== "", id: this.id})
     }
   }
 }

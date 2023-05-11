@@ -147,6 +147,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/puzzle/teil/:id',
+            name: 'puzzle-piece-focus',
+            props: true,
+            component: PuzzleView,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
             path: '/puzzle',
             name: 'puzzle',
             component: PuzzleView,
