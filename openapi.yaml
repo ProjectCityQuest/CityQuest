@@ -454,10 +454,10 @@ paths:
             application/json:
               example:
                 pieces: [
-                  {location_name: "Museum Moderner Kunst", image: "base64", column: 10, row: 5},
-                  {location_name: "Weinhaus Pfandler", image: "", column: 10, row: 6 }
+                  {id: 1, location_name: "Museum Moderner Kunst", image: "base64", column: 10, row: 5},
+                  {id: 2, location_name: "Weinhaus Pfandler", image: "", column: 10, row: 6 }
                 ]
-          description: Liefert alle Puzzle-Teile zurück. das Attribut 'image' ist leer, wenn der Spot noch nicht besucht bzw. ein bas64-String des Bildausschnitts, wenn der Spot bereits besucht wurde. Das Array pieces muss alle Puzzle-Teile des Puzzles enthalten.
+          description: Liefert alle Puzzle-Teile zurück. das Attribut 'image' ist leer, wenn der Spot noch nicht besucht bzw. ein bas64-String des Bildausschnitts, wenn der Spot bereits besucht wurde. Das Array pieces muss alle Puzzle-Teile des Puzzles enthalten. Die IDs sollten die gleichen sein, wie die bei der Karte.
         '401':
           content:
             application/json:
