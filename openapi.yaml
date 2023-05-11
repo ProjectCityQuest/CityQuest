@@ -395,6 +395,75 @@ paths:
               example:
                 error: Es gibt keinen entry mit dieser ID
               description: Es gibt keinen entry mit dieser ID
+  /deleteentry:
+    delete:
+      tags:
+        - auth
+      description: Löscht einen Sammelbuch-Eintrag
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                id: 8324
+      responses:
+        200:
+          description: Der Eintrag wurde gelöscht
+        400:
+          content:
+            application/json:
+              example:
+                error: Ungültige ID
+          description: Es existiert kein Eintrag mit dieser ID
+  /getspots:
+    get:
+      tags:
+        - auth
+      description: Liefert alle Spots zurück
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                spots: [
+                  {id: 1, name: "Parlament", coordinates: [48.232436, 16.351748], description: "Hier die Beschreibung."},
+                  {id: 2, name: "Stephansdom", coordinates: [48.232436, 16.351748], description: "Hier die Beschreibung."}
+                ]
+          description: Liefert die Spots zurück
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig  
+  /getpuzzle:
+    get:
+      tags:
+        - auth
+      description: Liefert alle Puzzle-Teile zurück
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                pieces: [
+                  {id: 1, location_name: "Museum Moderner Kunst", image: "base64", column: 10, row: 5},
+                  {id: 2, location_name: "Weinhaus Pfandler", image: "", column: 10, row: 6 }
+                ]
+          description: Liefert alle Puzzle-Teile zurück. das Attribut 'image' ist leer, wenn der Spot noch nicht besucht bzw. ein bas64-String des Bildausschnitts, wenn der Spot bereits besucht wurde. Das Array pieces muss alle Puzzle-Teile des Puzzles enthalten. Die IDs sollten die gleichen sein, wie die bei der Karte.
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig   
 components:
   securitySchemes:
     ApiKeyAuth:

@@ -310,9 +310,9 @@ public class UserEndpoint {
         return new ResponseEntity<>(new GetCollectionDto(entries), HttpStatus.OK);
     }
 
-    @GetMapping("/getentry")
+    @PostMapping("/getentry")
     public ResponseEntity<Object> getEntry(@RequestBody GetEntryRequestDto request, @RequestHeader(value = "sessionKey") String token) {
-        LOG.info("GET /getentry issued with parameter " + request);
+        LOG.info("POST /getentry issued with parameter " + request);
 
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
@@ -320,5 +320,19 @@ public class UserEndpoint {
         }
         CollectionEntry entry = UserServiceImpl.getCollectionEntry(request.getId(), user.getId());
         return new ResponseEntity<>(new GetEntryResponseDto(entry), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteentry")
+    public ResponseEntity<Object> deleteEntry(@RequestBody GetEntryRequestDto request, @RequestHeader(value = "sessionKey") String token) {
+        LOG.info("DELETE /deleteentry issued with parameter " + request);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+
+        boolean entry = UserServiceImpl.deleteEntry(request.getId());
+        if (!entry) return new ResponseEntity<>(new ErrorDto("Ungültige ID"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

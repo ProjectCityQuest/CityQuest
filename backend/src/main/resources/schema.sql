@@ -26,7 +26,16 @@ create table Sammelbucheintrag
     timestamp  varchar(100),
     location   varchar(200),
     text       varchar(5000),
-    bild       varchar(50000),
+    bild       varchar(5000000),
     fk_user_id INTEGER,
     FOREIGN KEY (fk_user_id) REFERENCES Users (pk_id)
+);
+
+create table Spot
+(
+    pk_id        INTEGER primary key auto_increment,
+    name         varchar(100),
+    beschreibung varchar(1000),
+    longitude    float,
+    latitude     float
 );

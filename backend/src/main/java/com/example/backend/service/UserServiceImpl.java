@@ -224,4 +224,8 @@ public class UserServiceImpl {
     public static CollectionEntry getCollectionEntry(int entryId, int userId) {
         return DATABASE.getCollectionEntry(entryId, userId);
     }
+
+    public static boolean deleteEntry(int id) {
+        return DATABASE.deleteEntry(id);
+    }
 }

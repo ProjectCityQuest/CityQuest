@@ -47,11 +47,24 @@ button {
     background: transparent;
   }
 }
+.orange {
+  &.ready {
+    color: white;
+    background: $orange;
+  }
+
+  &.waiting {
+    color: $orange;
+    border-color: $orange;
+    background: transparent;
+  }
+}
 
 .delete {
   &.default {
-    color: white;
-    background: $red;
+    color: $red;
+    border: solid 2px $red;
+    background: transparent;
   }
 
   &:hover{
@@ -59,7 +72,8 @@ button {
   }
 
   &.pending {
-
+    color: white;
+    background: $red;
   }
 }
 
