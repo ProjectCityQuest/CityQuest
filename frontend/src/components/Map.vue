@@ -246,17 +246,10 @@ export default {
       );
     },
     interact(event) {
-      let popup = new Overlay({
-        element: this.$refs.namePopup,
-      });
-
-      this.map.addOverlay(popup);
 
       this.map.forEachFeatureAtPixel(event.pixel,
           (feature) => {
             this.zoomToFeature(feature);
-
-            let valueToShow = "";
 
             let features = feature.get('features');
 
@@ -265,30 +258,40 @@ export default {
             }
 
             if (features.length === 1) {
-              let featureId = features[0].id_;
-
-              spotsHelper.getSpotByID(featureId).then(spot => {
-                // show overlay
-                this.spotInfo.isVisible = true;
-                this.spotInfo.name = spot.name;
-                this.spotInfo.description = spot.description;
-                this.spotInfo.id = featureId;
-                this.spotInfo.isDiscovered = features[0].get("discovered") === "true";
-                this.spotInfo.isInRange = this.spotsInRange.includes(featureId);
-
-                // display popup
-                valueToShow = spot.name;
-                this.$refs.namePopup.innerHTML = valueToShow;
-                this.$refs.namePopup.hidden = false;
-
-                popup.setPosition(feature.getGeometry().getCoordinates());
-
-                let offsetX = this.$refs.namePopup.clientWidth / 2;
-                popup.setOffset([-offsetX, 0])
-              });
+              this.selectSpot(features[0]);
             }
-
           })
+    },
+    async selectSpot(feature) {
+      let popup = new Overlay({
+        element: this.$refs.namePopup,
+      });
+
+      let valueToShow = "";
+
+      this.map.addOverlay(popup);
+
+      let featureId = feature.id_;
+
+      await spotsHelper.getSpotByID(featureId).then(spot => {
+        // show overlay
+        this.spotInfo.isVisible = true;
+        this.spotInfo.name = spot.name;
+        this.spotInfo.description = spot.description;
+        this.spotInfo.id = featureId;
+        this.spotInfo.isDiscovered = feature.get("discovered") === "true";
+        this.spotInfo.isInRange = this.spotsInRange.includes(featureId);
+
+        // display popup
+        valueToShow = spot.name;
+        this.$refs.namePopup.innerHTML = valueToShow;
+        this.$refs.namePopup.hidden = false;
+
+        popup.setPosition(feature.getGeometry().getCoordinates());
+
+        let offsetX = this.$refs.namePopup.clientWidth / 2;
+        popup.setOffset([-offsetX, 0])
+      });
     },
     zoomToFeature(feature) {
       if (!feature) {
@@ -352,7 +355,7 @@ export default {
         if (feature.get("features").length === 1) {
           let single = feature.get("features")[0];
           let featureId = single.id_;
-          if (id === featureId) {
+          if (id.toLowerCase() === featureId.toLowerCase()) {
             return feature;
           }
         }
@@ -389,13 +392,21 @@ export default {
     this.createLocateButton();
 
     if (this.locationRequest) {
-      await spotsHelper.getSpotByID(this.locationRequest).then(spot => {
-        console.log(this.locationRequest)
+      spotsHelper.getSpotByID(this.locationRequest).then(spot => {
         let point = new Point([spot.coordinates[1], spot.coordinates[0]]);
 
         this.map.getView().fit(point.getExtent(), {
           duration: 500
         });
+
+        setTimeout(() => {
+          let features = this.getFeatureById(this.locationRequest);
+          let feature = features.get("features")[0];
+
+          this.zoomToFeature(features);
+
+          this.selectSpot(feature)
+        }, 550);
       });
     }
 
