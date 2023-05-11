@@ -62,4 +62,30 @@ button {
 
   }
 }
+
+.puzzle-piece {
+  width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.active {
+    color: white;
+    background: $middle_green;
+  }
+
+  &.inactive {
+    color: white;
+    background: $gray;
+  }
+}
+
+.collection-entry {
+  background: $orange;
+  color: white;
+
+  &.in-range {
+
+  }
+}
 </style>

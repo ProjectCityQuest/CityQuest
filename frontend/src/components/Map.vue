@@ -4,8 +4,8 @@
   <div class="ol-control ol-unselectable locate" ref="locate">
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
-  <SpotInfo :is-visible="spotInfo.isVisible" :name="spotInfo.name" :description="spotInfo.description"
-            @close="spotInfo.isVisible=false"></SpotInfo>
+  <SpotInfo :is-visible="spotInfo.isVisible" :name="spotInfo.name" :description="spotInfo.description" :is="spotInfo.id"
+            :is-discovered="spotInfo.isDiscovered" :is-in-range="spotInfo.isInRange" @close="spotInfo.isVisible=false"></SpotInfo>
 </template>
 
 <script>
@@ -49,7 +49,10 @@ export default {
       watcher: undefined,
       spotInfo: {
         isVisible: false,
+        isDiscovered: false,
+        isInRange: false,
         name: "",
+        id: "",
         description: ""
       }
     }
@@ -265,6 +268,9 @@ export default {
                 this.spotInfo.isVisible = true;
                 this.spotInfo.name = spot.name;
                 this.spotInfo.description = spot.description;
+                this.spotInfo.id = featureId;
+                this.spotInfo.isDiscovered = features[0].get("discovered") === "true";
+                this.spotInfo.isInRange = this.spotsInRange.includes(featureId);
 
                 // display popup
                 valueToShow = spot.name;
@@ -273,7 +279,7 @@ export default {
 
                 popup.setPosition(feature.getGeometry().getCoordinates());
 
-                let offsetX = this.$refs.popup.clientWidth/2;
+                let offsetX = this.$refs.popup.clientWidth / 2;
                 popup.setOffset([-offsetX, 0])
               });
             }
