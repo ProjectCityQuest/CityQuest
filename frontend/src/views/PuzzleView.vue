@@ -15,13 +15,15 @@
                    :location_name="piece.location_name"
                    :image="piece.image"
                    :row="piece.row"
-                   :column="piece.column" @open-overlay="openOverlay" :class="this.id!== -1?this.id == piece.id? 'newPiece':'oldPiece':''"
+                   :column="piece.column" @open-overlay="openOverlay"
+                   :class="this.id!== -1?this.id == piece.id? 'newPiece':'oldPiece':''"
       ></PuzzlePiece>
     </div>
     <Overlay :isVisible="overlayVisibile" @close-overlay="overlayVisibile = !overlayVisibile">
       <h1 class="overlay-heading" ref="overlay-heading"></h1>
       <p class="overlay-status" ref="overlay-status"></p>
-      <CQButton class="overlay-button" b-style="login" :status="mapButtonState" @click="toMap">auf Karte anzeigen</CQButton>
+      <CQButton class="overlay-button" b-style="login" :status="mapButtonState" @click="toMap">auf Karte anzeigen
+      </CQButton>
     </Overlay>
     <NavBar :active-icon="3"></NavBar>
   </div>
@@ -38,9 +40,9 @@ import router from "@/router";
 export default {
   name: "PuzzleView",
   components: {NavBar, Header, PuzzlePiece, Overlay, CQButton},
-  props:{
+  props: {
     id: {
-      type:Number,
+      type: Number,
       default: -1
     }
   },
@@ -63,13 +65,27 @@ export default {
   },
   methods: {
     openOverlay(e) {
-      this.overlayVisibile = !this.overlayVisibile
-      this.activePiece = e.id
-      this.$refs['overlay-heading'].innerHTML = e.location_name
-      this.$refs['overlay-status'].innerHTML = "Status: " + (e.visited ? 'erkundet' : 'unerkundet')
+      if (this.id !== -1) {
+        history.replaceState({id: 1}, '', `http://${window.location.hostname}:5173/puzzle`)
+
+        let elems = document.querySelectorAll(".oldPiece");
+        [].forEach.call(elems, function (el) {
+          el.classList.remove("oldPiece");
+        });
+
+        elems = document.querySelectorAll(".newPiece");
+        [].forEach.call(elems, function (el) {
+          el.classList.remove("newPiece");
+        });
+      } else {
+        this.overlayVisibile = !this.overlayVisibile
+        this.activePiece = e.id
+        this.$refs['overlay-heading'].innerHTML = e.location_name
+        this.$refs['overlay-status'].innerHTML = "Status: " + (e.visited ? 'erkundet' : 'unerkundet')
+      }
     },
-    toMap(){
-      router.push('/karte/ort/'+this.activePiece)
+    toMap() {
+      router.push('/karte/ort/' + this.activePiece)
     }
   }
 }
@@ -109,16 +125,16 @@ export default {
     "ak bk ck dk ek fk gk hk ik jk"
     "al bl cl dl el fl gl hl il jl";
 
-    .newPiece{
+    .newPiece {
       border-color: gold;
       border-width: 3px;
     }
 
-    .oldPiece{
+    .oldPiece {
       opacity: 0.5;
     }
 
-    .loading{
+    .loading {
       border: 0.8rem solid $light_gray;
       border-radius: 50%;
       border-top-color: $blue;
@@ -154,12 +170,20 @@ export default {
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
