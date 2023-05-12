@@ -139,14 +139,6 @@ const router = createRouter({
             }
         },
         {
-            path: '/karte',
-            name: 'karte',
-            component: MapView,
-            meta: {
-                requiresAuth: true
-            }
-        },
-        {
             path: '/karte/ort/:spotId',
             name: 'karte-ort',
             component: MapView,
@@ -156,8 +148,16 @@ const router = createRouter({
             }
         },
         {
+            path: '/karte',
+            name: 'karte',
+            component: MapView,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
             path: '/puzzle/teil/:id',
-            props:true,
+            props: true,
             name: 'puzzle-piece-focus',
             component: PuzzleView,
             meta: {
