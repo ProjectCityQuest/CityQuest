@@ -52,7 +52,8 @@ export default {
       mapButtonState: "active",
       activePiece: -1,
       pieces: [],
-      loading: true
+      loading: true,
+      focus: false
     }
   },
   async mounted() {
@@ -62,10 +63,11 @@ export default {
           this.loading = false
           this.pieces = data
         });
+    this.focus = this.id !== -1
   },
   methods: {
     openOverlay(e) {
-      if (this.id !== -1) {
+      if (this.focus) {
         history.replaceState({id: 1}, '', `http://${window.location.hostname}:5173/puzzle`)
 
         let elems = document.querySelectorAll(".oldPiece");
@@ -77,6 +79,7 @@ export default {
         [].forEach.call(elems, function (el) {
           el.classList.remove("newPiece");
         });
+        this.focus = false
       } else {
         this.overlayVisibile = !this.overlayVisibile
         this.activePiece = e.id
