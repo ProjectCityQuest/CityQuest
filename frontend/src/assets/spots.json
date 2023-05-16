@@ -800,10 +800,10 @@
     ]
   },
   {
-    "id": 71,
+    "id": 74,
     "name": "Universitätssternwarte Wien",
     "description": "Die Universitätssternwarte Wien ist eines der beiden vom Institut für Astrophysik der Universität Wien betriebenen Observatorien. Sie befindet sich im Sternwartepark auf der Türkenschanze, einer breiten Anhöhe am nordwestlichen Stadtrand von Wien im 18. Wiener Gemeindebezirk Währing. Von ihrer Gründung 1755 durch Maria Theresia bis zu dem 1874 begonnenen Umzug an den heutigen Standort befand sich die Wiener Universitätssternwarte im Stadtzentrum auf dem Dach der Alten Universität. Dieses Observatorium war die erste Universitätssternwarte des deutschen Sprachraums.",
-    "discovered": false,
+    "discovered": true,
     "coordinates": [
       48.23191635113858,
       16.33413774433233
@@ -830,7 +830,7 @@
     ]
   },
   {
-    "id": 74,
+    "id": 71,
     "name": "Friedenspagode",
     "description": "Ein buddhistisches Symbol für den Frieden in der Leopoldstadt? Richtig gelesen! Bei der Hafenzufahrtsstraße im 2. Bezirk trefft ihr auf eine dieser rund 80 Friedenspagoden, die es weltweit gibt. Diese Stupa, also ein Bauwerk, das Buddha selbst und seine Lehre, den Dharma, symbolisiert, sticht schon von Weitem durch ihre interessante Architektur ins Auge. Sie ist 26 Meter hoch und wurde zwischen 1982 und 1983 von japanischen Mönchen errichtet.",
     "discovered": false,

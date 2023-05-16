@@ -1,16 +1,24 @@
 let spots = [];
 
 async function setup() {
-    // if (sessionStorage.getItem("spots")) {
-        // spots = JSON.parse(sessionStorage.getItem("spots"));
-        // return;
-    // }
+    if (sessionStorage.getItem("spots")) {
+        spots = JSON.parse(sessionStorage.getItem("spots"));
+        return;
+    }
 
-    await fetch("/src/assets/spots.json")
+    await fetch(`http://${window.location.hostname}:8080/api/getspots`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'sessionKey': getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin',
+    })
         .then(res => res.json())
         .then(data => spots = data);
 
-    // sessionStorage.setItem("spots", JSON.stringify(spots));
+    sessionStorage.setItem("spots", JSON.stringify(spots));
 }
 
 export async function getAll() {
@@ -36,4 +44,20 @@ export function saveSpotsInRange(spotsInRange) {
 
 export function getSpotsInRange() {
     return sessionStorage.getItem("spotsInRange");
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return false;
 }
