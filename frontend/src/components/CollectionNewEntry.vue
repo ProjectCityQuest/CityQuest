@@ -6,33 +6,18 @@
         <p>Besucht am: {{ getDateNowFormatted }}</p>
       </div>
       <div class="hr"></div>
-      <div>
-        <img>
-        <router-link to="/kamera/" class="image-container">
-          <div class="image edit" :style="getProfilePictureStyle">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 139.81 139.31">
-              <path
-                  d="M8.05,140.17l17.76-3.39a3.61,3.61,0,0,0,1.87-6.1L13.32,116.32a3.61,3.61,0,0,0-6.1,1.87L3.83,136A3.61,3.61,0,0,0,8.05,140.17Z"
-                  transform="translate(-3.76 -0.92)"/>
-              <path d="M127,49l12.74-12.74a13.09,13.09,0,0,0,0-18.52l-13-13a13.09,13.09,0,0,0-18.52,0L95.5,17.5Z"
-                    transform="translate(-3.76 -0.92)"/>
-              <path
-                  d="M117.5,58.5,86,27,14.75,98.25A29,29,0,0,1,18.5,98,28.5,28.5,0,0,1,47,126.5c0,.89,0,1.76-.13,2.63Z"
-                  transform="translate(-3.76 -0.92)"/>
-            </svg>
-          </div>
-        </router-link>
-        <div class="username">
-          <h2>Benutzername</h2>
-          <input type="text" v-model="v$.changedUsername.$model" :class="status(v$.changedUsername)"
-                 @input="changeUsername">
-          <!-- error message -->
-          <div class="input-errors" v-for="(error, index) of v$.changedUsername.$errors" :key="index">
-            <div class="error-msg">{{ error.$message }}</div>
-          </div>
-        </div>
-        <p>{{ }}</p>
-      </div>
+      <form @submit.prevent>
+        <div class="image" :style="getProfilePictureStyle"></div>
+        <CQButton b-style="login" status="active" @click="toCamera">Bild aufnehmen</CQButton>
+        <CQButton b-style="login" status="active">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="24" height="24" viewBox="0 96 960 960">
+            <path
+                d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"/>
+          </svg>
+        </CQButton>
+        <label>Dein Erfahrung:</label>
+        <textarea v-model="userInput"></textarea>
+      </form>
     </div>
     <div class="spacer"></div>
   </div>
@@ -43,15 +28,15 @@
 
 import useVuelidate from "@vuelidate/core";
 import {required$} from "@/validators";
+import CQButton from "@/components/CQButton.vue";
+import router from "@/router";
 
 export default {
   name: "CollectionNewEntry",
+  components: {CQButton},
   props: {
     spotId: String,
     locationName: String
-  },
-  setup() {
-    return {v$: useVuelidate()}
   },
   data() {
     return {
@@ -63,15 +48,12 @@ export default {
         message: "",
         hasError: false
       },
-      profilePicture: ""
+      profilePicture: "",
+      userInput: ""
     }
   },
   validations() {
-    return {
-      changedUsername: {
-        required$
-      },
-    }
+    return {}
   },
   methods: {
     status(validation) {
@@ -79,6 +61,9 @@ export default {
         error: validation.$error,
         dirty: validation.$dirty
       }
+    },
+    toCamera() {
+      router.push("/kamera");
     },
     async updateProfile() {
       await this.updateUsername();
@@ -172,20 +157,6 @@ export default {
         message: ""
       };
     },
-    async toggleEdit() {
-      this.editingEnabled = !this.editingEnabled
-
-      // if editing is closed the image preview is discarded
-      if (this.editingEnabled === false) {
-        sessionStorage.removeItem("selectedImage");
-      }
-
-      await this.fetchUserData();
-      this.v$.changedUsername.$model = this.userData.name;
-      this.v$.$reset();
-
-      this.removeFeedback();
-    },
     fetchUserData() {
       return fetch(`http://${window.location.hostname}:8080/api/getusers`, {
         method: 'GET',
@@ -225,20 +196,6 @@ export default {
       }
       return false;
     },
-    changeUsername(event) {
-      if (sessionStorage.getItem("selectedImage")) {
-        this.state = 'active';
-        return;
-      }
-
-      if (this.v$.$invalid) {
-        this.state = 'inactive';
-      } else if (this.userData.name === event.target.value) {
-        this.state = 'inactive';
-      } else {
-        this.state = 'active';
-      }
-    }
   },
   computed: {
     getUsername() {
@@ -251,7 +208,7 @@ export default {
       return this.errors.deleteAccount;
     },
     getProfilePictureStyle() {
-      if (sessionStorage.getItem("selectedImage") && this.editingEnabled) {
+      if (sessionStorage.getItem("selectedImage")) {
         return `background-image: url(${sessionStorage.getItem("selectedImage")})`;
       }
       return `background-image: url(${this.profilePicture})`;
@@ -267,17 +224,6 @@ export default {
     }
   },
   async mounted() {
-    await this.fetchUserData();
-    this.v$.changedUsername.$model = this.userData.name;
-
-    await this.fetchProfilePicture();
-
-    const prevRoute = this.$router.options.history.state.back;
-
-    if (prevRoute.includes("kamera") || prevRoute.includes("galerie")) {
-      await this.toggleEdit();
-    }
-
     if (sessionStorage.getItem("selectedImage")) {
       this.state = "active";
     }
@@ -298,6 +244,20 @@ export default {
     background-color: #eaeaea;
     border-radius: 10px;
     margin: 0 auto 0 auto;
+
+    .image {
+      width: 100%;
+      height: 160px;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      svg {
+        path {
+          stroke: white;
+          stroke-width: 2px;
+        }
+      }
+    }
 
     .top {
       padding: 15px;
