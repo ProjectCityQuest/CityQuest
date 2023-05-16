@@ -57,12 +57,14 @@ export default {
     }
   },
   async mounted() {
-    await fetch("/src/assets/puzzle.json")
-        .then(res => res.json())
-        .then(data => {
-          this.loading = false
-          this.pieces = data
-        });
+    for (let i = 1; i <= 12; i++) {
+      await fetch("/src/assets/puzzle/spots_"+i+".json")
+          .then(res => res.json())
+          .then(data => {
+            this.loading = false
+            data.forEach(x => this.pieces.push(x))
+          });
+    }
     this.focus = this.id !== -1
   },
   methods: {
@@ -103,7 +105,7 @@ export default {
   }
 
   .puzzle-container {
-    height: calc(100vh - 140px);
+    height: calc(100svh - 140px);
     width: 100%;
     padding-top: 70px;
 
