@@ -506,7 +506,7 @@ paths:
           application/json:
             schema:
               example:
-                entry: {id: 7253}
+                id: 7253
       responses:
         '201':
           description: das Puzzleteil ist eingesammelt
