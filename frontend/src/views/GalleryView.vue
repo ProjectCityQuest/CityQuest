@@ -13,7 +13,7 @@
           <path d="M378 810 154 586l43-43 181 181 384-384 43 43-427 427Z"/>
         </svg>
       </div>
-      <img :id="index" :src="image" :style="{height: imageHeight}"/>
+      <img :id="index" :src="image" :style="{height: imageHeight}" alt="Aufgenommenes Bild"/>
     </div>
   </div>
   <div class="footer-wrapper">
@@ -48,15 +48,15 @@ export default {
   },
   methods: {
     backToCamera() {
-      // router.push('/kamera/' + this.source)
       router.push('/kamera')
     },
     safeImage() {
       this.buttonStatus = "waiting"
-      let gallery = JSON.parse(sessionStorage.getItem('gallery')) || []
-      sessionStorage.setItem("selectedImage", gallery[gallery.length - 1])
-      sessionStorage.removeItem("gallery")
-      router.push('/' + this.source)
+
+      cameraHelper.setSelectedImage(cameraHelper.getGallery()[this.selectedImage]);
+      cameraHelper.clearGallery();
+
+      router.push(cameraHelper.getFromPath());
     }
   },
   watch: {

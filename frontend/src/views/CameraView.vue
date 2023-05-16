@@ -19,7 +19,7 @@
   <div class="footer-wrapper">
     <canvas id="canvas"></canvas>
     <div id="last-shot-container" @click="toGallery()">
-      <img v-if="this.gallery.length > 0" id="last-shot" :src="lastShot">
+      <img v-if="isPreviewVisible" id="last-shot" :src="lastShot" alt="Vorschaubild">
     </div>
     <div id="take-photo">
       <div id="inner-circle"></div>
@@ -40,8 +40,8 @@ export default {
       streaming: false,
       video: null,
       canvas: null,
-      gallery: JSON.parse(sessionStorage.getItem('gallery')) || [],
-      fromPath: ""
+      fromPath: "",
+      isPreviewVisible: false
     }
   },
   mounted() {
@@ -92,23 +92,22 @@ export default {
           }, false)
     },
     takePicture() {
+      this.isPreviewVisible = true;
+
       const context = this.canvas.getContext("2d");
       context.drawImage(this.video, 0, 0, this.width, this.height);
       const data = canvas.toDataURL("image/png");
-      // this.gallery = JSON.parse(sessionStorage.getItem('gallery')) || []
-      // this.gallery.push(data);
+
       cameraHelper.addImageToGallery(data);
-      // sessionStorage.setItem('gallery', JSON.stringify(this.gallery))
 
       if (cameraHelper.getGallery().length > 0) {
         document.getElementById("last-shot").src = data
       }
     },
     toGallery() {
-      router.push('/galerie/' + this.source);
+      router.push('/galerie/');
     },
     goBack() {
-      // sessionStorage.removeItem("gallery")
       cameraHelper.clearGallery();
       sessionStorage.removeItem("selectedImage")
       router.push(cameraHelper.getFromPath());
@@ -116,7 +115,8 @@ export default {
   },
   computed: {
     lastShot() {
-      const gallery = JSON.parse(sessionStorage.getItem('gallery')) || [];
+      // const gallery = JSON.parse(sessionStorage.getItem('gallery')) || [];
+      const gallery = cameraHelper.getGallery();
       if (gallery.length > 0) {
         return gallery[gallery.length - 1];
       } else {

@@ -208,7 +208,7 @@ const router = createRouter({
             }
         },
         {
-            path: '/galerie/:source',
+            path: '/galerie/',
             name: 'galerie',
             component: GalleryView,
             props: true,
