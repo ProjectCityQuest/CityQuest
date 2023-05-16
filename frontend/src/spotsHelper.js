@@ -1,13 +1,16 @@
 let spots = [];
 
 async function setup() {
+    // if (sessionStorage.getItem("spots")) {
+        // spots = JSON.parse(sessionStorage.getItem("spots"));
+        // return;
+    // }
+
     await fetch("/src/assets/spots.json")
         .then(res => res.json())
         .then(data => spots = data);
 
-    spots.forEach(spot => spot.id = "CityQuest" + spot.id);
-
-    sessionStorage.setItem("spots", JSON.stringify(spots));
+    // sessionStorage.setItem("spots", JSON.stringify(spots));
 }
 
 export async function getAll() {
@@ -19,10 +22,18 @@ export async function getSpotByID(id) {
     await setup();
 
     for (let spot of spots) {
-        if (spot.id.toLowerCase() === id.toLowerCase()) {
+        if (String(spot.id).toLowerCase() === id.toLowerCase()) {
             return spot;
         }
     }
 
     return spots[0];
+}
+
+export function saveSpotsInRange(spotsInRange) {
+    sessionStorage.setItem("spotsInRange", spotsInRange)
+}
+
+export function getSpotsInRange() {
+    return sessionStorage.getItem("spotsInRange");
 }
