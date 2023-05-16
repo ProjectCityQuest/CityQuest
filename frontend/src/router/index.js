@@ -200,10 +200,9 @@ const router = createRouter({
             }
         },
         {
-            path: '/kamera/:source',
+            path: '/kamera/',
             name: 'kamera',
             component: CameraView,
-            props: true,
             meta: {
                 requiresAuth: true
             }

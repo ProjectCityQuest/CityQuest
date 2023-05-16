@@ -24,6 +24,7 @@
 <script>
 import router from '@/router'
 import CQButton from "@/components/CQButton.vue";
+import * as cameraHelper from "@/cameraHelper";
 
 export default {
   name: "GalleryView",
@@ -34,7 +35,7 @@ export default {
     return {
       buttonStatus: "inactive",
       selectedImage: null,
-      gallery: JSON.parse(sessionStorage.getItem('gallery')) || []
+      gallery: cameraHelper.getGallery()
     }
   },
   components: {
@@ -47,7 +48,8 @@ export default {
   },
   methods: {
     backToCamera() {
-      router.push('/kamera/' + this.source)
+      // router.push('/kamera/' + this.source)
+      router.push('/kamera')
     },
     safeImage() {
       this.buttonStatus = "waiting"

@@ -29,12 +29,10 @@
 
 <script>
 import router from '@/router'
+import * as cameraHelper from "@/cameraHelper";
 
 export default {
   name: "CameraView",
-  props: {
-    source: String
-  },
   data() {
     return {
       width: 0,
@@ -42,11 +40,21 @@ export default {
       streaming: false,
       video: null,
       canvas: null,
-      gallery: JSON.parse(sessionStorage.getItem('gallery')) || []
+      gallery: JSON.parse(sessionStorage.getItem('gallery')) || [],
+      fromPath: ""
     }
   },
   mounted() {
     this.runCamera()
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.fromPath = from.path
+
+      if (!String(vm.fromPath).includes("galerie")) {
+        cameraHelper.saveFromPath(vm.fromPath);
+      }
+    })
   },
   methods: {
     runCamera() {
@@ -87,11 +95,12 @@ export default {
       const context = this.canvas.getContext("2d");
       context.drawImage(this.video, 0, 0, this.width, this.height);
       const data = canvas.toDataURL("image/png");
-      this.gallery = JSON.parse(sessionStorage.getItem('gallery')) || []
-      this.gallery.push(data);
-      sessionStorage.setItem('gallery', JSON.stringify(this.gallery))
+      // this.gallery = JSON.parse(sessionStorage.getItem('gallery')) || []
+      // this.gallery.push(data);
+      cameraHelper.addImageToGallery(data);
+      // sessionStorage.setItem('gallery', JSON.stringify(this.gallery))
 
-      if (this.gallery.length > 0) {
+      if (cameraHelper.getGallery().length > 0) {
         document.getElementById("last-shot").src = data
       }
     },
@@ -99,9 +108,10 @@ export default {
       router.push('/galerie/' + this.source);
     },
     goBack() {
-      sessionStorage.removeItem("gallery")
+      // sessionStorage.removeItem("gallery")
+      cameraHelper.clearGallery();
       sessionStorage.removeItem("selectedImage")
-      router.push('/' + this.source)
+      router.push(cameraHelper.getFromPath());
     }
   },
   computed: {

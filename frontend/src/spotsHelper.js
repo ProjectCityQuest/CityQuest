@@ -1,10 +1,10 @@
 let spots = [];
 
 async function setup() {
-    if (sessionStorage.getItem("spots")) {
-        spots = JSON.parse(sessionStorage.getItem("spots"));
-        return;
-    }
+    // if (sessionStorage.getItem("spots")) {
+        // spots = JSON.parse(sessionStorage.getItem("spots"));
+        // return;
+    // }
 
     await fetch(`http://${window.location.hostname}:8080/api/getspots`, {
         method: 'GET',
@@ -18,7 +18,7 @@ async function setup() {
         .then(res => res.json())
         .then(data => spots = data);
 
-    sessionStorage.setItem("spots", JSON.stringify(spots));
+    // sessionStorage.setItem("spots", JSON.stringify(spots));
 }
 
 export async function getAll() {
