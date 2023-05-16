@@ -448,6 +448,13 @@ paths:
       description: Liefert alle Puzzle-Teile zurück
       security:
         - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                pageIndex: 1
       responses:
         '200':
           content:
