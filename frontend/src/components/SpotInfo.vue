@@ -45,7 +45,7 @@ export default {
   props: {
     isVisible: Boolean,
     isDiscovered: Boolean,
-    isInRange: Boolean,
+    spotsInRange: Array,
     name: String,
     description: String,
     id: String
@@ -72,6 +72,11 @@ export default {
     createCollectionEntry() {
       this.$router.push("/sammelbuch/neu/" + this.id.replace("CityQuest", ""));
     },
+  },
+  computed: {
+    isInRange() {
+      return this.spotsInRange.includes(this.id);
+    }
   },
   watch: {
     id() {

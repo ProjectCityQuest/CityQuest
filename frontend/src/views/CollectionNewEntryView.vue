@@ -14,7 +14,9 @@
       <p>zurück</p>
     </div>
     <div class="hr"></div>
-    <CollectionNewEntry v-if="requestIsValid" :spot-id="spotId" :location-name="spot.name"></CollectionNewEntry>
+    <div class="entry-container" v-if="requestIsValid" >
+      <CollectionNewEntry :spot-id="spotId" :location-name="spot.name"></CollectionNewEntry>
+    </div>
     <div class="invalid-container" v-else>
       <p>Du bist nicht in Reichweite oder der Ort existiert nicht.</p>
     </div>
@@ -62,6 +64,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
+  min-height: 100vh;
 
   .heading {
 
@@ -104,5 +107,8 @@ export default {
     margin-top: 15px;
   }
 
+  .entry-container {
+    margin-top: 1rem;
+  }
 }
 </style>

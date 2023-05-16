@@ -5,7 +5,7 @@
     <button title="Locate me" @click="zoomToUser">◎</button>
   </div>
   <SpotInfo :is-visible="spotInfo.isVisible" :name="spotInfo.name" :description="spotInfo.description" :id="spotInfo.id"
-            :is-discovered="spotInfo.isDiscovered" :is-in-range="spotInfo.isInRange" @close="spotInfo.isVisible=false"
+            :is-discovered="spotInfo.isDiscovered" :spots-in-range="spotsInRange" @close="spotInfo.isVisible=false"
             @collect-puzzle-piece="(spotId) => collectPuzzlePiece(spotId)"></SpotInfo>
 </template>
 
