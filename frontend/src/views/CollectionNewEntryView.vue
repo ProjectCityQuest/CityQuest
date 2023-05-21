@@ -45,7 +45,8 @@ export default {
     }
   },
   mounted() {
-    if (![spotsHelper.getSpotsInRange()].includes(this.spotId)) {
+    console.log(spotsHelper.getSpotsInRange(), [spotsHelper.getSpotsInRange()]);
+    if (!spotsHelper.getSpotsInRange().includes(this.spotId)) {
       this.requestIsValid = false;
       return;
     }

@@ -17,11 +17,11 @@
         </CQButton>
         <label>Dein Erfahrung:</label>
         <textarea v-model="userInput"></textarea>
+        <CQButton b-style="login" status="inactive">Absenden</CQButton>
       </form>
     </div>
     <div class="spacer"></div>
   </div>
-
 </template>
 
 <script>

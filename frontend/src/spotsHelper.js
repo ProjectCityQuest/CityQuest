@@ -39,11 +39,11 @@ export async function getSpotByID(id) {
 }
 
 export function saveSpotsInRange(spotsInRange) {
-    sessionStorage.setItem("spotsInRange", spotsInRange)
+    sessionStorage.setItem("spotsInRange", JSON.stringify(spotsInRange));
 }
 
 export function getSpotsInRange() {
-    return sessionStorage.getItem("spotsInRange");
+    return JSON.parse(sessionStorage.getItem("spotsInRange"));
 }
 
 function getCookie(cname) {
