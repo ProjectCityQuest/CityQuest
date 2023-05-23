@@ -25,6 +25,7 @@
 
 <script>
 import * as spotsHelper from "@/spotsHelper";
+import * as cameraHelper from "@/cameraHelper";
 import CollectionNewEntry from "@/components/CollectionNewEntry.vue";
 
 export default {
@@ -41,6 +42,7 @@ export default {
   },
   methods: {
     backToMap() {
+      cameraHelper.removeSelectedImage();
       this.$router.push("/karte/ort/" + this.spotId);
     }
   },

@@ -23,7 +23,7 @@
           <label>Deine Erfahrung:</label>
           <textarea v-model="userInput" class="entry-text"></textarea>
         </div>
-        <CQButton b-style="login" status="inactive">Absenden</CQButton>
+        <CQButton b-style="login" :status="userInput ? 'active' : 'inactive'" @click="createEntry">Eintrag erstellen</CQButton>
       </form>
     </div>
     <div class="spacer"></div>
@@ -101,6 +101,13 @@ export default {
       }
       return false;
     },
+    createEntry() {
+      if (!this.userInput) {
+        return;
+      }
+
+      console.log(this.userInput, this.coverImage, this.spotId);
+    }
   },
   computed: {
     getDeleteAccountError() {
@@ -114,13 +121,16 @@ export default {
 
       return `${String(date.getUTCDate()).padStart(2, "0")}.${String(date.getMonth() + 1).padStart(2, "0")}.
         ${date.getFullYear()}, ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+    },
+    getImageSrc() {
+      if (this.coverImage) {
+        return this.coverImage;
+      }
+
+
     }
   },
   async mounted() {
-    if (sessionStorage.getItem("selectedImage")) {
-      this.state = "active";
-    }
-
     this.coverImage = cameraHelper.getSelectedImage();
   }
 }
@@ -140,12 +150,11 @@ export default {
     background-color: #eaeaea;
     border-radius: 10px;
     margin: 0 auto 0 auto;
-    overflow: scroll;
+    overflow-y: scroll;
 
     form {
       width: 100%;
       height: fit-content;
-      overflow: scroll;
       display: flex;
       flex-direction: column;
       align-items: center;

@@ -43,6 +43,7 @@ export function setSelectedImage(image) {
 }
 
 export function removeSelectedImage() {
+    selectedImage = "";
     sessionStorage.removeItem("selectedImage");
 }
 
