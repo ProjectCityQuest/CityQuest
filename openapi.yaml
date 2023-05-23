@@ -352,7 +352,7 @@ paths:
             application/json:
               example:
                 entries: [
-                  {id: 1, timestamp: "2004-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"},
+                  {id: 1,c, location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"},
                   {id: 2, timestamp: "2015-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
                 ]
           description: Liefert die Sammelbucheinträge
@@ -485,7 +485,7 @@ paths:
           application/json:
             schema:
               example:
-                entry: {locationId: 3, text: "Das ist ein Text für Wien", image: "this is some base64 data"}
+                entry: {locationId: 3,  timestamp: "2004-06-14T23:34:30", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
       responses:
         '201':
           description: Liefert die Sammelbucheinträge
