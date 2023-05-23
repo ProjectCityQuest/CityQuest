@@ -431,8 +431,8 @@ paths:
             application/json:
               example:
                 spots: [
-                  {id: 1, name: "Parlament", coordinates: [48.232436, 16.351748], description: "Hier die Beschreibung."},
-                  {id: 2, name: "Stephansdom", coordinates: [48.232436, 16.351748], description: "Hier die Beschreibung."}
+                  {id: 1, name: "Parlament", coordinates: [48.232436, 16.351748], discovered: false, description: "Hier die Beschreibung."},
+                  {id: 2, name: "Stephansdom", coordinates: [48.232436, 16.351748], discovered: true, description: "Hier die Beschreibung."}
                 ]
           description: Liefert die Spots zurück
         '401':
