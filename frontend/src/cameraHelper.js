@@ -42,6 +42,10 @@ export function setSelectedImage(image) {
     sessionStorage.setItem("selectedImage", image);
 }
 
+export function removeSelectedImage() {
+    sessionStorage.removeItem("selectedImage");
+}
+
 export function saveFromPath(fromPath) {
     sessionStorage.setItem("fromPath", fromPath);
 }

@@ -7,16 +7,22 @@
       </div>
       <div class="hr"></div>
       <form @submit.prevent>
-        <div class="image" :style="getProfilePictureStyle"></div>
-        <CQButton b-style="login" status="active" @click="toCamera">Bild aufnehmen</CQButton>
-        <CQButton b-style="login" status="active">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="24" height="24" viewBox="0 96 960 960">
-            <path
-                d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"/>
-          </svg>
-        </CQButton>
-        <label>Dein Erfahrung:</label>
-        <textarea v-model="userInput"></textarea>
+        <div class="cover-image-container portrait">
+          <img v-if="coverImage" :src="coverImage" alt="Sammelbuchbild" class="cover-image">
+          <div class="action-container">
+            <CQButton b-style="login" status="active" @click="toCamera" class="take-picture">Bild aufnehmen</CQButton>
+            <CQButton b-style="login" status="active" @click="removeImage" class="remove-image">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="24" height="24" viewBox="0 96 960 960">
+                <path
+                    d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"/>
+              </svg>
+            </CQButton>
+          </div>
+        </div>
+        <div class="experience-container">
+          <label>Deine Erfahrung:</label>
+          <textarea v-model="userInput" class="entry-text"></textarea>
+        </div>
         <CQButton b-style="login" status="inactive">Absenden</CQButton>
       </form>
     </div>
@@ -26,10 +32,9 @@
 
 <script>
 
-import useVuelidate from "@vuelidate/core";
-import {required$} from "@/validators";
 import CQButton from "@/components/CQButton.vue";
 import router from "@/router";
+import * as cameraHelper from "@/cameraHelper";
 
 export default {
   name: "CollectionNewEntry",
@@ -40,16 +45,14 @@ export default {
   },
   data() {
     return {
-      changedUsername: "",
       userData: {},
-      editingEnabled: false,
       state: "inactive",
       feedback: {
         message: "",
         hasError: false
       },
-      profilePicture: "",
-      userInput: ""
+      userInput: "",
+      coverImage: ""
     }
   },
   validations() {
@@ -65,83 +68,9 @@ export default {
     toCamera() {
       router.push("/kamera");
     },
-    async updateProfile() {
-      await this.updateUsername();
-      if (sessionStorage.getItem("selectedImage")) {
-        await this.updateProfilePicture();
-      }
-
-      await this.toggleEdit();
-    },
-    async updateUsername() {
-      const response = await fetch(`http://${window.location.hostname}:8080/api/changeusername`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'sessionKey': this.getCookie('sessionKey')
-        },
-        withCredentials: true,
-        credentials: 'same-origin',
-        body: JSON.stringify({
-              'username': this.changedUsername,
-            }
-        )
-      }).catch((err) => {
-        this.state = "active";
-        if (err.message === 'Failed to fetch') {
-          this.setError("Verbindung konnte nicht hergestellt werden.");
-        } else {
-          this.setError("Das hat nicht geklappt ):");
-        }
-      });
-
-      if (!response) {
-        return;
-      }
-
-      if (response.ok) {
-        this.state = "inactive";
-        this.userData.name = this.changedUsername;
-      } else {
-        let data = await response.json();
-        this.setError(data.error);
-      }
-    },
-    async updateProfilePicture() {
-      const response = await fetch(`http://${window.location.hostname}:8080/api/changeprofilepicture`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'sessionKey': this.getCookie('sessionKey')
-        },
-        withCredentials: true,
-        credentials: 'same-origin',
-        body: JSON.stringify({
-              'image': sessionStorage.getItem("selectedImage"),
-            }
-        )
-      }).catch((err) => {
-        this.state = "active";
-        if (err.message === 'Failed to fetch') {
-          this.setError("Verbindung konnte nicht hergestellt werden.");
-        } else {
-          this.setError("Das hat nicht geklappt ):");
-        }
-      });
-
-      if (!response) {
-        return;
-      }
-
-      if (response.ok) {
-        this.state = "inactive";
-
-        this.profilePicture = sessionStorage.getItem("selectedImage");
-        sessionStorage.removeItem("selectedImage");
-      } else {
-        let data = await response.json();
-        this.setError(data.error);
-      }
+    removeImage() {
+      this.coverImage = "";
+      cameraHelper.removeSelectedImage();
     },
     setError(message) {
       this.feedback = {
@@ -156,30 +85,6 @@ export default {
         hasError: false,
         message: ""
       };
-    },
-    fetchUserData() {
-      return fetch(`http://${window.location.hostname}:8080/api/getusers`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'sessionKey': this.getCookie('sessionKey')
-        },
-        withCredentials: true,
-        credentials: 'same-origin'
-      }).then(response => response.json())
-          .then(data => this.userData = data)
-    },
-    fetchProfilePicture() {
-      return fetch(`http://${window.location.hostname}:8080/api/getprofilepicture`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'sessionKey': this.getCookie('sessionKey')
-        },
-        withCredentials: true,
-        credentials: 'same-origin'
-      }).then(response => response.json())
-          .then(data => this.profilePicture = data.image);
     },
     getCookie(cname) {
       let name = cname + "=";
@@ -198,20 +103,8 @@ export default {
     },
   },
   computed: {
-    getUsername() {
-      return this.userData.name;
-    },
-    getEmail() {
-      return this.userData.email;
-    },
     getDeleteAccountError() {
       return this.errors.deleteAccount;
-    },
-    getProfilePictureStyle() {
-      if (sessionStorage.getItem("selectedImage")) {
-        return `background-image: url(${sessionStorage.getItem("selectedImage")})`;
-      }
-      return `background-image: url(${this.profilePicture})`;
     },
     getLocationName() {
       return this.locationName;
@@ -227,6 +120,8 @@ export default {
     if (sessionStorage.getItem("selectedImage")) {
       this.state = "active";
     }
+
+    this.coverImage = cameraHelper.getSelectedImage();
   }
 }
 </script>
@@ -241,21 +136,60 @@ export default {
 
   .entry {
     width: 90%;
+    height: 70vh;
     background-color: #eaeaea;
     border-radius: 10px;
     margin: 0 auto 0 auto;
+    overflow: scroll;
 
-    .image {
+    form {
       width: 100%;
-      height: 160px;
-      background-repeat: no-repeat;
-      background-position: center;
+      height: fit-content;
+      overflow: scroll;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-      svg {
-        path {
-          stroke: white;
-          stroke-width: 2px;
+      .cover-image-container {
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 20px);
+        margin-top: 20px;
+
+        .cover-image {
+          border-radius: 5px;
         }
+
+        .action-container {
+          display: flex;
+          gap: 10px;
+
+          .take-picture {
+            width: 75%;
+          }
+
+          .remove-image {
+            width: 25%;
+          }
+        }
+      }
+
+      .experience-container {
+        width: calc(100% - 20px);
+        margin-top: 1em;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .entry-text {
+          padding: 0.5em;
+          border: silver 1px solid;
+          border-radius: 5px;
+        }
+      }
+
+      &:last-child {
+        margin-bottom: 1em;
       }
     }
 
