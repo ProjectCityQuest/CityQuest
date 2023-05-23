@@ -249,7 +249,7 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         return entry;
     }
 
-    public List<Spot> getSpots() {
+    public List<Spot> getSpots(int userId) {
         List<Map<String, Object>> spots = jdbcTemplate.queryForList("SELECT * FROM Spot;");
 
         List<Spot> spotList = new LinkedList<>();
@@ -261,7 +261,14 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
             double longitude = Double.parseDouble(currentSpot.get("longitude") + "");
             String description = currentSpot.get("beschreibung")+"";
 
-            Spot spot = new Spot(id, name, new double[] {longitude, latitude}, description);
+            String checkStatement = "SELECT max(pk_id) FROM userHatBesucht WHERE fk_user_id = ? AND fk_spot_id = ?;";
+            Object[] checkParams = new Object[]{userId, id};
+            Object items = jdbcTemplate.queryForObject(checkStatement, checkParams, Object.class);
+
+            boolean discovered = items != null;
+
+
+            Spot spot = new Spot(id, name, new double[] {longitude, latitude}, discovered, description);
             spotList.add(spot);
         }
 

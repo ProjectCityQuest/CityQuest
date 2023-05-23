@@ -67,7 +67,7 @@ public interface DatabaseAccess {
 
     boolean deleteEntry(int id);
 
-    List<Spot> getSpots();
+    List<Spot> getSpots(int userId);
 
     List<PuzzlePiece> getPuzzle(int id, int pageIndex);
 

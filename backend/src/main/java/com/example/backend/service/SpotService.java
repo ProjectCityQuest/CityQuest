@@ -9,7 +9,7 @@ import java.util.List;
 public class SpotService {
     private static final DatabaseAccess DATABASE = new DatabaseAccessImplementation();
 
-    public static List<Spot> getSpots() {
-        return DATABASE.getSpots();
+    public static List<Spot> getSpots(int userId) {
+        return DATABASE.getSpots(userId);
     }
 }
