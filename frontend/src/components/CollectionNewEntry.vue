@@ -52,7 +52,8 @@ export default {
         hasError: false
       },
       userInput: "",
-      coverImage: ""
+      coverImage: "",
+      time: Date.now()
     }
   },
   validations() {
@@ -106,7 +107,7 @@ export default {
         return;
       }
 
-      console.log(this.userInput, this.coverImage, this.spotId);
+      console.log(this.userInput, this.coverImage, this.spotId, new Date(this.time).toISOString().replace(/[.].*/, ""));
     }
   },
   computed: {
@@ -117,17 +118,10 @@ export default {
       return this.locationName;
     },
     getDateNowFormatted() {
-      let date = new Date(Date.now());
+      let date = new Date(this.time);
 
       return `${String(date.getUTCDate()).padStart(2, "0")}.${String(date.getMonth() + 1).padStart(2, "0")}.
         ${date.getFullYear()}, ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
-    },
-    getImageSrc() {
-      if (this.coverImage) {
-        return this.coverImage;
-      }
-
-
     }
   },
   async mounted() {
