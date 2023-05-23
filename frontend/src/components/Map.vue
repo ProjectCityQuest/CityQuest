@@ -359,14 +359,14 @@ export default {
         }
       });
     },
-    collectPuzzlePiece(spotId) {
+    async collectPuzzlePiece(spotId) {
       this.spotInfo.isDiscovered = true;
 
       let spot = this.getFeatureById(spotId).get("features")[0];
 
       spot.set("discovered", "true");
 
-      fetch(`http://${window.location.hostname}:8080/api/collectpuzzlepiece`, {
+      await fetch(`http://${window.location.hostname}:8080/api/collectpuzzlepiece`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -377,7 +377,9 @@ export default {
         body: JSON.stringify({
           id: spotId.replace("CityQuest","")
         })
-      }).then(r => console.log(r))
+      })
+
+      this.$router.push("/puzzle/teil/"+spotId.replace("CityQuest",""))
     },
     getFeatureById(id) {
       for (let feature of this.spotsLayer.getSource().getFeatures()) {
