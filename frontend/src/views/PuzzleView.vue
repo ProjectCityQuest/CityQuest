@@ -57,15 +57,42 @@ export default {
     }
   },
   async mounted() {
-    await fetch("/src/assets/puzzle.json")
-        .then(res => res.json())
-        .then(data => {
-          this.loading = false
-          this.pieces = data
-        });
+    for (let i = 1; i <= 12; i++) {
+      fetch(`http://${window.location.hostname}:8080/api/getpuzzle`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          sessionKey: this.getCookie('sessionKey'),
+        },
+        withCredentials: true,
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          pageIndex: i
+        })
+      }).then(r => r.json())
+          .then(data => {
+            this.loading = false
+            data.pieces.forEach(x => this.pieces.push(x))
+          })
+    }
     this.focus = this.id !== -1
   },
   methods: {
+    getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return false;
+    },
     openOverlay(e) {
       if (this.focus) {
         history.replaceState({id: 1}, '', `http://${window.location.hostname}:5173/puzzle`)
@@ -103,7 +130,7 @@ export default {
   }
 
   .puzzle-container {
-    height: calc(100vh - 140px);
+    height: calc(100svh - 140px);
     width: 100%;
     padding-top: 70px;
 
