@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       image: null,
+      location_id: 0,
       location: "",
       text: "",
       timestamp: "",
@@ -80,6 +81,7 @@ export default {
           .then(data => {
             this.image = data.entry.image
             this.location = data.entry.location
+            this.location_id = data.entry.locationId
             this.text = data.entry.text
             this.timestamp = data.entry.timestamp
           })
@@ -105,7 +107,7 @@ export default {
     },
     toMap() {
       this.buttonState = "waiting"
-      //TODO: link to Map
+      router.push("/karte/ort/"+this.location_id)
     },
     deleteEntry() {
       return fetch(`http://${window.location.hostname}:8080/api/deleteentry`, {
