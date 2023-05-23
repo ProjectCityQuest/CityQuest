@@ -62,6 +62,21 @@ export default {
     }
   },
   methods: {
+    getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return false;
+    },
     initiateMap(enablePreloading) {
       this.map = new Map({
         target: 'map',
@@ -90,7 +105,8 @@ export default {
     trackUserPosition() {
       this.watcher = navigator.geolocation.watchPosition(
           (pos) => {
-            const coords = [pos.coords.longitude, pos.coords.latitude];
+            //const coords = [pos.coords.longitude, pos.coords.latitude];
+            const coords = [16.355073381011316, 48.207356741513];
 
             this.drawRange(coords);
             this.updateSpotsInRange();
@@ -349,7 +365,19 @@ export default {
       let spot = this.getFeatureById(spotId).get("features")[0];
 
       spot.set("discovered", "true");
-      // TODO: also send to backend
+
+      fetch(`http://${window.location.hostname}:8080/api/collectpuzzlepiece`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          sessionKey: this.getCookie('sessionKey'),
+        },
+        withCredentials: true,
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          id: spotId.replace("CityQuest","")
+        })
+      }).then(r => console.log(r))
     },
     getFeatureById(id) {
       for (let feature of this.spotsLayer.getSource().getFeatures()) {
