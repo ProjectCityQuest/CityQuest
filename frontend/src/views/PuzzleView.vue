@@ -58,17 +58,8 @@ export default {
   },
   async mounted() {
     for (let i = 1; i <= 12; i++) {
-      /*await fetch("/src/assets/puzzle/spots_"+i+".json")
-          .then(res => res.json())
-          .then(data => {
-            this.loading = false
-            data.forEach(x => {
-              if (Math.random()>0.6){ x.image = ""}
-              this.pieces.push(x)
-            })
-          });*/
       await fetch(`http://${window.location.hostname}:8080/api/getpuzzle`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           sessionKey: this.getCookie('sessionKey'),
@@ -78,11 +69,30 @@ export default {
         body: JSON.stringify({
           pageIndex: i
         })
-      }).then(r => console.log(r))
+      }).then(r => r.json())
+          .then(data => {
+            this.loading = false
+            data.pieces.forEach(x => this.pieces.push(x))
+          })
     }
     this.focus = this.id !== -1
   },
   methods: {
+    getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return false;
+    },
     openOverlay(e) {
       if (this.focus) {
         history.replaceState({id: 1}, '', `http://${window.location.hostname}:5173/puzzle`)

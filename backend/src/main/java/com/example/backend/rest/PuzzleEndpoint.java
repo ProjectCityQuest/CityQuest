@@ -24,9 +24,9 @@ import java.util.List;
 public class PuzzleEndpoint {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    @GetMapping("/getpuzzle")
+    @PostMapping("/getpuzzle")
     public ResponseEntity<Object> getPuzzle(@RequestHeader(value = "sessionKey") String token, @RequestBody GetPuzzleRequestDto request) {
-        LOG.info("GET /getpuzzle issued with parameter " + request);
+        LOG.info("POST /getpuzzle issued with parameter " + request);
 
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
