@@ -460,6 +460,7 @@ paths:
           content:
             application/json:
               example:
+                pageIndex: 1,
                 pieces: [
                   {location_id: 1, location_name: "Museum Moderner Kunst", image: "base64", column: 10, row: 5},
                   {location_id: 2, location_name: "Weinhaus Pfandler", image: "", column: 10, row: 6 }
