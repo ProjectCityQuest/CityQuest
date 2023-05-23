@@ -5,6 +5,7 @@
 package com.example.backend.db;
 
 import com.example.backend.entity.CollectionEntry;
+import com.example.backend.entity.PuzzlePiece;
 import com.example.backend.entity.Spot;
 import com.example.backend.entity.User;
 
@@ -66,4 +67,6 @@ public interface DatabaseAccess {
     boolean deleteEntry(int id);
 
     List<Spot> getSpots();
+
+    List<PuzzlePiece> getPuzzle(int id, int pageIndex);
 }

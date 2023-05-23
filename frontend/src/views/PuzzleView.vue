@@ -58,12 +58,27 @@ export default {
   },
   async mounted() {
     for (let i = 1; i <= 12; i++) {
-      await fetch("/src/assets/puzzle/spots_"+i+".json")
+      /*await fetch("/src/assets/puzzle/spots_"+i+".json")
           .then(res => res.json())
           .then(data => {
             this.loading = false
-            data.forEach(x => this.pieces.push(x))
-          });
+            data.forEach(x => {
+              if (Math.random()>0.6){ x.image = ""}
+              this.pieces.push(x)
+            })
+          });*/
+      await fetch(`http://${window.location.hostname}:8080/api/getpuzzle`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          sessionKey: this.getCookie('sessionKey'),
+        },
+        withCredentials: true,
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          pageIndex: i
+        })
+      }).then(r => console.log(r))
     }
     this.focus = this.id !== -1
   },

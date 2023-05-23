@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .view-container {
   background-image: url("../assets/background.png");
   min-height: 100vh;
