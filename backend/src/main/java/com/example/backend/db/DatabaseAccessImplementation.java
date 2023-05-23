@@ -5,11 +5,14 @@
 
 package com.example.backend.db;
 
+import com.example.backend.dto.ErrorDto;
 import com.example.backend.entity.CollectionEntry;
 import com.example.backend.entity.PuzzlePiece;
 import com.example.backend.entity.Spot;
 import com.example.backend.entity.User;
 import com.example.backend.service.UserServiceImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -293,5 +296,29 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         }
 
         return puzzlePieces;
+    }
+
+    public ResponseEntity<Object> collectPuzzlePiece(int userId, int spotId) {
+        String statement1 = "SELECT max(pk_id) FROM Spot where pk_id = ?";
+        Object[] params1 = new Object[]{spotId};
+        Object items1 = jdbcTemplate.queryForObject(statement1, params1, Object.class);
+
+        if (items1 == null) {
+            return new ResponseEntity<>(new ErrorDto("Es gibt keinen spot mit dieser spotId"), HttpStatus.FORBIDDEN);
+        }
+
+        String statement2 = "SELECT max(pk_id) FROM userHatBesucht where fk_user_id = ? and fk_spot_id = ?";
+        Object[] params2 = new Object[]{userId, spotId};
+        Object items2 = jdbcTemplate.queryForObject(statement2, params2, Object.class);
+
+        if (items2 != null) {
+            return new ResponseEntity<>(new ErrorDto("Das Puzzleteil wurde bereits eingesammelt"), HttpStatus.PAYMENT_REQUIRED);
+        }
+
+        String statement3 = "INSERT INTO userHatBesucht (fk_user_id, fk_spot_id) VALUES (?, ?)";
+        Object[] params3 = new Object[]{userId, spotId};
+        jdbcTemplate.update(statement3, params3);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
