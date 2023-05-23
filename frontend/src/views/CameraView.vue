@@ -139,7 +139,10 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transform: scaleX(-1);
+
+  #video{
+    transform: scaleX(-1) !important;
+  }
 
   .hr,
   .vr {
