@@ -442,7 +442,7 @@ paths:
                 error: Der Token ist ungueltig
           description: Der Token ist ungueltig  
   /getpuzzle:
-    get:
+    post:
       tags:
         - auth
       description: Liefert alle Puzzle-Teile zurück
