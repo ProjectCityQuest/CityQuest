@@ -40,11 +40,19 @@ create table Spot
     latitude     float
 );
 
+create table userHatBesucht(
+    pk_id INTEGER primary key auto_increment,
+    fk_user_id INTEGER,
+    fk_spot_id INTEGER,
+    FOREIGN KEY (fk_user_id) REFERENCES Users (pk_id),
+    FOREIGN KEY (fk_spot_id) REFERENCES Spot (pk_id)
+);
+
 create table Puzzle
 (
     pk_id  INTEGER primary key auto_increment,
     name   varchar(100),
-    column INTEGER,
-    row    INTEGER,
-    image  varchar(5000000)
-)
+    pos_col INTEGER,
+    pos_row    INTEGER,
+    bild  varchar(5000000)
+);

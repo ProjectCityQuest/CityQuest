@@ -6,6 +6,7 @@ package com.example.backend.rest;
 
 import com.example.backend.dto.ErrorDto;
 import com.example.backend.dto.GetPuzzleDto;
+import com.example.backend.dto.GetPuzzleRequestDto;
 import com.example.backend.entity.PuzzlePiece;
 import com.example.backend.entity.User;
 import com.example.backend.service.PuzzleService;
@@ -24,14 +25,14 @@ public class PuzzleEndpoint {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/getpuzzle")
-    public ResponseEntity<Object> getPuzzle(@RequestHeader(value = "sessionKey") String token) {
-        LOG.info("GET /getspots issued with parameter " + token);
+    public ResponseEntity<Object> getPuzzle(@RequestHeader(value = "sessionKey") String token, @RequestBody GetPuzzleRequestDto request) {
+        LOG.info("GET /getpuzzle issued with parameter " + request);
 
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
             return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
         }
-        List<PuzzlePiece> puzzlePieces = PuzzleService.getPuzzle(user.getId());
-        return new ResponseEntity<>(new GetPuzzleDto(puzzlePieces), HttpStatus.OK);
+        List<PuzzlePiece> puzzlePieces = PuzzleService.getPuzzle(user.getId(),request.getPageIndex());
+        return new ResponseEntity<>(new GetPuzzleDto(puzzlePieces, request.getPageIndex()), HttpStatus.OK);
     }
 }

@@ -257,10 +257,35 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         return true;
     }
 
-    public List<PuzzlePiece> getPuzzle(int id) {
+    public List<PuzzlePiece> getPuzzle(int id, int pageIndex) {
         List<PuzzlePiece> puzzlePieces = new LinkedList<>();
 
+        int from = 1 + 10 * (pageIndex-1);
+        int to = pageIndex * 10;
 
+        String statement = "SELECT * FROM Puzzle WHERE pk_id BETWEEN ? AND ?;";
+        Object[] params = new Object[]{from, to};
+        List<Map<String, Object>> puzzles = jdbcTemplate.queryForList(statement, params);
+
+        for (Map<String, Object> current:puzzles) {
+            int pk_id = Integer.parseInt(current.get("pk_id") + "");
+            String name = current.get("name") + "";
+            int pos_col = Integer.parseInt(current.get("pos_col") + "");
+            int pos_row = Integer.parseInt(current.get("pos_row") + "");
+            String bild = "";
+
+            String checkStatement = "SELECT max(pk_id) FROM userHatBesucht WHERE fk_user_id = ? AND fk_spot_id = (SELECT max(pk_id) FROM Spot where name = ?);";
+            Object[] checkParams = new Object[]{id, name};
+            Object items = jdbcTemplate.queryForObject(checkStatement, checkParams, Object.class);
+
+            if (items != null) {
+                bild = current.get("bild")+"";
+            }
+
+            PuzzlePiece puzzlePiece = new PuzzlePiece(pk_id, name, bild, pos_col, pos_row);
+
+            puzzlePieces.add(puzzlePiece);
+        }
 
         return puzzlePieces;
     }

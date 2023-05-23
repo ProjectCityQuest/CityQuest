@@ -68,5 +68,5 @@ public interface DatabaseAccess {
 
     List<Spot> getSpots();
 
-    List<PuzzlePiece> getPuzzle(int id);
+    List<PuzzlePiece> getPuzzle(int id, int pageIndex);
 }

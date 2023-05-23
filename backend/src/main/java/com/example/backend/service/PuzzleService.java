@@ -14,7 +14,7 @@ public class PuzzleService {
      * @param id of the user
      */
 
-    public static List<PuzzlePiece> getPuzzle(int id) {
-        return DATABASE.getPuzzle(id);
+    public static List<PuzzlePiece> getPuzzle(int id, int pageIndex) {
+        return DATABASE.getPuzzle(id, pageIndex);
     }
 }
