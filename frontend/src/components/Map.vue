@@ -105,8 +105,7 @@ export default {
     trackUserPosition() {
       this.watcher = navigator.geolocation.watchPosition(
           (pos) => {
-            //const coords = [pos.coords.longitude, pos.coords.latitude];
-            const coords = [16.355073381011316, 48.207356741513];
+            const coords = [pos.coords.longitude, pos.coords.latitude];
 
             this.drawRange(coords);
             this.updateSpotsInRange();
