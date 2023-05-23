@@ -11,6 +11,7 @@ import com.example.backend.entity.User;
 import com.example.backend.util.IP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 
@@ -227,5 +228,9 @@ public class UserServiceImpl {
 
     public static boolean deleteEntry(int id) {
         return DATABASE.deleteEntry(id);
+    }
+
+    public static ResponseEntity<Object> collectPuzzlePiece(int userId, int spotId) {
+        return DATABASE.collectPuzzlePiece(userId, spotId);
     }
 }

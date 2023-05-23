@@ -5,8 +5,10 @@
 package com.example.backend.db;
 
 import com.example.backend.entity.CollectionEntry;
+import com.example.backend.entity.PuzzlePiece;
 import com.example.backend.entity.Spot;
 import com.example.backend.entity.User;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -66,4 +68,8 @@ public interface DatabaseAccess {
     boolean deleteEntry(int id);
 
     List<Spot> getSpots();
+
+    List<PuzzlePiece> getPuzzle(int id, int pageIndex);
+
+    ResponseEntity<Object> collectPuzzlePiece(int userId, int spotId);
 }
