@@ -335,4 +335,16 @@ public class UserEndpoint {
         if (!entry) return new ResponseEntity<>(new ErrorDto("Ungültige ID"), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/collectpuzzlepiece")
+    public ResponseEntity<Object> collectPuzzlePiece(@RequestBody GetEntryRequestDto request, @RequestHeader(value = "sessionKey") String token) {
+        LOG.info("POST /collectpuzzlepiece issued with paramenter " + request);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+
+        return UserServiceImpl.collectPuzzlePiece(user.getId(), request.getId());
+    }
 }
