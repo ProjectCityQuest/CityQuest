@@ -338,7 +338,7 @@ public class UserEndpoint {
 
     @PostMapping("/collectpuzzlepiece")
     public ResponseEntity<Object> collectPuzzlePiece(@RequestBody GetEntryRequestDto request, @RequestHeader(value = "sessionKey") String token) {
-        LOG.info("POST /collectpuzzlepiece issued with paramenter " + request);
+        LOG.info("POST /collectpuzzlepiece issued with parameter " + request);
 
         User user = UserServiceImpl.getUserByToken(token);
         if (user == null) {
@@ -346,5 +346,22 @@ public class UserEndpoint {
         }
 
         return UserServiceImpl.collectPuzzlePiece(user.getId(), request.getId());
+    }
+
+    @PostMapping("/createentry")
+    public ResponseEntity<Object> createEntry(@RequestHeader(value = "sessionKey") String token, @RequestBody CreateEntryDto request) {
+        LOG.info("POST /createEntry issued with parameter " + request);
+
+        User user = UserServiceImpl.getUserByToken(token);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
+        }
+
+        boolean b = UserServiceImpl.createEntry(user.getId(), request.getEntry());
+        if (!b) {
+            return new ResponseEntity<>(new ErrorDto("Es gibt keine location mit dieser locationId"), HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
     }
 }

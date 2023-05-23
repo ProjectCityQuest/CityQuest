@@ -32,7 +32,7 @@ public class SpotEndpoint {
         if (user == null) {
             return new ResponseEntity<>(new ErrorDto("Der Token des Benutzers ist ungültig!"), HttpStatus.UNAUTHORIZED);
         }
-        List<Spot> spots = SpotService.getSpots();
+        List<Spot> spots = SpotService.getSpots(user.getId());
         return new ResponseEntity<>(spots, HttpStatus.OK);
     }
 }

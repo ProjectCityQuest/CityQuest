@@ -67,9 +67,11 @@ public interface DatabaseAccess {
 
     boolean deleteEntry(int id);
 
-    List<Spot> getSpots();
+    List<Spot> getSpots(int userId);
 
     List<PuzzlePiece> getPuzzle(int id, int pageIndex);
 
     ResponseEntity<Object> collectPuzzlePiece(int userId, int spotId);
+
+    boolean createEntry(int userId, CollectionEntry entry);
 }

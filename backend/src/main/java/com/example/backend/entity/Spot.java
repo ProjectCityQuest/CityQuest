@@ -6,13 +6,23 @@ public class Spot {
     int id;
     String name;
     double[] coords;
+    boolean discovered;
     String description;
 
-    public Spot(int id, String name, double[] coords, String description) {
+    public Spot(int id, String name, double[] coords, boolean discovered, String description) {
         this.id = id;
         this.name = name;
         this.coords = coords;
+        this.discovered = discovered;
         this.description = description;
+    }
+
+    public boolean isDiscovered() {
+        return discovered;
+    }
+
+    public void setDiscovered(boolean discovered) {
+        this.discovered = discovered;
     }
 
     public int getId() {
@@ -53,6 +63,7 @@ public class Spot {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", coords=" + Arrays.toString(coords) +
+                ", discovered=" + discovered +
                 ", description='" + description + '\'' +
                 '}';
     }
