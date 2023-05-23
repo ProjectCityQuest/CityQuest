@@ -184,6 +184,11 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         String statement = "SELECT profile_picture FROM Users where pk_id = ?;";
         String profilePicture = jdbcTemplate.queryForObject(statement, new Object[]{id}, (rs, rowNum) -> rs.getString("profile_picture"));
 
+        if (profilePicture == null) {
+            String defaultStatement = "SELECT profile_picture FROM DefaultData where pk_id = 1;";
+            profilePicture = jdbcTemplate.queryForObject(defaultStatement, (rs, rowNum) -> rs.getString("profile_picture"));
+        }
+
         LOG.info("DB ACCESSED to retrieve Profile Picture of user with id: '" + id + "'");
 
         return profilePicture;

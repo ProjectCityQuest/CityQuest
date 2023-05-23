@@ -352,7 +352,7 @@ paths:
             application/json:
               example:
                 entries: [
-                  {id: 1, timestamp: "2004-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"},
+                  {id: 1,c, location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"},
                   {id: 2, timestamp: "2015-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
                 ]
           description: Liefert die Sammelbucheinträge
@@ -381,7 +381,7 @@ paths:
           content:
             application/json:
               example:
-                entry: {id: 8324, timestamp: "2015-06-14T23:34:30", location: "Wien", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
+                entry: {id: 8324, timestamp: "2015-06-14T23:34:30", location: "Wien", locationId: 3, text: "Das ist ein Text für Wien", image: "this is some base64 data"}
           description: Liefert die Sammelbucheinträge
         '401':
           content:
@@ -448,14 +448,22 @@ paths:
       description: Liefert alle Puzzle-Teile zurück
       security:
         - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                pageIndex: 1
       responses:
         '200':
           content:
             application/json:
               example:
+                pageIndex: 1
                 pieces: [
-                  {id: 1, location_name: "Museum Moderner Kunst", image: "base64", column: 10, row: 5},
-                  {id: 2, location_name: "Weinhaus Pfandler", image: "", column: 10, row: 6 }
+                  {location_id: 1, location_name: "Museum Moderner Kunst", image: "base64", column: 10, row: 5},
+                  {location_id: 2, location_name: "Weinhaus Pfandler", image: "", column: 10, row: 6 }
                 ]
           description: Liefert alle Puzzle-Teile zurück. das Attribut 'image' ist leer, wenn der Spot noch nicht besucht bzw. ein bas64-String des Bildausschnitts, wenn der Spot bereits besucht wurde. Das Array pieces muss alle Puzzle-Teile des Puzzles enthalten. Die IDs sollten die gleichen sein, wie die bei der Karte.
         '401':
@@ -464,6 +472,70 @@ paths:
               example:
                 error: Der Token ist ungueltig
           description: Der Token ist ungueltig   
+  /createEntry:
+    post:
+      tags:
+        - auth
+      description: Erstellt einen neuen Sammelbucheintrag
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                entry: {locationId: 3,  timestamp: "2004-06-14T23:34:30", text: "Das ist ein Text für Wien", image: "this is some base64 data"}
+      responses:
+        '201':
+          description: Liefert die Sammelbucheinträge
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+        '403': 
+          content:
+            application/json:
+              example:
+                error: Es gibt keine location mit dieser locationId
+              description: Es gibt keine location mit dieser locationId
+  /collectpuzzlepiece:
+    post:
+      tags:
+        - auth
+      description: Ein  user hat das Puzzle teil einer bestimmten location eingesammelt
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                id: 7253
+      responses:
+        '201':
+          description: das Puzzleteil ist eingesammelt
+        '401':
+          content:
+            application/json:
+              example:
+                error: Der Token ist ungueltig
+          description: Der Token ist ungueltig
+        '402': 
+          content:
+            application/json:
+              example:
+                error: Das Puzzleteil wurde bereits eingesammelt
+              description: Das Puzzleteil wurde bereits eingesammelt
+        '403': 
+          content:
+            application/json:
+              example:
+                error: Es gibt keinen spot mit dieser spotId
+              description: Es gibt keinen spot mit dieser spotId
 components:
   securitySchemes:
     ApiKeyAuth:
