@@ -5,8 +5,6 @@
 package com.example.backend.rest;
 
 import com.example.backend.dto.ErrorDto;
-import com.example.backend.dto.GetCollectionDto;
-import com.example.backend.entity.CollectionEntry;
 import com.example.backend.entity.Spot;
 import com.example.backend.entity.User;
 import com.example.backend.service.SpotService;
