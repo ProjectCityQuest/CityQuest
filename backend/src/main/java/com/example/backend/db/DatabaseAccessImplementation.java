@@ -216,11 +216,17 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         for (Map<String, Object> currentEntry : entries) {
             int pk_id = Integer.parseInt(currentEntry.get("pk_id") + "");
             String timestamp = currentEntry.get("timestamp") + "";
-            String location = currentEntry.get("location") + "";
+            int locationId = Integer.parseInt(currentEntry.get("fk_location_id") + "");
+            String location = "";
             String text = currentEntry.get("text") + "";
             String bild = currentEntry.get("bild") + "";
 
-            CollectionEntry entry = new CollectionEntry(pk_id, timestamp, location, text, bild);
+            String s = "SELECT name FROM Spot where pk_id = ?";
+            Object[] p = new Object[]{locationId};
+            List<Map<String, Object>> data = jdbcTemplate.queryForList(s, p);
+            location = data.get(0).get("name")+"";
+
+            CollectionEntry entry = new CollectionEntry(pk_id, timestamp, locationId, location, text, bild);
 
             collection.add(entry);
         }
@@ -230,7 +236,15 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
 
     public CollectionEntry getCollectionEntry(int entryId, int userId) {
         String statement = "SELECT * FROM Sammelbucheintrag where pk_id = ?;";
-        CollectionEntry entry = jdbcTemplate.queryForObject(statement, new Object[]{entryId}, (rs, rowNum) -> new CollectionEntry(rs.getInt("pk_id"), rs.getString("timestamp"), rs.getString("location"), rs.getString("text"), rs.getString("bild")));
+        CollectionEntry entry = jdbcTemplate.queryForObject(statement, new Object[]{entryId}, (rs, rowNum) -> {
+            int locationID = Integer.parseInt(rs.getString("fk_location_id")+"");
+
+            String s = "SELECT name FROM Spot where pk_id = ?";
+            Object[] params = new Object[]{locationID};
+            String locationName = jdbcTemplate.queryForObject(s, params, String.class);
+
+            return new CollectionEntry(rs.getInt("pk_id"), rs.getString("timestamp"), locationID, locationName, rs.getString("text"), rs.getString("bild"));
+        });
 
         return entry;
     }
@@ -332,5 +346,21 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         jdbcTemplate.update(statement3, params3);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    public boolean createEntry(int userId, CollectionEntry entry) {
+        String statement1 = "SELECT max(pk_id) FROM Spot where pk_id = ?";
+        Object[] params1 = new Object[]{entry.getLocationId()};
+        Object items1 = jdbcTemplate.queryForObject(statement1, params1, Object.class);
+
+        if (items1 == null) {
+            return false;
+        }
+
+        String statement = "INSERT INTO Sammelbucheintrag (timestamp, fk_location_id, text, bild, fk_user_id) VALUES (?, ?, ?, ?, ?)";
+        Object[] params = new Object[]{entry.getTimestamp(), entry.getLocationId(), entry.getText(), entry.getImage(), userId};
+        jdbcTemplate.update(statement, params);
+
+        return true;
     }
 }

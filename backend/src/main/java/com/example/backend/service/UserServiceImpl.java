@@ -233,4 +233,8 @@ public class UserServiceImpl {
     public static ResponseEntity<Object> collectPuzzlePiece(int userId, int spotId) {
         return DATABASE.collectPuzzlePiece(userId, spotId);
     }
+
+    public static boolean createEntry(int userId, CollectionEntry entry) {
+        return DATABASE.createEntry(userId, entry);
+    }
 }
