@@ -26,7 +26,7 @@
             <p>{{ getEmail }}</p>
           </div>
         </div>
-        <router-link to="kamera/account" class="image-container">
+        <router-link to="kamera" class="image-container">
           <div class="image edit" :style="getProfilePictureStyle">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 139.81 139.31">
               <path
