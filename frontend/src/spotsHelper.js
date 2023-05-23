@@ -6,7 +6,15 @@ async function setup() {
         // return;
     // }
 
-    await fetch("/src/assets/spots.json")
+    await fetch(`http://${window.location.hostname}:8080/api/getspots`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'sessionKey': getCookie('sessionKey')
+        },
+        withCredentials: true,
+        credentials: 'same-origin',
+    })
         .then(res => res.json())
         .then(data => spots = data);
 
@@ -31,9 +39,25 @@ export async function getSpotByID(id) {
 }
 
 export function saveSpotsInRange(spotsInRange) {
-    sessionStorage.setItem("spotsInRange", spotsInRange)
+    sessionStorage.setItem("spotsInRange", JSON.stringify(spotsInRange));
 }
 
 export function getSpotsInRange() {
-    return sessionStorage.getItem("spotsInRange");
+    return JSON.parse(sessionStorage.getItem("spotsInRange"));
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return false;
 }

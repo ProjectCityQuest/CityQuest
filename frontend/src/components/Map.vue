@@ -210,7 +210,7 @@ export default {
       let counter = 0;
 
       for (let spot of spots) {
-        let coords = spot.coordinates;
+        let coords = spot.coords;
         let id = "CityQuest" + spot.id;
 
         let feature = new Feature({
@@ -395,7 +395,7 @@ export default {
     // location requested by url: /karte/ort/cityquest1
     if (this.locationRequest) {
       spotsHelper.getSpotByID(this.locationRequest).then(spot => {
-        let point = new Point([spot.coordinates[1], spot.coordinates[0]]);
+        let point = new Point([spot.coords[1], spot.coords[0]]);
 
         // zooms to coordinates and reveals the feature
         this.map.getView().fit(point.getExtent(), {

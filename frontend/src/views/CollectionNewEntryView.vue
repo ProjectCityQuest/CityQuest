@@ -25,6 +25,7 @@
 
 <script>
 import * as spotsHelper from "@/spotsHelper";
+import * as cameraHelper from "@/cameraHelper";
 import CollectionNewEntry from "@/components/CollectionNewEntry.vue";
 
 export default {
@@ -41,11 +42,13 @@ export default {
   },
   methods: {
     backToMap() {
+      cameraHelper.removeSelectedImage();
       this.$router.push("/karte/ort/" + this.spotId);
     }
   },
   mounted() {
-    if (![spotsHelper.getSpotsInRange()].includes(this.spotId)) {
+    console.log(spotsHelper.getSpotsInRange(), [spotsHelper.getSpotsInRange()]);
+    if (!spotsHelper.getSpotsInRange().includes(this.spotId)) {
       this.requestIsValid = false;
       return;
     }
