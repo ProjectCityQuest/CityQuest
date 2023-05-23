@@ -297,7 +297,6 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
         List<Map<String, Object>> puzzles = jdbcTemplate.queryForList(statement, params);
 
         for (Map<String, Object> current:puzzles) {
-            int pk_id = Integer.parseInt(current.get("pk_id") + "");
             String name = current.get("name") + "";
             int pos_col = Integer.parseInt(current.get("pos_col") + "");
             int pos_row = Integer.parseInt(current.get("pos_row") + "");
@@ -311,7 +310,13 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
                 bild = current.get("bild")+"";
             }
 
-            PuzzlePiece puzzlePiece = new PuzzlePiece(pk_id, name, bild, pos_col, pos_row);
+            String statement1 = "SELECT * FROM Spot where name = ?;";
+            Object[] params1 = {name};
+            List<Map<String, Object>> data = jdbcTemplate.queryForList(statement1, params1);
+
+            Map<String, Object> current1 = data.get(0);
+
+            PuzzlePiece puzzlePiece = new PuzzlePiece(Integer.parseInt(current1.get("pk_id")+""), name, bild, pos_col, pos_row);
 
             puzzlePieces.add(puzzlePiece);
         }
