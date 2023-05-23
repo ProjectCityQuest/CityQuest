@@ -72,4 +72,6 @@ public interface DatabaseAccess {
     List<PuzzlePiece> getPuzzle(int id, int pageIndex);
 
     ResponseEntity<Object> collectPuzzlePiece(int userId, int spotId);
+
+    boolean createEntry(int userId, CollectionEntry entry);
 }

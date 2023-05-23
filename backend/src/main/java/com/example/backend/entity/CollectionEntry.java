@@ -3,16 +3,26 @@ package com.example.backend.entity;
 public class CollectionEntry {
     private int id;
     private String timestamp;
+    private int locationId;
     private String location;
     private String text;
     private String image;
 
-    public CollectionEntry(int id, String timestamp, String location, String text, String image) {
+    public CollectionEntry(int id, String timestamp, int locationId, String location, String text, String image) {
         this.id = id;
         this.timestamp = timestamp;
+        this.locationId = locationId;
         this.location = location;
         this.text = text;
         this.image = image;
+    }
+
+    public int getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
     }
 
     public int getId() {
@@ -60,6 +70,7 @@ public class CollectionEntry {
         return "CollectionEntry{" +
                 "id=" + id +
                 ", timestamp='" + timestamp + '\'' +
+                ", locationId=" + locationId +
                 ", location='" + location + '\'' +
                 ", text='" + text + '\'' +
                 ", image='" + image + '\'' +
