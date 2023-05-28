@@ -23,11 +23,11 @@
         <slide v-for="index in slides.length" :key="index">
           <div class="slide-container">
             <img class="carousel-image" :src="slides[index-1]">
-            <p>{{ comments[index-1]}}</p>
+            <p>{{ comments[index - 1] }}</p>
           </div>
         </slide>
         <template #addons>
-          <navigation />
+          <navigation/>
         </template>
       </carousel>
       <CQButton class="button" @click="toRegistration()" b-style="login" :status="registerState">jetzt registrieren
@@ -39,32 +39,33 @@
 
 <script>
 import CQButton from "@/components/CQButton.vue";
-import Slideshow from "@/components/Slideshow.vue";
 import router from "@/router";
 
 import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+import {Carousel, Slide, Pagination, Navigation} from 'vue3-carousel';
 
 export default {
   name: "LandingView",
-  components: { CQButton, Slideshow ,
+  components: {
+    CQButton,
     Carousel,
     Slide,
     Pagination,
-    Navigation,},
+    Navigation,
+  },
   data() {
     return {
       registerState: "active",
       loginState: "active",
       slides: [
-          "/slides/slide_1.png",
-          "/slides/slide_2.png",
-          "/slides/slide_3.png",
-          ],
+        "/slides/slide_1.png",
+        "/slides/slide_2.png",
+        "/slides/slide_3.png",
+      ],
       comments: [
-          "Lerne neue Orte kennen",
-          "Vervollständige das Puzzle",
-          "Halte deine Erinnerungen fest"
+        "Lerne neue Orte kennen",
+        "Vervollständige das Puzzle",
+        "Halte deine Erinnerungen fest"
       ]
     }
   },
@@ -115,17 +116,17 @@ export default {
       font-size: 1.1rem;
     }
 
-    .button{
+    .button {
       width: 75%;
     }
 
-    .slide-container{
+    .slide-container {
       display: flex;
       flex-direction: column;
       border: solid 2px $gray;
       border-radius: 10px;
 
-      .carousel-image{
+      .carousel-image {
         width: 60vw;
         height: 60vw;
       }
