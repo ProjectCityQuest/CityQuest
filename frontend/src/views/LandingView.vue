@@ -19,8 +19,8 @@
       <h1>CityQuest</h1>
       <p>Erkunde die Stadt und sammle unvergessliche Erinnerungen!</p>
 
-      <carousel>
-        <slide v-for="index in slides.length" :key="index">
+      <carousel class="carousel">
+        <slide v-for="(index, slide) in 3" :key="index">
           <div class="slide-container">
             <img class="carousel-image" :src="slides[index-1]">
             <p>{{ comments[index - 1] }}</p>
@@ -28,6 +28,7 @@
         </slide>
         <template #addons>
           <navigation/>
+          <pagination/>
         </template>
       </carousel>
       <CQButton class="button" @click="toRegistration()" b-style="login" :status="registerState">jetzt registrieren
@@ -120,15 +121,29 @@ export default {
       width: 75%;
     }
 
-    .slide-container {
-      display: flex;
-      flex-direction: column;
-      border: solid 2px $gray;
-      border-radius: 10px;
+    .carousel {
+      width:100vw;
 
-      .carousel-image {
-        width: 60vw;
-        height: 60vw;
+      .slide-container {
+        display: flex;
+        flex-direction: column;
+        border: solid 3px $gray;
+        border-radius: 10px;
+        width:60vw;
+
+        .carousel-image {
+          width:100%;
+          height:60vw;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+        }
+
+        p {
+          padding: 10px;
+          background-color: $white;
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+        }
       }
     }
   }
