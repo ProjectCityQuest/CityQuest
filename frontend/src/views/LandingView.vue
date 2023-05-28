@@ -19,7 +19,7 @@
       <h1>CityQuest</h1>
       <p>Erkunde die Stadt und sammle unvergessliche Erinnerungen!</p>
 
-      <carousel class="carousel">
+      <carousel class="carousel" :wrap-around="true">
         <slide v-for="(index, slide) in 3" :key="index">
           <div class="slide-container">
             <img class="carousel-image" :src="slides[index-1]">
