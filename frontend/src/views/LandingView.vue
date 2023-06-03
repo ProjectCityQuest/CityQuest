@@ -31,9 +31,8 @@
           <pagination/>
         </template>
       </carousel>
-      <CQButton class="button" @click="toRegistration()" b-style="login" :status="registerState">jetzt registrieren
-      </CQButton>
-      <CQButton class="button" @click="toLogin()" b-style="login" :status="loginState">einloggen</CQButton>
+      <CQButton class="button" @click="toRegistration()" b-style="login" :status="registerState">Registrieren</CQButton>
+      <CQButton class="button" @click="toLogin()" b-style="login" :status="loginState">Login</CQButton>
     </div>
   </div>
 </template>
