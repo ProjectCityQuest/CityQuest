@@ -363,4 +363,17 @@ public class DatabaseAccessImplementation implements DatabaseAccess {
 
         return true;
     }
+
+    public boolean userHasLoggedIn(int userId) {
+        String statement = "SELECT has_logged_in FROM Users where pk_id = ?;";
+        boolean has_logged_in = jdbcTemplate.queryForObject(statement, new Object[]{userId}, (rs, rowNum) -> rs.getBoolean("has_logged_in"));
+
+        if (!has_logged_in) {
+            String statement1 = "UPDATE Users SET has_logged_in = true WHERE pk_id = ?";
+            Object[] params = new Object[]{userId};
+            jdbcTemplate.update(statement1, params);
+        }
+
+        return has_logged_in;
+    }
 }
