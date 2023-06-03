@@ -60,11 +60,14 @@ paths:
             application/json:
               example:
                 sessionKey: Lu9Tc1Pdola+SOnfPUxEkoKYuQLdjmsMK89uxT+RrrVegf1xQOI6Mpv5IXrYX6CVsukFLhwGzNH/zLMsuoBSbQ==
+                firstLogin: true
               schema:
                 type: string
                 properties:
                   sessionKey:
                     type: string
+                  firstLogin:
+                      type: boolean
           description: Erfolgreich eingeloggt. Gibt *sessionKey* zurück
         '400':
           content:
