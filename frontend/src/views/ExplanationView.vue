@@ -5,7 +5,7 @@
       <p>Eine kurze Tour durch CityQuest, um dir die Funktionen näher zu bringen:</p>
 
       <carousel class="carousel" :wrap-around="true">
-        <slide v-for="(index, slide) in 3" :key="index">
+        <slide v-for="(index, slide) in 8" :key="index">
           <div class="slide-container">
             <img class="carousel-image" :src="slides[index-1]">
             <p>{{ comments[index - 1] }}</p>
@@ -42,14 +42,24 @@ export default {
       registerState: "active",
       loginState: "active",
       slides: [
-        "/slides/slide_1.png",
-        "/slides/slide_2.png",
-        "/slides/slide_3.png",
+        "/tour/slide_1.png",
+        "/tour/slide_2.png",
+        "/tour/slide_3.png",
+        "/tour/slide_4.png",
+        "/tour/slide_5.png",
+        "/tour/slide_6.png",
+        "/tour/slide_7.png",
+        "/tour/slide_8.png",
       ],
       comments: [
         "Lerne neue Orte kennen",
+        "Lerne neue Orte kennen",
+        "Lerne neue Orte kennen",
+        "Lerne neue Orte kennen",
+        "Lerne neue Orte kennen",
+        "Lerne neue Orte kennen",
         "Vervollständige das Puzzle",
-        "Halte deine Erinnerungen fest"
+        "Halte deine Erinnerungen fest",
       ]
     }
   },
