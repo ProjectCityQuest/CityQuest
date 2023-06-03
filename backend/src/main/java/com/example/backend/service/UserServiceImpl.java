@@ -237,4 +237,8 @@ public class UserServiceImpl {
     public static boolean createEntry(int userId, CollectionEntry entry) {
         return DATABASE.createEntry(userId, entry);
     }
+
+    public static boolean userHasLoggedIn(int userId) {
+        return DATABASE.userHasLoggedIn(userId);
+    }
 }

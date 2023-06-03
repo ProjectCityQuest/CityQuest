@@ -74,4 +74,6 @@ public interface DatabaseAccess {
     ResponseEntity<Object> collectPuzzlePiece(int userId, int spotId);
 
     boolean createEntry(int userId, CollectionEntry entry);
+
+    boolean userHasLoggedIn(int userId);
 }

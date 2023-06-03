@@ -8,7 +8,8 @@ create table Users
     password          varchar(50),
     email             varchar(50),
     email_is_verified boolean,
-    profile_picture   varchar(5000000)
+    profile_picture   varchar(5000000),
+    has_logged_in     boolean
 );
 
 create table Bewertung

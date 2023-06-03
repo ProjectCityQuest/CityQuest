@@ -74,7 +74,8 @@ public class UserEndpoint {
         } else {
             currentUser.setToken(Strings.generateToken());
             LOG.info("Token for User: '" + user.getUsername() + "' has been set to: '" + currentUser.getToken() +"'");
-            return new ResponseEntity<>(new AuthorizationDto(currentUser.getToken()), HttpStatus.OK);
+            boolean has_logged_in = UserServiceImpl.userHasLoggedIn(currentUser.getId());
+            return new ResponseEntity<>(new AuthorizationDto(currentUser.getToken(), !has_logged_in), HttpStatus.OK);
         }
     }
 
