@@ -1,14 +1,14 @@
 <template>
   <div class="view-container">
     <div class="info-container">
-      <h1>Einführung</h1>
-      <p>Eine kurze Tour durch CityQuest, um dir die Funktionen näher zu bringen:</p>
-
+      <div class="header" ref="header">
+        <h1>Einführung</h1>
+      </div>
       <carousel class="carousel" :wrap-around="true">
-        <slide v-for="(index, slide) in 8" :key="index">
+        <slide v-for="(index, slide) in 7" :key="index">
           <div class="slide-container">
-            <img class="carousel-image" :src="slides[index-1]">
-            <p>{{ comments[index - 1] }}</p>
+            <img class="carousel-image" :src="slides[index-1]" :style="{ height: imageHeight }">
+            <p >{{ comments[index - 1] }}</p>
           </div>
         </slide>
         <template #addons>
@@ -39,6 +39,7 @@ export default {
   },
   data() {
     return {
+      imageHeight: "0px",
       registerState: "active",
       loginState: "active",
       slides: [
@@ -49,17 +50,15 @@ export default {
         "/tour/slide_5.png",
         "/tour/slide_6.png",
         "/tour/slide_7.png",
-        "/tour/slide_8.png",
       ],
       comments: [
-        "Lerne neue Orte kennen",
-        "Lerne neue Orte kennen",
-        "Lerne neue Orte kennen",
-        "Lerne neue Orte kennen",
-        "Lerne neue Orte kennen",
-        "Lerne neue Orte kennen",
-        "Vervollständige das Puzzle",
-        "Halte deine Erinnerungen fest",
+        "Die Karte ist unsere Startseite. Hier siehst du alle Spots und deinen Standort. Über den Kreis links oben kannst du an deine Position heranzoomen.",
+        "Wenn du auf einen Spot innerhalb deines Radius klickst hast du die Möglichkeit, das Puzzle-Teil einzusammeln und einen Sammelbucheintrag zu schreiben.",
+        "Hast du ein Puzzle-Teil eingesammelt wird es dir auf deiner Puzzle-Seite hervorgehoben und angezeigt.",
+        "Um an Infos zu einem Puzzle-Teil zu kommen genügt ein Klick auf das jeweilige Teil. Dann werden Name, Status und ein Link zur Karte angezeigt.",
+        "Deine geschriebenen Einträge findest du auf der Sammelbuch-Seite. Du kannst nach Textstellen und Spotnamen suchen und die Suchergebnisse nach belieben sortieren.",
+        "Nähere Infos zu deinem Account und Möglichkeiten zum Passwort ändern und abmelden findest du auf der Account-Seite ganz links im Menü.",
+        "Dort kannst du auch deinen Benutzernamen und deni Profilbild ändern.",
       ]
     }
   },
@@ -67,6 +66,13 @@ export default {
     toMap() {
       router.push("/karte")
     },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      const headerHeight = this.$refs.header.offsetHeight;
+      console.log(headerHeight)
+      this.imageHeight = `calc(100vh - ${headerHeight}px - 5rem)`;
+    });
   }
 }
 </script>
@@ -96,15 +102,18 @@ export default {
     align-items: center;
     gap: 1rem;
 
-    h1 {
-      font-size: 1.75rem;
-      padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
-    }
+    .header{
 
-    p {
-      text-align: center;
-      font-size: 1.1rem;
+      h1 {
+        font-size: 1.75rem;
+        padding-top: 1.5rem;
+        margin-bottom: -1rem;
+      }
+
+      p {
+        text-align: center;
+        font-size: 1.1rem;
+      }
     }
 
     .button {
@@ -117,15 +126,12 @@ export default {
       .slide-container {
         display: flex;
         flex-direction: column;
-        border: solid 3px $gray;
-        border-radius: 10px;
         width:70vw;
 
         .carousel-image {
           width:100%;
-          max-height:124vw;
-          border-top-left-radius: 10px;
-          border-top-right-radius: 10px;
+          border: solid 3px $gray;
+          border-radius: 10px;
         }
 
         p {
