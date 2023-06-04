@@ -112,7 +112,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../assets/colors";
+@import "src/assets/colors";
+@import "src/assets/media_query";
 
 .view-container {
   min-height: 100vh;
@@ -194,4 +195,6 @@ export default {
 
   }
 }
+
+@include media-query();
 </style>

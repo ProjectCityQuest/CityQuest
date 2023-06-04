@@ -1,49 +1,51 @@
 <template>
-  <div class="change-password-wrapper">
-    <h1>Passwort ändern</h1>
+  <div class="view-container">
+    <div class="change-password-wrapper">
+      <h1>Passwort ändern</h1>
 
-    <div class="explanation-container">
-      <p>Dein Passwort sollte folgende Bedingungen erfüllen:</p>
-      <ul>
-        <li>12 Zeichen lang</li>
-        <li>Groß- und Kleinbuchstaben enthalten</li>
-      </ul>
+      <div class="explanation-container">
+        <p>Dein Passwort sollte folgende Bedingungen erfüllen:</p>
+        <ul>
+          <li>12 Zeichen lang</li>
+          <li>Groß- und Kleinbuchstaben enthalten</li>
+        </ul>
+      </div>
+
+      <form @submit.prevent>
+        <label>Altes Passwort</label>
+        <input class="password input-field" type="password"
+               v-model="v$.form.oldPassword.$model"
+               :class="status(v$.form.oldPassword)">
+        <!-- error message -->
+        <div class="input-errors" v-for="(error, index) of v$.form.oldPassword.$errors" :key="index">
+          <div class="error-msg">{{ error.$message }}</div>
+        </div>
+
+        <label>Neues Passwort</label>
+        <input class="password input-field" type="password"
+               v-model="v$.form.newPassword.$model"
+               :class="status(v$.form.newPassword)">
+        <!-- error message -->
+        <div class="input-errors" v-for="(error, index) of v$.form.newPassword.$errors" :key="index">
+          <div class="error-msg">{{ error.$message }}</div>
+        </div>
+
+        <label>Passwort wiederholen</label>
+        <input class="password input-field" type="password"
+               v-model="v$.form.confirmPassword.$model"
+               :class="status(v$.form.confirmPassword)">
+        <!-- error message -->
+        <div class="input-errors" v-for="(error, index) of v$.form.confirmPassword.$errors" :key="index">
+          <div class="error-msg">{{ error.$message }}</div>
+        </div>
+
+        <p class="feedback-message" :class="feedback.status">{{ feedback.message }}</p>
+
+        <button :disabled="v$.form.$invalid" @click="requestChangePassword()">Speichern</button>
+      </form>
+
+      <router-link class="router-link" to="/account">zurück zum Account</router-link>
     </div>
-
-    <form @submit.prevent>
-      <label>Altes Passwort</label>
-      <input class="password input-field" type="password"
-             v-model="v$.form.oldPassword.$model"
-             :class="status(v$.form.oldPassword)">
-      <!-- error message -->
-      <div class="input-errors" v-for="(error, index) of v$.form.oldPassword.$errors" :key="index">
-        <div class="error-msg">{{ error.$message }}</div>
-      </div>
-
-      <label>Neues Passwort</label>
-      <input class="password input-field" type="password"
-             v-model="v$.form.newPassword.$model"
-             :class="status(v$.form.newPassword)">
-      <!-- error message -->
-      <div class="input-errors" v-for="(error, index) of v$.form.newPassword.$errors" :key="index">
-        <div class="error-msg">{{ error.$message }}</div>
-      </div>
-
-      <label>Passwort wiederholen</label>
-      <input class="password input-field" type="password"
-             v-model="v$.form.confirmPassword.$model"
-             :class="status(v$.form.confirmPassword)">
-      <!-- error message -->
-      <div class="input-errors" v-for="(error, index) of v$.form.confirmPassword.$errors" :key="index">
-        <div class="error-msg">{{ error.$message }}</div>
-      </div>
-
-      <p class="feedback-message" :class="feedback.status">{{ feedback.message }}</p>
-
-      <button :disabled="v$.form.$invalid" @click="requestChangePassword()">Speichern</button>
-    </form>
-
-    <router-link class="router-link" to="/account">zurück zum Account</router-link>
   </div>
 </template>
 
@@ -161,59 +163,70 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/form";
+@import "src/assets/media_query";
 
-.change-password-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-image: url('/src/assets/background.png');
+.view-container {
+  .change-password-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('/src/assets/background.png');
 
-  h1 {
-    font-size: 32px;
-    margin: 1rem 1rem 1.5rem 1rem;
-  }
-
-  .explanation-container {
-    width: 60%;
-
-    p {
-      text-align: center;
-      margin-bottom: 1rem;
+    h1 {
+      font-size: 32px;
+      margin: 1rem 1rem 1.5rem 1rem;
     }
 
-    ul {
-      margin-bottom: 1rem;
+    .explanation-container {
+      width: 60%;
 
-      li {
-        margin-bottom: 0.5rem;
+      p {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      ul {
+        margin-bottom: 1rem;
+
+        li {
+          margin-bottom: 0.5rem;
+        }
       }
     }
-  }
 
-  form {
-    &:last-child {
-      margin-bottom: 2rem;
-    }
-  }
-
-  .feedback-message {
-    margin-top: 1rem;
-    text-align: center;
-
-    &.success {
-      color: $dark_green;
+    form {
+      &:last-child {
+        margin-bottom: 2rem;
+      }
     }
 
-    &.error {
-      color: $red;
+    .feedback-message {
+      margin-top: 1rem;
+      text-align: center;
+
+      &.success {
+        color: $dark_green;
+      }
+
+      &.error {
+        color: $red;
+      }
+    }
+
+    .router-link {
+      margin: 2rem 0 2rem 0;
     }
   }
+}
 
-  .router-link {
-    margin: 2rem 0 2rem 0;
+@include media-query() {
+  .change-password-wrapper {
+    .explanation-container {
+      width: 40%;
+    }
   }
 }
 </style>

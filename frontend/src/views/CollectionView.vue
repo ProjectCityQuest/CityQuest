@@ -143,7 +143,15 @@ export default {
 @import "src/assets/colors";
 @import "src/assets/media_query";
 
+$header-height: 100px;
+
 .view-container {
+  background-image: url("../assets/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 100vh;
+
   .header {
     background-color: $white;
     position: fixed;
@@ -157,7 +165,7 @@ export default {
       align-items: center;
       justify-content: center;
 
-      height: 100px;
+      height: $header-height;
 
       h1 {
         font-size: 32px;
@@ -237,15 +245,8 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: calc(117px + 2rem);
-    padding-bottom: 85px;
     width: 100%;
-    height: calc(100vh - 100px - 2rem);
-    overflow: scroll;
-    background-image: url("../assets/background.png");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
+    padding-top: calc($header-height + 50px);
 
     * {
       width: 90%;
@@ -272,7 +273,7 @@ export default {
     .empty {
       text-align: center;
       color: $gray;
-      margin: auto 0 auto 0;
+      margin: calc($header-height + 100px) auto auto auto;
     }
   }
 }

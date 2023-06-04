@@ -1,20 +1,22 @@
 <template>
-  <div class="header">
-    <div class="heading">
-      <h1>Sammelbuch</h1>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="collection-icon">
-        <path
-            d="M35.21,11.16H14.51a.78.78,0,0,0-.78.78V38.51a.78.78,0,0,0,.78.79h20.7a.79.79,0,0,0,.79-.79V11.94A.78.78,0,0,0,35.21,11.16ZM31.67,21.28,29.06,18a.59.59,0,0,0-.94,0l-2.62,3.3V13.87h6.17Z"/>
-      </svg>
+  <div class="view-container">
+    <div class="header">
+      <div class="heading">
+        <h1>Sammelbuch</h1>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="collection-icon">
+          <path
+              d="M35.21,11.16H14.51a.78.78,0,0,0-.78.78V38.51a.78.78,0,0,0,.78.79h20.7a.79.79,0,0,0,.79-.79V11.94A.78.78,0,0,0,35.21,11.16ZM31.67,21.28,29.06,18a.59.59,0,0,0-.94,0l-2.62,3.3V13.87h6.17Z"/>
+        </svg>
+      </div>
+      <div class="back" @click="backToMap()">
+        <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48">
+          <path d="M400 976 0 576l400-400 56 57-343 343 343 343-56 57Z"/>
+        </svg>
+        <p>zurück</p>
+      </div>
+      <div class="hr"></div>
     </div>
-    <div class="back" @click="backToMap()">
-      <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48">
-        <path d="M400 976 0 576l400-400 56 57-343 343 343 343-56 57Z"/>
-      </svg>
-      <p>zurück</p>
-    </div>
-    <div class="hr"></div>
-    <div class="entry-container" v-if="requestIsValid" >
+    <div class="entry-container-r" v-if="requestIsValid">
       <CollectionNewEntry :spot-id="spotId" :location-name="spot.name"></CollectionNewEntry>
     </div>
     <div class="invalid-container" v-else>
@@ -47,7 +49,6 @@ export default {
     }
   },
   mounted() {
-    console.log(spotsHelper.getSpotsInRange(), [spotsHelper.getSpotsInRange()]);
     if (!spotsHelper.getSpotsInRange().includes(this.spotId)) {
       this.requestIsValid = false;
       return;
@@ -60,58 +61,99 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/colors";
+@import "src/assets/media_query";
 
-.header {
-  background-color: $white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 100vh;
+$header-height: 100px;
 
-  .heading {
+.view-container {
+  height: 100vh;
+  background-image: url("../assets/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  overflow: hidden;
 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-    height: 100px;
-
-    h1 {
-      font-size: 32px;
-    }
-
-    svg {
-      height: 45px;
-      fill: $orange;
-    }
-  }
-
-  .back {
-    display: flex;
-    flex-direction: row;
-    height: 1rem;
-    margin-left: 10px;
-    color: $blue;
-    width: fit-content;
-
-    svg {
-      height: 1rem;
-      width: 1rem;
-      fill: $blue;
-    }
-  }
-
-  .hr {
+  .header {
+    background-color: $white;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 2px;
-    background-color: $light_gray;
-    margin-top: 15px;
+    height: fit-content;
+
+    .heading {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      height: $header-height;
+
+      h1 {
+        font-size: 32px;
+      }
+
+      svg {
+        height: 45px;
+        fill: $orange;
+      }
+    }
+
+    .back {
+      display: flex;
+      flex-direction: row;
+      height: 1rem;
+      margin-left: 10px;
+      color: $blue;
+      width: fit-content;
+
+      svg {
+        height: 1rem;
+        width: 1rem;
+        fill: $blue;
+      }
+    }
+
+    .hr {
+      width: 100%;
+      height: 2px;
+      background-color: $light_gray;
+      margin-top: 15px;
+    }
   }
 
-  .entry-container {
-    margin-top: 1rem;
+  .entry-container-r, .invalid-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .entry-container-r {
+    margin-top: $header-height + 75px;
+  }
+
+  .invalid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      text-align: center;
+      font-style: italic;
+      color: $gray;
+    }
+  }
+}
+
+@include media-query() {
+  .header {
+    width: $default-min-width;
+    left: auto;
+  }
+
+  .entry-container-r {
+    width: 60%;
+    margin-right: auto;
+    margin-left: auto;
   }
 }
 </style>

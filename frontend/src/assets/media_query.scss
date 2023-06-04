@@ -1,4 +1,6 @@
-@mixin media-query($min-width: 768px, $logo-width: 15%) {
+$default-min-width: 768px;
+
+@mixin media-query($min-width: $default-min-width, $logo-width: 15%) {
   @media screen and (min-width: $min-width) {
     .view-container {
       width: $min-width;
@@ -9,6 +11,45 @@
       }
 
       @content;
+    }
+  }
+}
+
+@mixin navbar-media-query($min-width: $default-min-width) {
+  @media screen and (min-width: $min-width) {
+    .nav-bar-wrapper {
+      width: $min-width;
+      left: auto;
+    }
+  }
+}
+
+@mixin header-media-query($min-width: $default-min-width) {
+  @media screen and (min-width: $min-width) {
+    .header-wrapper {
+      width: $min-width;
+      left: auto;
+    }
+  }
+}
+
+@mixin spot-info-media-query($min-width: $default-min-width) {
+  @media screen and (min-width: $min-width) {
+    .info-wrapper {
+      width: $min-width;
+      left: auto;
+    }
+  }
+}
+
+@mixin overlay-media-query($min-width: $default-min-width) {
+  @media screen and (min-width: $min-width) {
+    .overlay-wrapper {
+      .overlay-background {
+        .overlay-container {
+          width: calc($min-width / 2);
+        }
+      }
     }
   }
 }

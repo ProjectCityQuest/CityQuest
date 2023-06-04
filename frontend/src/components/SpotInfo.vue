@@ -88,6 +88,7 @@ export default {
 
 <style scoped lang="scss">
 @import "/src/assets/colors";
+@import "/src/assets/media_query";
 
 .info-wrapper {
   position: fixed;
@@ -170,4 +171,6 @@ export default {
     }
   }
 }
+
+@include spot-info-media-query();
 </style>

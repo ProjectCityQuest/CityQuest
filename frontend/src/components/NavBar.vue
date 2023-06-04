@@ -90,4 +90,11 @@ export default {
     }
   }
 }
+
+@media screen and (min-width: 768px){
+  .nav-bar-wrapper {
+    width: 768px;
+    left: auto;
+  }
+}
 </style>
