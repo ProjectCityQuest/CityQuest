@@ -1,4 +1,5 @@
 @import "colors";
+@import "media_query";
 
 form {
   width: 60%;
@@ -67,5 +68,11 @@ form {
 
   .router-link {
     color: $black;
+  }
+}
+
+@include media-query() {
+  form {
+    width: 40%;
   }
 }

@@ -1,0 +1,14 @@
+@mixin media-query($min-width: 768px, $logo-width: 15%) {
+  @media screen and (min-width: $min-width) {
+    .view-container {
+      width: $min-width;
+      margin: 0 auto 0 auto;
+
+      .logo {
+        width: $logo-width;
+      }
+
+      @content;
+    }
+  }
+}
