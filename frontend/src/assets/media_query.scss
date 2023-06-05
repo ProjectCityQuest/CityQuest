@@ -48,7 +48,7 @@ $default-min-width: calc(100vh / 16 * 9);
     .overlay-wrapper {
       .overlay-background {
         .overlay-container {
-          width: calc($min-width / 2);
+          width: calc($min-width / 1.5);
         }
       }
     }
