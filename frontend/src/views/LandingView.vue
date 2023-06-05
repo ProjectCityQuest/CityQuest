@@ -104,6 +104,7 @@ export default {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 1rem;
 
     h1 {
       font-size: 1.75rem;
