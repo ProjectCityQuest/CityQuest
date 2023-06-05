@@ -14,7 +14,7 @@
             <path d="M378 810 154 586l43-43 181 181 384-384 43 43-427 427Z"/>
           </svg>
         </div>
-        <img :id="index" :src="image" :style="{height: imageHeight}" alt="Aufgenommenes Bild"/>
+        <img :id="index" :src="image" alt="Aufgenommenes Bild"/>
       </div>
     </div>
     <div class="footer-wrapper">
@@ -42,11 +42,6 @@ export default {
   },
   components: {
     CQButton
-  },
-  computed: {
-    imageHeight() {
-      return (window.innerWidth * 0.45) + "px"
-    }
   },
   methods: {
     backToCamera() {
@@ -130,6 +125,7 @@ export default {
       img {
         height: 100%;
         width: 100%;
+        aspect-ratio: 1/1;
         object-fit: cover;
         padding: 0;
         margin: 0;
