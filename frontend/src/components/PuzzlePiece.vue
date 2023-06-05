@@ -36,7 +36,8 @@ export default {
 
 .piece-container{
   width: 100%;
-  height: calc(calc(100svh - 140px) / 12);
+  height: calc((100vh - 140px) / 12);
+  // height: 100%;
   background-color: transparent;
   border-style: solid;
   border-width: 1px;
