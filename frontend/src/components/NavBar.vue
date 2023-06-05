@@ -43,7 +43,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "src/assets/colors.scss";
+@import "/src/assets/colors";
+@import "/src/assets/media_query";
 
 .nav-bar-wrapper {
   position: fixed;
@@ -90,4 +91,6 @@ export default {
     }
   }
 }
+
+@include navbar-media-query();
 </style>

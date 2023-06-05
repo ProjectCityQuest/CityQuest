@@ -1,39 +1,41 @@
 <template>
-  <div class="header">
-    <div class="heading" @click="this.sortingOverlay=false">
-      <h1>Sammelbuch</h1>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="collection-icon">
-        <path
-            d="M35.21,11.16H14.51a.78.78,0,0,0-.78.78V38.51a.78.78,0,0,0,.78.79h20.7a.79.79,0,0,0,.79-.79V11.94A.78.78,0,0,0,35.21,11.16ZM31.67,21.28,29.06,18a.59.59,0,0,0-.94,0l-2.62,3.3V13.87h6.17Z"/>
-      </svg>
-    </div>
-    <div class="back" @click="backToCollection()">
-      <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48">
-        <path d="M400 976 0 576l400-400 56 57-343 343 343 343-56 57Z"/>
-      </svg>
-      <p>zurück</p>
-    </div>
-    <div class="hr"></div>
-  </div>
-  <div class="background">
-    <div class="entry-container">
-      <div class="entry">
-        <div class="top">
-          <h1>{{ location }}</h1>
-          <p>Besucht am: {{ timestampFormatted }}</p>
-        </div>
-        <div class="hr"></div>
-        <div :class="classList">
-          <img v-if="image!=null" :src="image">
-          <p>{{ text }}</p>
-        </div>
+  <div class="view-container">
+    <div class="header">
+      <div class="heading" @click="this.sortingOverlay=false">
+        <h1>Sammelbuch</h1>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="collection-icon">
+          <path
+              d="M35.21,11.16H14.51a.78.78,0,0,0-.78.78V38.51a.78.78,0,0,0,.78.79h20.7a.79.79,0,0,0,.79-.79V11.94A.78.78,0,0,0,35.21,11.16ZM31.67,21.28,29.06,18a.59.59,0,0,0-.94,0l-2.62,3.3V13.87h6.17Z"/>
+        </svg>
       </div>
-      <CQButton b-style="orange" :status="buttonState" @click="toMap()">Spot auf Karte anzeigen</CQButton>
-      <p class="delete" @click="deleteEntry()">Eintrag löschen</p>
-      <div class="spacer"></div>
+      <div class="back" @click="backToCollection()">
+        <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48">
+          <path d="M400 976 0 576l400-400 56 57-343 343 343 343-56 57Z"/>
+        </svg>
+        <p>zurück</p>
+      </div>
+      <div class="hr"></div>
     </div>
+    <div class="background">
+      <div class="entry-container">
+        <div class="entry">
+          <div class="top">
+            <h1>{{ location }}</h1>
+            <p>Besucht am: {{ timestampFormatted }}</p>
+          </div>
+          <div class="hr"></div>
+          <div :class="classList">
+            <img v-if="image!=null" :src="image">
+            <p>{{ text }}</p>
+          </div>
+        </div>
+        <CQButton b-style="orange" :status="buttonState" @click="toMap()">Spot auf Karte anzeigen</CQButton>
+        <p class="delete" @click="deleteEntry()">Eintrag löschen</p>
+        <div class="spacer"></div>
+      </div>
+    </div>
+    <NavBar :active-icon="4"></NavBar>
   </div>
-  <NavBar :active-icon="4"></NavBar>
 </template>
 
 <script>
@@ -107,7 +109,7 @@ export default {
     },
     toMap() {
       this.buttonState = "waiting"
-      router.push("/karte/ort/"+this.location_id)
+      router.push("/karte/ort/" + this.location_id)
     },
     deleteEntry() {
       return fetch(`http://${window.location.hostname}:8080/api/deleteentry`, {
@@ -138,145 +140,155 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/colors";
+@import "src/assets/media_query";
 
-.header {
-  background-color: $white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+$header-height: 100px;
 
-  .heading {
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-    height: 100px;
-
-    h1 {
-      font-size: 32px;
-    }
-
-    svg {
-      height: 45px;
-      fill: $orange;
-    }
-  }
-
-  .back {
-    display: flex;
-    flex-direction: row;
-    height: 1rem;
-    margin-left: 10px;
-    color: $blue;
-    width: fit-content;
-
-    svg {
-      height: 1rem;
-      width: 1rem;
-      fill: $blue;
-    }
-  }
-
-  .hr {
-    width: 100%;
-    height: 2px;
-    background-color: $light_gray;
-    margin-top: 15px;
-  }
-}
-
-.background {
-  position: fixed;
-  left: 0;
-  top: calc(117px + 1rem);
-  width: 100%;
-  height: calc(100vh - 135px - 1rem);
+.view-container {
+  height: 100vh;
   background-image: url("../assets/background.png");
-  padding-top: 15px;
-  overflow: scroll;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  overflow-y: scroll;
 
+  .header {
+    background-color: $white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
 
-  .entry-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    .heading {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
 
-    .entry {
-      width: 90%;
-      background-color: #eaeaea;
-      border-radius: 10px;
-      margin: 0 auto 0 auto;
+      height: $header-height;
 
-      .top {
-        padding: 15px;
-        text-align: center;
-
-        h1 {
-          font-size: 1.3rem;
-        }
-
-        p {
-          padding-top: 10px;
-          font-size: 0.95rem;
-        }
+      h1 {
+        font-size: 32px;
       }
 
-      .hr {
-        width: 100%;
-        height: 2px;
-        background-color: #c9c9c9;
-        margin-top: 10px;
+      svg {
+        height: 45px;
+        fill: $orange;
       }
+    }
 
-      .body {
-        display: flex;
-        gap: 15px;
-        padding: 15px;
+    .back {
+      display: flex;
+      flex-direction: row;
+      height: 1rem;
+      margin-left: 10px;
+      color: $blue;
+      width: fit-content;
 
-        img {
-          object-fit: cover;
-          border-radius: 5px;
+      svg {
+        height: 1rem;
+        width: 1rem;
+        fill: $blue;
+      }
+    }
+
+    .hr {
+      width: 100%;
+      height: 2px;
+      background-color: $light_gray;
+      margin-top: 15px;
+    }
+  }
+
+  .background {
+    padding-top: calc($header-height + 50px);
+
+    .entry-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .entry {
+        width: 90%;
+        background-color: #eaeaea;
+        border-radius: 10px;
+        margin: 0 auto 0 auto;
+
+        .top {
+          padding: 15px;
+          text-align: center;
+
+          h1 {
+            font-size: 1.3rem;
+          }
+
+          p {
+            padding-top: 10px;
+            font-size: 0.95rem;
+          }
         }
 
-        p {
-          font-size: 0.95rem;
-          text-align: justify;
-          hyphens: auto;
+        .hr {
+          width: 100%;
+          height: 2px;
+          background-color: #c9c9c9;
+          margin-top: 10px;
         }
 
-        &.img-hor {
-          flex-direction: column;
-        }
-
-        &.img-vert {
-          flex-direction: row-reverse;
+        .body {
+          display: flex;
+          gap: 15px;
+          padding: 15px;
 
           img {
-            width: 50%;
+            object-fit: cover;
+            border-radius: 5px;
+          }
+
+          p {
+            font-size: 0.95rem;
+            text-align: justify;
+            hyphens: auto;
+          }
+
+          &.img-hor {
+            flex-direction: column;
+          }
+
+          &.img-vert {
+            flex-direction: row-reverse;
+
+            img {
+              width: 50%;
+            }
           }
         }
       }
-    }
 
-    button {
-      width: 60%;
-      margin-top: 15px;
-    }
+      button {
+        width: 60%;
+        margin-top: 15px;
+      }
 
-    .delete {
-      text-align: center;
-      margin-top: 15px;
-      text-decoration: underline;
-      color: $dark_gray;
-    }
+      .delete {
+        text-align: center;
+        margin-top: 15px;
+        text-decoration: underline;
+        color: $dark_gray;
+      }
 
-    .spacer {
-      height: 80px;
-      width: 100%;
+      .spacer {
+        height: 80px;
+        width: 100%;
+      }
     }
+  }
+}
+
+@include media-query() {
+  .header {
+    width: $default-min-width;
+    left: auto;
   }
 }
 </style>

@@ -1,6 +1,8 @@
 <template>
-  <Map :location-request="this.spotId"></Map>
-  <NavBar :active-icon="2"></NavBar>
+  <div class="view-container">
+    <Map :location-request="this.spotId"></Map>
+    <NavBar :active-icon="2"></NavBar>
+  </div>
 </template>
 
 <script>
@@ -17,8 +19,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import "src/assets/media_query";
+
 .ol-attribution {
   // slightly illegal
   display: none;
 }
+
+@include media-query();
 </style>

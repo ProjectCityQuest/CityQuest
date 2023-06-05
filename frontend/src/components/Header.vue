@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="header-wrapper">
     <slot></slot>
   </header>
 </template>
@@ -12,8 +12,9 @@ export default {
 
 <style scoped lang="scss">
 @import "/src/assets/colors";
+@import "/src/assets/media_query";
 
-header {
+.header-wrapper {
   background-color: $white;
   position: fixed;
   width: 100%;
@@ -35,4 +36,5 @@ header {
   }
 }
 
+@include header-media-query();
 </style>
