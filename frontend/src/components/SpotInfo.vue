@@ -88,6 +88,7 @@ export default {
 
 <style scoped lang="scss">
 @import "/src/assets/colors";
+@import "/src/assets/media_query";
 
 .info-wrapper {
   position: fixed;
@@ -126,7 +127,7 @@ export default {
     margin: 0 1rem 1rem 1rem;
     height: 70%;
     padding-right: 0.5rem;
-    overflow: scroll;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -170,4 +171,6 @@ export default {
     }
   }
 }
+
+@include spot-info-media-query();
 </style>

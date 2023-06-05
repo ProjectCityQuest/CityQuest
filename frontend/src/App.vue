@@ -1,7 +1,15 @@
 <template>
-  <router-view></router-view>
+  <div class="router-view-wrapper">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script></script>
 
-<style></style>
+<style scoped lang="scss">
+@import "assets/colors";
+
+.router-view-wrapper {
+  background: $dark_gray;
+}
+</style>

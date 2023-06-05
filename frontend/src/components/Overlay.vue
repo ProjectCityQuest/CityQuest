@@ -39,7 +39,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../assets/colors";
+@import "src/assets/colors";
+@import "src/assets/media_query";
 
 .overlay-wrapper {
   &.visible {
@@ -67,6 +68,7 @@ export default {
       background: $white;
       padding: 1rem;
       border-radius: 10px;
+      width: 75%;
 
       nav {
         display: flex;
@@ -84,9 +86,9 @@ export default {
           }
         }
       }
-
-      width: 75%;
     }
   }
 }
+
+@include overlay-media-query();
 </style>
