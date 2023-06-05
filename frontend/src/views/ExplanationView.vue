@@ -8,7 +8,7 @@
         <slide v-for="(index, slide) in 7" :key="index">
           <div class="slide-container">
             <img class="carousel-image" :src="slides[index-1]" :style="{ height: imageHeight }">
-            <p >{{ comments[index - 1] }}</p>
+            <p ref="explanation">{{ comments[index - 1] }}</p>
           </div>
         </slide>
         <template #addons>
@@ -58,7 +58,7 @@ export default {
         "Um an Infos zu einem Puzzle-Teil zu kommen genügt ein Klick auf das jeweilige Teil. Dann werden Name, Status und ein Link zur Karte angezeigt.",
         "Deine geschriebenen Einträge findest du auf der Sammelbuch-Seite. Du kannst nach Textstellen und Spotnamen suchen und die Suchergebnisse nach belieben sortieren.",
         "Nähere Infos zu deinem Account und Möglichkeiten zum Passwort ändern und abmelden findest du auf der Account-Seite ganz links im Menü.",
-        "Dort kannst du auch deinen Benutzernamen und deni Profilbild ändern.",
+        "Dort kannst du auch deinen Benutzernamen und dein Profilbild ändern.",
       ]
     }
   },
@@ -70,8 +70,12 @@ export default {
   mounted() {
     this.$nextTick(() => {
       const headerHeight = this.$refs.header.offsetHeight;
+      let textHeight = 0;
       console.log(headerHeight)
-      this.imageHeight = `calc(100vh - ${headerHeight}px - 5rem)`;
+      this.$refs.explanation.forEach(x=>{
+        textHeight = Math.max(textHeight,x.offsetHeight)
+      })
+      this.imageHeight = `calc(100vh - ${headerHeight}px - ${textHeight}px - 7rem)`;
     });
   }
 }
@@ -101,6 +105,7 @@ export default {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 1rem;
 
     .header{
 
@@ -136,7 +141,6 @@ export default {
 
         p {
           padding: 10px;
-          background-color: $white;
           border-bottom-left-radius: 10px;
           border-bottom-right-radius: 10px;
         }
