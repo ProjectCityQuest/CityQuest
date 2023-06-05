@@ -83,11 +83,12 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/colors";
+@import "src/assets/media_query";
 
 .view-container {
   background-image: url("../assets/background.png");
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -126,12 +127,12 @@ export default {
     }
 
     .carousel {
-      width:100vw;
+      width:75%;
 
       .slide-container {
         display: flex;
         flex-direction: column;
-        width:70vw;
+        width:75%;
 
         .carousel-image {
           width:100%;
@@ -145,6 +146,15 @@ export default {
           border-bottom-right-radius: 10px;
         }
       }
+    }
+  }
+}
+
+
+@include media-query() {
+  .info-container {
+    .carousel {
+      width: 100%;
     }
   }
 }
