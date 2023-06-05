@@ -111,7 +111,11 @@ export default {
         let data = await response.json();
         document.cookie = "sessionKey= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
         document.cookie = "sessionKey=" + data.sessionKey + "; path=/";
-        this.$router.push("/karte");
+        if(data.firstLogin){
+          this.$router.push("/einfuehrung");
+        } else{
+          this.$router.push("/karte");
+        }
       } else {
         this.setError("Der angegebene Benutzername oder das Passwort sind falsch. Bitte versuche es erneut")
       }
