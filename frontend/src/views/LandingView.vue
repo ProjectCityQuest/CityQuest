@@ -87,7 +87,7 @@ export default {
 .view-container {
   background-image: url("../assets/background.png");
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,6 +106,7 @@ export default {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 1rem;
 
     h1 {
       font-size: 1.75rem;
@@ -130,7 +131,7 @@ export default {
         flex-direction: column;
         border: solid 3px $gray;
         border-radius: 10px;
-        width: 60vw;
+        width: 75%;
 
         .carousel-image {
           width: 100%;
@@ -152,7 +153,7 @@ export default {
 @include media-query() {
   .info-container {
     .carousel {
-      width: 60%;
+      width: 100%;
     }
   }
 }

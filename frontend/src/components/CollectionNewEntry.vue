@@ -24,6 +24,7 @@
           <textarea v-model="userInput" class="entry-text"></textarea>
         </div>
         <CQButton b-style="login" :status="userInput ? 'active' : 'inactive'" @click="createEntry">Eintrag erstellen</CQButton>
+        <p class="feedback-message">{{ feedback.message }}</p>
       </form>
     </div>
     <div class="spacer"></div>
@@ -102,12 +103,36 @@ export default {
       }
       return false;
     },
-    createEntry() {
+    async createEntry() {
       if (!this.userInput) {
         return;
       }
 
-      console.log(this.userInput, this.coverImage, this.spotId, new Date(this.time).toISOString().replace(/[.].*/, ""));
+      const response = await fetch(`http://${window.location.hostname}:8080/api/createentry`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'sessionKey': this.getCookie('sessionKey')
+        },
+        body: JSON.stringify({
+          entry: {
+            locationId: this.spotId,
+            timestamp: new Date(this.time).toISOString().replace(/[.].*/, ""),
+            text: this.userInput,
+            image: this.coverImage ? this.coverImage : null
+          }
+        })
+      }).catch((err) => {
+        if (err.message === 'Failed to fetch') {
+          this.setError("Verbindung konnte nicht hergestellt werden.");
+        } else {
+          this.setError("Das hat nicht geklappt ):");
+        }
+      });
+
+      if (response.ok) {
+        this.$router.push("/sammelbuch");
+      }
     }
   },
   computed: {
@@ -189,6 +214,12 @@ export default {
           border: silver 1px solid;
           border-radius: 5px;
         }
+      }
+
+      .feedback-message {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        color: $red;
       }
 
       &:last-child {

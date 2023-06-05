@@ -14,6 +14,7 @@ import CameraView from "@/views/CameraView.vue";
 import GalleryView from "@/views/GalleryView.vue";
 import CollectionEntryView from "@/views/CollectionEntryView.vue";
 import CollectionNewEntryView from "@/views/CollectionNewEntryView.vue";
+import ExplanationView from "@/views/ExplanationView.vue";
 
 // gets the value of a cookie by name
 // if the cookie doesn't exist, the function returns 'false'
@@ -212,6 +213,14 @@ const router = createRouter({
             name: 'galerie',
             component: GalleryView,
             props: true,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: '/einfuehrung',
+            name: 'einführung',
+            component: ExplanationView,
             meta: {
                 requiresAuth: true
             }
