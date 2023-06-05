@@ -290,13 +290,5 @@ $header-height: 100px;
     width: $default-min-width;
     left: auto;
   }
-
-  .background {
-    .entry-container {
-      .entry {
-        width: 60%;
-      }
-    }
-  }
 }
 </style>

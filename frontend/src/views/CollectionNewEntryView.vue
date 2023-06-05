@@ -149,11 +149,5 @@ $header-height: 100px;
     width: $default-min-width;
     left: auto;
   }
-
-  .entry-container-r {
-    width: 60%;
-    margin-right: auto;
-    margin-left: auto;
-  }
 }
 </style>

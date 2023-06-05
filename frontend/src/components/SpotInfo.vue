@@ -127,7 +127,7 @@ export default {
     margin: 0 1rem 1rem 1rem;
     height: 70%;
     padding-right: 0.5rem;
-    overflow: scroll;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

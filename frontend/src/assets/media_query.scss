@@ -1,7 +1,8 @@
-$default-min-width: 768px;
+// $default-min-width: 768px;
+$default-min-width: calc(100vh / 16 * 9);
 
 @mixin media-query($min-width: $default-min-width, $logo-width: 15%) {
-  @media screen and (min-width: $min-width) {
+  @media screen and (min-width: 425px) {
     .view-container {
       width: $min-width;
       margin: 0 auto 0 auto;
@@ -16,7 +17,7 @@ $default-min-width: 768px;
 }
 
 @mixin navbar-media-query($min-width: $default-min-width) {
-  @media screen and (min-width: $min-width) {
+  @media screen and (min-width: 425px) {
     .nav-bar-wrapper {
       width: $min-width;
       left: auto;
@@ -25,7 +26,7 @@ $default-min-width: 768px;
 }
 
 @mixin header-media-query($min-width: $default-min-width) {
-  @media screen and (min-width: $min-width) {
+  @media screen and (min-width: 425px) {
     .header-wrapper {
       width: $min-width;
       left: auto;
@@ -34,7 +35,7 @@ $default-min-width: 768px;
 }
 
 @mixin spot-info-media-query($min-width: $default-min-width) {
-  @media screen and (min-width: $min-width) {
+  @media screen and (min-width: 425px) {
     .info-wrapper {
       width: $min-width;
       left: auto;
@@ -43,7 +44,7 @@ $default-min-width: 768px;
 }
 
 @mixin overlay-media-query($min-width: $default-min-width) {
-  @media screen and (min-width: $min-width) {
+  @media screen and (min-width: 425px) {
     .overlay-wrapper {
       .overlay-background {
         .overlay-container {

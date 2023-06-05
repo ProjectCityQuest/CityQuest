@@ -151,6 +151,7 @@ $header-height: 100px;
   background-size: cover;
   background-attachment: fixed;
   height: 100vh;
+  overflow: hidden;
 
   .header {
     background-color: $white;
@@ -247,6 +248,8 @@ $header-height: 100px;
     align-items: center;
     width: 100%;
     padding-top: calc($header-height + 50px);
+    height: calc(100vh - 70px - $header-height - 50px);
+    overflow-y: scroll;
 
     * {
       width: 90%;
@@ -299,6 +302,10 @@ $header-height: 100px;
 @include media-query() {
   .header {
     width: $default-min-width;
+    left: auto;
+  }
+
+  .sortingOverlay {
     left: auto;
   }
 }

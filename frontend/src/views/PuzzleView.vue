@@ -125,6 +125,8 @@ export default {
 @import "src/assets/colors";
 
 .view-container {
+  height: 100vh;
+
   .puzzle-icon {
     fill: $dark_green;
   }

@@ -141,11 +141,11 @@ export default {
 
   .account-wrapper {
     padding-top: 100px;
-    height: 100vh;
+    height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: scroll;
+    overflow-y: scroll;
 
     h1 {
       font-size: 32px;
