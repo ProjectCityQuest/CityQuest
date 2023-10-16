@@ -6,24 +6,24 @@ export function getSpotStyle(isInRange, isDiscovered) {
     if (isInRange) {
         if (isDiscovered) {
             icon = new Icon({
-                src: '/src/assets/spot/in_range_discovered.svg',
+                src: '/spot/in_range_discovered.svg',
                 imgSize: [98, 98]
             });
         } else {
             icon = new Icon({
-                src: '/src/assets/spot/in_range.svg',
+                src: '/spot/in_range.svg',
                 imgSize: [98, 98]
             });
         }
     } else {
         if (isDiscovered) {
             icon = new Icon({
-                src: '/src/assets/spot/discovered.svg',
+                src: '/spot/discovered.svg',
                 imgSize: [80, 80]
             });
         } else {
             icon = new Icon({
-                src: '/src/assets/spot/spot.svg',
+                src: '/spot/spot.svg',
                 imgSize: [80, 80]
             });
         }
@@ -37,7 +37,7 @@ export function getSpotStyle(isInRange, isDiscovered) {
 export function getClusterStyle(text) {
     return new Style({
         image: new Icon({
-            src: '/src/assets/spot/cluster.svg',
+            src: '/spot/cluster.svg',
             imgSize: [80, 80]
         }),
         text: new Text({
@@ -53,7 +53,7 @@ export function getClusterStyle(text) {
 export function getPositionStyle() {
     return new Style({
         image: new Icon({
-            src: '/src/assets/location.svg',
+            src: '/location.svg',
             imgSize: [24, 24],
             rotateWithView: true,
         }),
