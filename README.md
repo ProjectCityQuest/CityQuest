@@ -3,6 +3,8 @@
 ## About
 CityQuest is an interactive mobile app designed to enhance the experience of tourists and locals exploring Vienna. By gamifying the exploration process, CityQuest offers a unique way to discover the city's key spots, track progress through a personal profile view, and earn rewards for each visited location.
 
+https://raw.githubusercontent.com/ProjectCityQuest/CityQuest/.github/videos/presentation_video.mp4
+
 ## Getting Started
 
 ### Prerequisites
