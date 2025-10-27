@@ -69,9 +69,9 @@ public class UserEndpoint {
             return new ResponseEntity<>(new ErrorDto("Falscher Benutzername oder falsches Passwort"), HttpStatus.BAD_REQUEST);
         } else if (!currentUser.getPassword().equals(user.getPassword())) {
             return new ResponseEntity<>(new ErrorDto("Falscher Benutzername oder falsches Passwort"), HttpStatus.BAD_REQUEST);
-        } else if (!currentUser.isEmailIsVerified()) {
+        } /*else if (!currentUser.isEmailIsVerified()) {
             return new ResponseEntity<>(new ErrorDto("Die E-Mail-Adresse wurde noch nicht verifiziert"), HttpStatus.UNAUTHORIZED);
-        } else {
+        }*/ else {
             currentUser.setToken(Strings.generateToken());
             LOG.info("Token for User: '" + user.getUsername() + "' has been set to: '" + currentUser.getToken() +"'");
             boolean has_logged_in = UserServiceImpl.userHasLoggedIn(currentUser.getId());
