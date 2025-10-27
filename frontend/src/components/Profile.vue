@@ -124,7 +124,7 @@ export default {
       await this.toggleEdit();
     },
     async updateUsername() {
-      const response = await fetch(`http://${window.location.hostname}/api/changeusername`, {
+      const response = await fetch(`https://${window.location.hostname}/api/changeusername`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ export default {
       }
     },
     async updateProfilePicture() {
-      const response = await fetch(`http://${window.location.hostname}/api/changeprofilepicture`, {
+      const response = await fetch(`https://${window.location.hostname}/api/changeprofilepicture`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ export default {
       this.removeFeedback();
     },
     fetchUserData() {
-      return fetch(`http://${window.location.hostname}/api/getusers`, {
+      return fetch(`https://${window.location.hostname}/api/getusers`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ export default {
           .then(data => this.userData = data)
     },
     fetchProfilePicture() {
-      return fetch(`http://${window.location.hostname}/api/getprofilepicture`, {
+      return fetch(`https://${window.location.hostname}/api/getprofilepicture`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

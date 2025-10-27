@@ -125,7 +125,7 @@ export default {
       return false;
     },
     fetchData() {
-      return fetch(`http://${window.location.hostname}/api/getcollection`, {
+      return fetch(`https://${window.location.hostname}/api/getcollection`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

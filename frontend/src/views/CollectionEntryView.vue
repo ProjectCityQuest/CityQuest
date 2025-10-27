@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     fetchData() {
-      return fetch(`http://${window.location.hostname}/api/getentry`, {
+      return fetch(`https://${window.location.hostname}/api/getentry`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ export default {
       router.push("/karte/ort/" + this.location_id)
     },
     deleteEntry() {
-      return fetch(`http://${window.location.hostname}/api/deleteentry`, {
+      return fetch(`https://${window.location.hostname}/api/deleteentry`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

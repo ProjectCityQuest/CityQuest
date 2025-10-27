@@ -58,7 +58,7 @@ export default {
   },
   async mounted() {
     for (let i = 1; i <= 12; i++) {
-      fetch(`http://${window.location.hostname}/api/getpuzzle`, {
+      fetch(`https://${window.location.hostname}/api/getpuzzle`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export default {
     },
     openOverlay(e) {
       if (this.focus) {
-        history.replaceState({id: 1}, '', `http://${window.location.hostname}:5173/puzzle`)
+        history.replaceState({id: 1}, '', `https://${window.location.hostname}:5173/puzzle`)
 
         let elems = document.querySelectorAll(".oldPiece");
         [].forEach.call(elems, function (el) {

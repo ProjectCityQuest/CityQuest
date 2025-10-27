@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     async requestAccountDelete() {
-      const response = await fetch(`http://${window.location.hostname}/api/deleteusers`, {
+      const response = await fetch(`https://${window.location.hostname}/api/deleteusers`, {
         method: 'DELETE',
         headers: {
           sessionKey: this.getCookie('sessionKey')
@@ -78,7 +78,7 @@ export default {
       }
     },
     async requestLogout() {
-      const response = await fetch(`http://${window.location.hostname}/api/logout`, {
+      const response = await fetch(`https://${window.location.hostname}/api/logout`, {
         method: 'POST',
         headers: {
           sessionKey: this.getCookie('sessionKey')

@@ -66,7 +66,7 @@ export default {
       this.resetFeedback();
       this.request.status = 'pending';
 
-      const response = await fetch(`http://${window.location.hostname}/api/forgotpassword/${this.form.email}`, {
+      const response = await fetch(`https://${window.location.hostname}/api/forgotpassword/${this.form.email}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',

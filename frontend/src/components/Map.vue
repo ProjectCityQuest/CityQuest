@@ -365,7 +365,7 @@ export default {
 
       spot.set("discovered", "true");
 
-      await fetch(`http://${window.location.hostname}/api/collectpuzzlepiece`, {
+      await fetch(`https://${window.location.hostname}/api/collectpuzzlepiece`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
