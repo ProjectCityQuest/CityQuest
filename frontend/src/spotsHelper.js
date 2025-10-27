@@ -6,7 +6,7 @@ async function setup() {
         // return;
     // }
 
-    await fetch(`http://${window.location.hostname}:8080/api/getspots`, {
+    await fetch(`http://${window.location.hostname}/api/getspots`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

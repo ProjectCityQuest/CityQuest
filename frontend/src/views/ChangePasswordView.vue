@@ -115,7 +115,7 @@ export default {
     async requestChangePassword() {
       this.resetFeedback();
 
-      const response = await fetch(`http://${window.location.hostname}:8080/api/changepasswordauth`, {
+      const response = await fetch(`http://${window.location.hostname}/api/changepasswordauth`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

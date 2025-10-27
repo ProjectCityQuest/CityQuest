@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     async verifyKey() {
-      const response = await fetch(`http://${window.location.hostname}:8080/api/verifyforgotpasswordkey`, {
+      const response = await fetch(`http://${window.location.hostname}/api/verifyforgotpasswordkey`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({

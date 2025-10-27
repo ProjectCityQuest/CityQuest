@@ -47,7 +47,7 @@ export default {
       this.ratings[index] = rating
     },
     async requestAccountDelete() {
-      const rating = await fetch(`http://${window.location.hostname}:8080/api/submitrating`, {
+      const rating = await fetch(`http://${window.location.hostname}/api/submitrating`, {
         method: 'POST',
         headers: {
           sessionKey: this.getCookie('sessionKey'),
@@ -64,7 +64,7 @@ export default {
       });
 
       if (rating.ok) {
-        const response = await fetch(`http://${window.location.hostname}:8080/api/deleteusers`, {
+        const response = await fetch(`http://${window.location.hostname}/api/deleteusers`, {
           method: 'DELETE',
           headers: {
             sessionKey: this.getCookie('sessionKey')

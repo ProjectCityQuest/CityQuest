@@ -80,7 +80,7 @@ export default {
       this.resetError();
       this.state = "waiting";
 
-      const response = await fetch(`http://${window.location.hostname}:8080/api/login`, {
+      const response = await fetch(`http://${window.location.hostname}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

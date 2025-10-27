@@ -46,7 +46,7 @@ export default {
   methods: {
     verifyKey() {
       if (this.verificationKey !== undefined) {
-        fetch(`http://${window.location.hostname}:8080/api/verify`, {
+        fetch(`http://${window.location.hostname}/api/verify`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

@@ -82,7 +82,7 @@ export default {
       this.resetFeedback();
       this.request.status = 'pending';
 
-      const response = await fetch(`http://${window.location.hostname}:8080/api/changepassword`, {
+      const response = await fetch(`http://${window.location.hostname}/api/changepassword`, {
         method: 'PATCH',
         headers: {
           'Accept': 'application/json',

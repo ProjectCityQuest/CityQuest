@@ -108,7 +108,7 @@ export default {
         return;
       }
 
-      const response = await fetch(`http://${window.location.hostname}:8080/api/createentry`, {
+      const response = await fetch(`http://${window.location.hostname}/api/createentry`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

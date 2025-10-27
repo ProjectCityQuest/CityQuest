@@ -105,7 +105,7 @@ export default {
       this.resetError();
       this.state = "waiting";
 
-      await fetch(`http://${window.location.hostname}:8080/api/register`, {
+      await fetch(`http://${window.location.hostname}/api/register`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

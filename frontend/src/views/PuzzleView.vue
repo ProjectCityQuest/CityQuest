@@ -58,7 +58,7 @@ export default {
   },
   async mounted() {
     for (let i = 1; i <= 12; i++) {
-      fetch(`http://${window.location.hostname}:8080/api/getpuzzle`, {
+      fetch(`http://${window.location.hostname}/api/getpuzzle`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
