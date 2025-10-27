@@ -92,7 +92,6 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  padding-bottom: 2rem;
 
   .logo {
     width: 25%;
