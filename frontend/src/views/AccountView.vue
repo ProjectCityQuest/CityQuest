@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     async requestAccountDelete() {
-      const response = await fetch(`https://${window.location.hostname}/api/deleteusers`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/deleteusers`, {
         method: 'DELETE',
         headers: {
           sessionKey: this.getCookie('sessionKey')
@@ -78,7 +78,7 @@ export default {
       }
     },
     async requestLogout() {
-      const response = await fetch(`https://${window.location.hostname}/api/logout`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
         method: 'POST',
         headers: {
           sessionKey: this.getCookie('sessionKey')

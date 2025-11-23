@@ -46,7 +46,7 @@ export default {
   methods: {
     verifyKey() {
       if (this.verificationKey !== undefined) {
-        fetch(`https://${window.location.hostname}/api/verify`, {
+        fetch(`${import.meta.env.VITE_API_URL}/verify`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

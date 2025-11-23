@@ -105,7 +105,7 @@ export default {
       this.resetError();
       this.state = "waiting";
 
-      await fetch(`https://${window.location.hostname}/api/register`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/register`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

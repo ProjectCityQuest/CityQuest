@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     async verifyKey() {
-      const response = await fetch(`https://${window.location.hostname}/api/verifyforgotpasswordkey`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/verifyforgotpasswordkey`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({

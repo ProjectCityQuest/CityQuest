@@ -6,7 +6,7 @@ async function setup() {
         // return;
     // }
 
-    await fetch(`https://${window.location.hostname}/api/getspots`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/getspots`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

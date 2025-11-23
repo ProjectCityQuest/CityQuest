@@ -115,7 +115,7 @@ export default {
     async requestChangePassword() {
       this.resetFeedback();
 
-      const response = await fetch(`https://${window.location.hostname}/api/changepasswordauth`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/changepasswordauth`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

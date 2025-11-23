@@ -16,38 +16,36 @@ public class Emails {
     private static final Logger LOG = LoggerFactory.getLogger(Emails.class);
 
     public static void sendVerificationMail(String email, String key) throws MessagingException {
-        return;
-        /*MimeMessage message = createMailTemplate(email);
+        MimeMessage message = createMailTemplate(email);
         message.setSubject("Bestätigen Sie Ihre Email!");
 
         EmailTemplate emailVerificationTemplate = new EmailTemplate();
         emailVerificationTemplate.addTitle("Verifizieren Sie Ihre Email");
         emailVerificationTemplate.addLine();
-        emailVerificationTemplate.addButton("Klicken Sie hier um Ihre Email zu verifizieren!", "http://"+IP.getServerIP()+":5173/email-verifizierung/" + email + "/"+key);
+        emailVerificationTemplate.addButton("Klicken Sie hier um Ihre Email zu verifizieren!", "https://cityquest.markuswizany.at/email-verifizierung/" + email + "/"+key);
         emailVerificationTemplate.addText("Falls Sie sich nicht bei CityQuest registriert haben, ignorieren Sie diese Email.");
 
         message.setContent(emailVerificationTemplate.generateEmailTemplate(), "text/html");
 
         Transport.send(message);
 
-        LOG.info("Email Verification sent to '" + email + "' containig key: '" + key + "'");*/
+        LOG.info("Email Verification sent to '" + email + "' containig key: '" + key + "'");
     }
 
     public static void sendPasswordResetMail(String email, String key) throws MessagingException {
-        return;
-        /*MimeMessage message = createMailTemplate(email);
+        MimeMessage message = createMailTemplate(email);
         message.setSubject("Passwortänderung!");
 
         EmailTemplate passwordResetEmailTemplate = new EmailTemplate();
         passwordResetEmailTemplate.addTitle("Folgen Sie den Anweisungen um Ihr Passwort zu ändern");
         passwordResetEmailTemplate.addLine();
-        passwordResetEmailTemplate.addButton("Klicken Sie hier um Ihr Passwort zu ändern!", "http://"+IP.getServerIP()+":5173/passwort-vergessen/" + email + "/"+key);
+        passwordResetEmailTemplate.addButton("Klicken Sie hier um Ihr Passwort zu ändern!", "https://cityquest.markuswizany.at/passwort-vergessen/" + email + "/"+key);
         passwordResetEmailTemplate.addText("Falls Sie keine Passwortänderung angefordert haben, ignorieren Sie diese Email.");
 
         message.setContent(passwordResetEmailTemplate.generateEmailTemplate(), "text/html");
         Transport.send(message);
 
-        LOG.info("Email for password reset sent to '" + email + "' containig key: '" + key + "'");*/
+        LOG.info("Email for password reset sent to '" + email + "' containig key: '" + key + "'");
     }
 
     private static MimeMessage createMailTemplate(String email) throws MessagingException {

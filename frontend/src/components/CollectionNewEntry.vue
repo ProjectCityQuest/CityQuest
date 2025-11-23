@@ -108,7 +108,7 @@ export default {
         return;
       }
 
-      const response = await fetch(`https://${window.location.hostname}/api/createentry`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/createentry`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -47,7 +47,7 @@ export default {
       this.ratings[index] = rating
     },
     async requestAccountDelete() {
-      const rating = await fetch(`https://${window.location.hostname}/api/submitrating`, {
+      const rating = await fetch(`${import.meta.env.VITE_API_URL}/submitrating`, {
         method: 'POST',
         headers: {
           sessionKey: this.getCookie('sessionKey'),
@@ -64,7 +64,7 @@ export default {
       });
 
       if (rating.ok) {
-        const response = await fetch(`https://${window.location.hostname}/api/deleteusers`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/deleteusers`, {
           method: 'DELETE',
           headers: {
             sessionKey: this.getCookie('sessionKey')

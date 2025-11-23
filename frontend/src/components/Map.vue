@@ -365,7 +365,7 @@ export default {
 
       spot.set("discovered", "true");
 
-      await fetch(`https://${window.location.hostname}/api/collectpuzzlepiece`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/collectpuzzlepiece`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

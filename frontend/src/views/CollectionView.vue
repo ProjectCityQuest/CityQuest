@@ -125,7 +125,7 @@ export default {
       return false;
     },
     fetchData() {
-      return fetch(`https://${window.location.hostname}/api/getcollection`, {
+      return fetch(`${import.meta.env.VITE_API_URL}/getcollection`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
