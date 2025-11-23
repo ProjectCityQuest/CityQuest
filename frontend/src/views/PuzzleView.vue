@@ -95,7 +95,7 @@ export default {
     },
     openOverlay(e) {
       if (this.focus) {
-        history.replaceState({id: 1}, '', `${import.meta.env.VITE_API_URL.split(':')[0]}/puzzle`)
+        history.replaceState({id: 1}, '', `${import.meta.env.VITE_API_URL.replace('/api', '')}/puzzle`)
 
         let elems = document.querySelectorAll(".oldPiece");
         [].forEach.call(elems, function (el) {
